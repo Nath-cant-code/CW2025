@@ -9,11 +9,32 @@ import java.util.stream.Collectors;
 public class MatrixOperations {
 
 
-    //We don't want to instantiate this utility class
+    /**
+     * We don't want to instantiate this utility class. <br>
+     * Hence, this constructor is empty.
+     */
     private MatrixOperations(){
 
     }
 
+    /**
+     * This is the method to be called to check (or predict) if the next orientation or position
+     * of the current Brick-shape-object will exceed the playable area (currentMatrix or currentGameMatrix in SimpleBoard)
+     * or if there is available space for the Brick-shape-object to fall into (i.e. the space is unoccupied by another Brick-shape-object).<br>
+     *
+     * It does this by using a nested for loop to increment or decrement the x- and y- coordinates
+     * of each block in the Brick-shape-object, and calls the checkOutOfBound method
+     * to check if the new (desired) position or orientation is still in the playable area or not. <br>
+     *
+     * The matrix[targetY][targetX] != 0 checks if the space is available and unoccupied by another Brick-shape-object.
+     *
+     * @param matrix The playable area the bricks can fall in (currentMatrix or currentGameMatrix in SimpleBoard).
+     * @param brick Current orientation of current Brick-shape-object
+     * @param x
+     * @param y
+     * @return  True if new (desired) orientation or position of current Brick-shape-object is invalid,
+     * False if it is still within the playable area and the space is unoccupied.
+     */
     public static boolean intersect(final int[][] matrix, final int[][] brick, int x, int y) {
         for (int i = 0; i < brick.length; i++) {
             for (int j = 0; j < brick[i].length; j++) {
@@ -27,6 +48,14 @@ public class MatrixOperations {
         return false;
     }
 
+    /**
+     *
+     * @param matrix The playable area the bricks can fall in (currentMatrix or currentGameMatrix in SimpleBoard).
+     * @param targetX
+     * @param targetY
+     * @return True if rotated orientation of Brick-shape-object is out of bounds,
+     * False if orientation remains inside playable area.
+     */
     private static boolean checkOutOfBound(int[][] matrix, int targetX, int targetY) {
         boolean returnValue = true;
         if (targetX >= 0 && targetY < matrix.length && targetX < matrix[targetY].length) {

@@ -6,6 +6,12 @@ import com.comp2042.logic.bricks.RandomBrickGenerator;
 
 import java.awt.*;
 
+/**
+ * This class implements Board and creates useful methods. <br>
+ * An object of this class is created in GameController
+ * and only one object is created everytime the game (program) runs.<br>
+ * SimpleBoard object is the playable area where bricks will fall.
+ */
 public class SimpleBoard implements Board {
 
     private final int width;
@@ -16,6 +22,19 @@ public class SimpleBoard implements Board {
     private Point currentOffset;
     private final Score score;
 
+    /**
+     * This constructor makes it so that when a SimpleBoard object is created in GameController,
+     * the size of the playable area must be specified. <br>
+     * currentGameMatrix would be the playable area for the bricks to fall in. <br>
+     * <p>
+     *     brickGenerator: an object to either: <br>
+     *     - look at the first (top) Brick-shape-object in the Deque (nextBricks) <br>
+     *     - or pop the first (top) Brick-shape-object in the Deque, essentially deleting it from the Deque
+     * </p>
+     * @param width     the values represent how many Brick sub-blocks (or pixels) can fit across the playable area.
+     * @param height    the values represent how many Brick sub-blocks (or pixels)
+     *                  can stack on top of each other in the playable area up until the Brick generation area (spawn point).
+     */
     public SimpleBoard(int width, int height) {
         this.width = width;
         this.height = height;

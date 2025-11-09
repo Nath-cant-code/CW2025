@@ -1,5 +1,10 @@
 package com.comp2042;
 
+/**
+ * This interface and its abstract methods are implemented by SimpleBoard.
+ * <p></p>
+ * GameController creates a SimpleBoard object and uses the methods in implemented by SimpleBoard.
+ */
 public interface Board {
 
     boolean moveBrickDown();
