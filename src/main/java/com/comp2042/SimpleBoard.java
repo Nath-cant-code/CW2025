@@ -28,8 +28,8 @@ public class SimpleBoard implements Board {
      * currentGameMatrix would be the playable area for the bricks to fall in. <br>
      * <p>
      *     brickGenerator: an object to either: <br>
-     *     - look at the first (top) Brick-shape-object in the Deque (nextBricks) <br>
-     *     - or pop the first (top) Brick-shape-object in the Deque, essentially deleting it from the Deque
+     *     - getNextBrick(): look at the first (top) Brick-shape-object in the Deque (nextBricks) <br>
+     *     - getBrick(): or pop the first (top) Brick-shape-object in the Deque, essentially deleting it from the Deque
      * </p>
      * @param width     the values represent how many Brick sub-blocks (or pixels) can fit across the playable area.
      * @param height    the values represent how many Brick sub-blocks (or pixels)

@@ -18,9 +18,9 @@ public class MatrixOperations {
     }
 
     /**
-     * This is the method to be called to check (or predict) if the next orientation or position
+     * This is the method to be called to check (or predict) if the next (desired) orientation or position
      * of the current Brick-shape-object will exceed the playable area (currentMatrix or currentGameMatrix in SimpleBoard)
-     * or if there is available space for the Brick-shape-object to fall into (i.e. the space is unoccupied by another Brick-shape-object).<br>
+     * or if there is available space for the Brick-shape-object to fall into (i.e. if the space is unoccupied by another Brick-shape-object).<br>
      *
      * It does this by using a nested for loop to increment or decrement the x- and y- coordinates
      * of each block in the Brick-shape-object, and calls the checkOutOfBound method
@@ -29,9 +29,9 @@ public class MatrixOperations {
      * The matrix[targetY][targetX] != 0 checks if the space is available and unoccupied by another Brick-shape-object.
      *
      * @param matrix The playable area the bricks can fall in (currentMatrix or currentGameMatrix in SimpleBoard).
-     * @param brick Current orientation of current Brick-shape-object
-     * @param x
-     * @param y
+     * @param brick Current orientation of current Brick-shape-object.
+     * @param x     dx relative to object being referenced.
+     * @param y     dy relative to object being referenced.
      * @return  True if new (desired) orientation or position of current Brick-shape-object is invalid,
      * False if it is still within the playable area and the space is unoccupied.
      */
@@ -51,8 +51,8 @@ public class MatrixOperations {
     /**
      *
      * @param matrix The playable area the bricks can fall in (currentMatrix or currentGameMatrix in SimpleBoard).
-     * @param targetX
-     * @param targetY
+     * @param targetX   Incremented value of dx relative to object being referenced.
+     * @param targetY   Incremented value of dy relative to object being referenced.
      * @return True if rotated orientation of Brick-shape-object is out of bounds,
      * False if orientation remains inside playable area.
      */
@@ -64,6 +64,13 @@ public class MatrixOperations {
         return returnValue;
     }
 
+    /**
+     * So far the only use is in merge() method. <br>
+     * Intention of this method is to create a deep copy of the currentGameMatrix as to not affect the original matrix
+     * when merging the matrix of the Brick-shape-object with the matrix of the currentGameMatrix. <br>
+     * @param original Original and current matrix of the Brick-shape-object.
+     * @return Copied version of the original and current matrix of the Brick-shape-object.
+     */
     public static int[][] copy(int[][] original) {
         int[][] myInt = new int[original.length][];
         for (int i = 0; i < original.length; i++) {
@@ -75,6 +82,14 @@ public class MatrixOperations {
         return myInt;
     }
 
+    /**
+     * Assimilates the Brick-shape-object's matrix into the playable area's matrix (currentMatrix/currentGameMatrix). <br>
+     * @param filledFields  currentGameMatrix.
+     * @param brick         current (matrix) orientation of the Brick-shape-object.
+     * @param x             dx relative to object being referenced.
+     * @param y             dy relative to object being referenced.
+     * @return              new version of currentGameMatrix with the newly added Brick-shape-object.
+     */
     public static int[][] merge(int[][] filledFields, int[][] brick, int x, int y) {
         int[][] copy = copy(filledFields);
         for (int i = 0; i < brick.length; i++) {
@@ -89,6 +104,13 @@ public class MatrixOperations {
         return copy;
     }
 
+    /**
+     * Checks for rows that have no unoccupied block spaces before clearing said rows
+     * and shifting every row above the topmost deleted row down until it reaches a row that is above
+     * a lower row that has at least 1 block occupying a space. <br>
+     * @param matrix    currentGameMatrix
+     * @return A ClearRow object with the fields (int linesRemoved, int[][] newMatrix, scoreBonus).
+     */
     public static ClearRow checkRemoving(final int[][] matrix) {
         int[][] tmp = new int[matrix.length][matrix[0].length];
         Deque<int[]> newRows = new ArrayDeque<>();
@@ -121,6 +143,12 @@ public class MatrixOperations {
         return new ClearRow(clearedRows.size(), tmp, scoreBonus);
     }
 
+    /**
+     * Used in Brick-shape-classes only.
+     * @param list A list of matrices, which is actually the list of
+     *             all the different possible matrix orientations of a Brick-shape-object.
+     * @return  A copy of the List of possible matrix orientations of the Brick-shape-object.
+     */
     public static List<int[][]> deepCopyList(List<int[][]> list){
         return list.stream().map(MatrixOperations::copy).collect(Collectors.toList());
     }
