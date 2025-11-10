@@ -2,6 +2,9 @@ package com.comp2042;
 
 import com.comp2042.logic.bricks.Brick;
 
+/**
+ * This class manages the selection of the possible orientations of a Brick-shape-object.
+ */
 public class BrickRotator {
 
     private Brick brick;
@@ -25,7 +28,7 @@ public class BrickRotator {
     }
 
     /**
-     * Whatever value the currentShape counter has, that will be the index of the getShapeMatrix List being accessed.
+     * Whatever value the currentShape counter has, that will be the index of the getShapeMatrix List being accessed.<br>
      * @return Orientation of current Brick-shape-object
      */
     public int[][] getCurrentShape() {
@@ -33,7 +36,7 @@ public class BrickRotator {
     }
 
     /**
-     * Only used once in SimpleBoard.rotateLeftBrick() to set a new orientation for the current Brick-shape-object.
+     * Only used once in SimpleBoard.rotateLeftBrick() to set a NEW orientation for the current Brick-shape-object.<br>
      * @param currentShape  New counter value to be used as the index (nextShape) to select the new orientation.
      */
     public void setCurrentShape(int currentShape) {
@@ -41,8 +44,8 @@ public class BrickRotator {
     }
 
     /**
-     * No uses?
-     * @param brick no uses
+     * Used in createNewBrick() in SimpleBoard. Sets the Brick-shape-object to the first orientation in its brickMatrix.<br>
+     * @param brick The first (top) Brick-shape-object in the Deque, nextBricks.
      */
     public void setBrick(Brick brick) {
         this.brick = brick;

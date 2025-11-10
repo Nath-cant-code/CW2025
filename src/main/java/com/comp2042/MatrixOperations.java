@@ -6,6 +6,9 @@ import java.util.Deque;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class is to handle all the matrix operations on the Brick-shape-object's matrix in accordance to the player's actions.
+ */
 public class MatrixOperations {
 
 
@@ -32,8 +35,8 @@ public class MatrixOperations {
      * @param brick Current orientation of current Brick-shape-object.
      * @param x     dx relative to object being referenced.
      * @param y     dy relative to object being referenced.
-     * @return  True if new (desired) orientation or position of current Brick-shape-object is invalid,
-     * False if it is still within the playable area and the space is unoccupied.
+     * @return  TRUE if new (desired) orientation or position of current Brick-shape-object is INVALID,
+     * FALSE if it is still within the playable area and the space is unoccupied, i.e. VALID.
      */
     public static boolean intersect(final int[][] matrix, final int[][] brick, int x, int y) {
         for (int i = 0; i < brick.length; i++) {
@@ -110,6 +113,7 @@ public class MatrixOperations {
      * a lower row that has at least 1 block occupying a space. <br>
      * @param matrix    currentGameMatrix
      * @return A ClearRow object with the fields (int linesRemoved, int[][] newMatrix, scoreBonus).
+     * Note that all values can be 0 in the case that the row is not completely filled.
      */
     public static ClearRow checkRemoving(final int[][] matrix) {
         int[][] tmp = new int[matrix.length][matrix[0].length];

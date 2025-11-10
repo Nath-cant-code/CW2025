@@ -10,10 +10,17 @@ import java.awt.*;
  * This class implements Board and creates useful methods. <br>
  * An object of this class is created in GameController
  * and only one object is created everytime the game (program) runs.<br>
- * SimpleBoard object is the playable area where bricks will fall.
+ * SimpleBoard object consists of the playable area where bricks will fall,
+ * along with all methods that correspond to the player's actions.
  */
 public class SimpleBoard implements Board {
 
+    /**
+     * It helps to think that brickRotater holds the Brick-shape-object that has ALREADY BEEN POPPED
+     * from the Deque, nextBricks and is currently falling in the playable area (currentGameMatrix). <br>
+     * While brickGenerator holds the first or top Brick-shape-object in the Deque, nextBricks,
+     * that HAS NOT BEEN POPPED YET.
+     */
     private final int width;
     private final int height;
     private final BrickGenerator brickGenerator;
@@ -44,6 +51,12 @@ public class SimpleBoard implements Board {
         score = new Score();
     }
 
+    /**
+     * Creates a point object to hold desired changes to Brick-shape-object's relative coordinates in playable area (currentGameMatrix).<br>
+     * Calls intersect() to check if new desired position of Brick-shape-object is valid within the playable area. <br>
+     * @return  If VALID -> else statement runs and currentOffset becomes the new coordinates and moveBrickDown() returns TRUE,
+     * if INVALID, moveBrickDown() returns FALSE.
+     */
     @Override
     public boolean moveBrickDown() {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
@@ -58,7 +71,12 @@ public class SimpleBoard implements Board {
         }
     }
 
-
+    /**
+     * Creates a point object to hold desired changes to Brick-shape-object's relative coordinates in playable area (currentGameMatrix).<br>
+     * Calls intersect() to check if new desired position of Brick-shape-object is valid within the playable area. <br>
+     * @return  If VALID -> else statement runs and currentOffset becomes the new coordinates and moveBrickDown() returns TRUE,
+     * if INVALID, moveBrickDown() returns FALSE.
+     */
     @Override
     public boolean moveBrickLeft() {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
@@ -73,6 +91,12 @@ public class SimpleBoard implements Board {
         }
     }
 
+    /**
+     * Creates a point object to hold desired changes to Brick-shape-object's relative coordinates in playable area (currentGameMatrix).<br>
+     * Calls intersect() to check if new desired position of Brick-shape-object is valid within the playable area. <br>
+     * @return  If VALID -> else statement runs and currentOffset becomes the new coordinates and moveBrickDown() returns TRUE,
+     * if INVALID, moveBrickDown() returns FALSE.
+     */
     @Override
     public boolean moveBrickRight() {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
@@ -87,6 +111,13 @@ public class SimpleBoard implements Board {
         }
     }
 
+    /**
+     * Creates a nextShape object to hold the next orientation in the Brick-shape-object's brickMatrix List. <br>
+     * Calls intersect() to check if the next orientation of the Brick-shape-object is valid within the playable area. <br>
+     * @return  If VALID -> else statement runs and sets the Brick-shape-object's current orientation to the new desired orientation
+     * and rotateLeftBrick() returns TRUE,
+     * if INVALID, rotateLeftBrick() returns FALSE.
+     */
     @Override
     public boolean rotateLeftBrick() {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
@@ -100,6 +131,14 @@ public class SimpleBoard implements Board {
         }
     }
 
+    /**
+     * Creates a new Brick object (currentBrick) by popping the first (top) Brick-shape-object from the Deque, nextBricks. <br>
+     * Calls setBrick() to set the new Brick-shape-object's orientation to the first in its brickMatrix List. <br>
+     * currentOffset is the coordinates in the playable area (currentGameMatrix) where the new Brick-shape-object will be generated,
+     * AKA the spawn point. <br>
+     * @return  If the spawn point is VALID, createNewBrick() returns FALSE,
+     * if spawn point in INVALID, createNewBrick() returns TRUE.
+     */
     @Override
     public boolean createNewBrick() {
         Brick currentBrick = brickGenerator.getBrick();
@@ -108,21 +147,37 @@ public class SimpleBoard implements Board {
         return MatrixOperations.intersect(currentGameMatrix, brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
     }
 
+    /**
+     * @return  currentGameMatrix, the current game state with all the Brick objects in place.
+     */
     @Override
     public int[][] getBoardMatrix() {
         return currentGameMatrix;
     }
 
+    /**
+     * @return  Creates a ViewData object with fields: current Brick-shape-object's current orientation, B-s-o's current x-coordinates,
+     * B-s-o's current y-coordinates, the first orientation in the brickMatrix of the first (top) Brick-shape-object in the Deque, nextBricks.
+     */
     @Override
     public ViewData getViewData() {
         return new ViewData(brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY(), brickGenerator.getNextBrick().getShapeMatrix().get(0));
     }
 
+    /**
+     * Calls merge() to assimilate the current Brick-shape-object into the game's playable area (currentGameMatrix).
+     */
     @Override
     public void mergeBrickToBackground() {
         currentGameMatrix = MatrixOperations.merge(currentGameMatrix, brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
     }
 
+    /**
+     * Creates a ClearRow object that contains information on fields
+     * such as linesRemoved, newMatrix (new version of currentGameMatrix), and scoreBonus.<br>
+     * Sets the currentGameMatrix to the newMatrix (version of playable area matrix after rows have been cleared).
+     * @return  The ClearRow object, so that the caller of this method can access the fields of the object.
+     */
     @Override
     public ClearRow clearRows() {
         ClearRow clearRow = MatrixOperations.checkRemoving(currentGameMatrix);
@@ -131,12 +186,19 @@ public class SimpleBoard implements Board {
 
     }
 
+    /**
+     * @return  Game score.
+     */
     @Override
     public Score getScore() {
         return score;
     }
 
-
+    /**
+     * Creates a playable area (currentGameMatrix) with set values of width and height from constructor.<br>
+     * Sets the game score to 0 (zero).<br>
+     * Calls createNewBrick() to generate a new Brick from the top of the Deque, newBricks, at the spawn point.
+     */
     @Override
     public void newGame() {
         currentGameMatrix = new int[width][height];

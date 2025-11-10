@@ -1,5 +1,11 @@
 package com.comp2042;
 
+/**
+ * This class is important for when the player completely fills a row with blocks from Brick-shape-objects
+ * and the whole row gets cleared, earning the player points. <br>
+ * This class contains information about the number of lines being cleared (linesRemoved),
+ * new game state of playable area (newMatrix), and the points obtained by the player for clearing a number of rows (scoreBonus).
+ */
 public final class ClearRow {
 
     private final int linesRemoved;
@@ -18,14 +24,23 @@ public final class ClearRow {
         this.scoreBonus = scoreBonus;
     }
 
+    /**
+     * @return  clearedRows.size().
+     */
     public int getLinesRemoved() {
         return linesRemoved;
     }
 
+    /**
+     * @return  tmp -> holder for the newly formed currentGameMatrix in checkRemoving().
+     */
     public int[][] getNewMatrix() {
         return MatrixOperations.copy(newMatrix);
     }
 
+    /**
+     * @return  score for clearing a number of rows.
+     */
     public int getScoreBonus() {
         return scoreBonus;
     }

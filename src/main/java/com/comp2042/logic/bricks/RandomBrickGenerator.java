@@ -6,6 +6,9 @@ import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * This class manages random sequential generation of Brick-shape-objects, popping, and peeking from said sequence (Deque).
+ */
 public class RandomBrickGenerator implements BrickGenerator {
 
     /**
@@ -14,7 +17,8 @@ public class RandomBrickGenerator implements BrickGenerator {
     private final List<Brick> brickList;
 
     /**
-     * Deque: A linear collection that supports element insertion and removal at both ends.
+     * Deque: A linear collection that supports element insertion and removal at both ends.<br>
+     * Holds a random sequence of Brick-shape-objects.
      */
     private final Deque<Brick> nextBricks = new ArrayDeque<>();
 

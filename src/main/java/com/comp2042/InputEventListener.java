@@ -1,5 +1,8 @@
 package com.comp2042;
 
+/**
+ * Interface implemented by GameController.
+ */
 public interface InputEventListener {
 
     DownData onDownEvent(MoveEvent event);
