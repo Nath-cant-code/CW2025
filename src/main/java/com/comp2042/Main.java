@@ -11,6 +11,27 @@ import java.util.ResourceBundle;
 
 public class Main extends Application {
 
+    /**
+     * Called automatically by launch(args) in main().<br>
+     * Creates a URL object, location, and load the game's FXML file into it .<br>
+     * Pass the URL object to a FXMLLoader object to properly load and build the UI of the game.<br>
+     * <p>
+     *     Self note: root now holds the full UI structure (GridPane, GameOverPanel).
+     * </p>
+     * A controller class is created and set as a GuiController object.<br>
+     * Creates a Scene object and adjusts the dimensions of the window.<br>
+     * <p>
+     *     Self note: Scene is what is inside the stage (main window).
+     * </p>
+     * Attach scene to stage and display the window on player's screen.<br>
+     * !!!!<br>
+     * Connects GuiController to GameController by passing an object of GuiController in:<br>
+     * new GameController(c);
+     * !!!!<br>
+     * @param primaryStage  Main window of the game (args).
+     * @throws Exception    Self note: This means that this method might throw an exception
+     * because FXML files and resource file might fail to load, but the exception is not handled here.
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -27,7 +48,9 @@ public class Main extends Application {
         new GameController(c);
     }
 
-
+    /**
+     * Self note: launch() is a static method from Application that sets up the JavaFX environment and automatically calls start().
+     */
     public static void main(String[] args) {
         launch(args);
     }

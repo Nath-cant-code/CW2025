@@ -1,5 +1,9 @@
 package com.comp2042;
 
+/**
+ * This class acts as one of the bridges (after GuiController) between player actions and the game logic
+ * by creating methods that link the player's actions to the game's responses towards player actions.
+ */
 public class GameController implements InputEventListener {
 
     private Board board = new SimpleBoard(25, 10);
