@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * This class is to handle all the matrix operations on the Brick-shape-object's matrix in accordance to the player's actions.
+ * This class is to handleKeyEvent all the matrix operations on the Brick-shape-object's matrix in accordance to the player's actions.
  */
 public class MatrixOperations {
 

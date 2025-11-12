@@ -49,7 +49,7 @@ public class NotificationPanel extends BorderPane {
      * Self note:<br>
      * transition.setOnFinished() creates an EventHandler to listen for when the transition fully completes.<br>
      * When the transition fully completes, the label is still technically there, just invisible.<br>
-     * So the handle() method removes the NotificationPanel object created by calling this class from the game screen.
+     * So the handleKeyEvent() method removes the NotificationPanel object created by calling this class from the game screen.
      * @param list  Object (NotificationPanel) being displayed on the screen.
      */
     public void showScore(ObservableList<Node> list) {

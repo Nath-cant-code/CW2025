@@ -59,9 +59,11 @@ public class GuiController implements Initializable {
 
     private Timeline timeLine;
 
-    private final BooleanProperty isPause = new SimpleBooleanProperty();
+    protected final BooleanProperty isPause = new SimpleBooleanProperty();
 
-    private final BooleanProperty isGameOver = new SimpleBooleanProperty();
+    protected final BooleanProperty isGameOver = new SimpleBooleanProperty();
+
+    protected InputHandler inputHandler;
 
     /**
      * Initialises the GUI when the FXML file is loaded at the start of the game.<br>
@@ -70,63 +72,19 @@ public class GuiController implements Initializable {
      *     gamePanel.setFocusTraversable(true);
  *         gamePanel.requestFocus();
      * </p>
-     * These lines sets up gamePanel to be ready to receive keyboard inputs.<br>
-     * --------------------------------MAYBE CAN SPLIT------------------------------<br>
+     * ----------------------------------------CLASS SPLIT ALERT--------------------------------------<br>
+     * The handle() method here was removed and put into a new class, InputHandler.java to increase cohesion of initialise() method.<br>
+     * NOTE: InputHandler object is created in setEventListener() method. <br>
+     * ----------------------------------------CLASS SPLIT ALERT--------------------------------------<br>
      * Hides the "GAME OVER" panel during gameplay.<br>
-     * -------------------------------[UNUSED]------------------------------<br>
      * Creates Reflection object for effects. <br>
-     * ------------------------------CHECK------------------------------<br>
-     * parameters unused but do not seem to be able to be removed.
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
         gamePanel.setFocusTraversable(true);
         gamePanel.requestFocus();
-        gamePanel.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            /**
-             * First checks if the game is paused or is over. <br>
-             * If either the game is in either state,
-             * <p>
-             *     the game will not process any additional keystrokes received from the player
-             *     except the new game keystroke, until the game is unpaused if in a paused state.
-             * </p>
-             * <br>
-             * If the game is in neither state, process the directional keystrokes of the player accordingly.<br>
-             * <p>
-             *     For example, when the player chooses to rotate the Brick-shape-object, either the UP key or the W key
-             *     must be entered.<br>
-             *     Then, the refreshBrick() method will be called and 2 objects will be passed, an EventType object
-             *     representing what the keystroke should do, and an EventSource object to denote that the action
-             *     is from the user and not a thread (system's automatic actions).
-             * </p>
-             * @param keyEvent  Player's directional keystroke.
-             */
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {
-                    if (keyEvent.getCode() == KeyCode.LEFT || keyEvent.getCode() == KeyCode.A) {
-                        refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)));
-                        keyEvent.consume();
-                    }
-                    if (keyEvent.getCode() == KeyCode.RIGHT || keyEvent.getCode() == KeyCode.D) {
-                        refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)));
-                        keyEvent.consume();
-                    }
-                    if (keyEvent.getCode() == KeyCode.UP || keyEvent.getCode() == KeyCode.W) {
-                        refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)));
-                        keyEvent.consume();
-                    }
-                    if (keyEvent.getCode() == KeyCode.DOWN || keyEvent.getCode() == KeyCode.S) {
-                        moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
-                        keyEvent.consume();
-                    }
-                }
-                if (keyEvent.getCode() == KeyCode.N) {
-                    newGame(null);
-                }
-            }
-        });
+
         gameOverPanel.setVisible(false);
 
         final Reflection reflection = new Reflection();
@@ -227,7 +185,7 @@ public class GuiController implements Initializable {
      * Is also called when the player does any action on the Brick object.<br>
      * @param brick Info on current and next in line Brick-shape-object.
      */
-    private void refreshBrick(ViewData brick) {
+    protected void refreshBrick(ViewData brick) {
         if (isPause.getValue() == Boolean.FALSE) {
             brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
             brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
@@ -273,7 +231,7 @@ public class GuiController implements Initializable {
      * gamePanel.requestFocus() to ensure the keystrokes are still being taken in by system.
      * @param event MoveEvent object to check if source of action is from system (THREAD) or player (USER).
      */
-    private void moveDown(MoveEvent event) {
+    protected void moveDown(MoveEvent event) {
         if (isPause.getValue() == Boolean.FALSE) {
             DownData downData = eventListener.onDownEvent(event);
             if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
@@ -292,6 +250,9 @@ public class GuiController implements Initializable {
      */
     public void setEventListener(InputEventListener eventListener) {
         this.eventListener = eventListener;
+
+        inputHandler = new InputHandler(eventListener, this, gamePanel);
+        inputHandler.setKeyListener();
     }
 
     /**
