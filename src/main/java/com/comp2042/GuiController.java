@@ -1,24 +1,19 @@
 package com.comp2042;
 
-import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.effect.Reflection;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -37,7 +32,7 @@ import java.util.ResourceBundle;
  */
 public class GuiController implements Initializable {
 
-    private static final int BRICK_SIZE = 20;
+    protected static final int BRICK_SIZE = 20;
 
     @FXML
     private GridPane gamePanel;
@@ -51,19 +46,28 @@ public class GuiController implements Initializable {
     @FXML
     private GameOverPanel gameOverPanel;
 
-    private Rectangle[][] displayMatrix;
+    protected Rectangle[][] displayMatrix;
 
     private InputEventListener eventListener;
 
-    private Rectangle[][] rectangles;
+    protected Rectangle[][] rectangles;
 
-    private Timeline timeLine;
+//    private Timeline timeLine;
 
     protected final BooleanProperty isPause = new SimpleBooleanProperty();
 
     protected final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
+    /**
+     * New class objects created.
+     */
     protected InputHandler inputHandler;
+
+    protected BoardRenderer boardRenderer = new BoardRenderer();
+
+    protected BrickRenderer brickRenderer = new BrickRenderer();
+
+    protected GameTimeLine gameTimeLine = new GameTimeLine();
 
     /**
      * Initialises the GUI when the FXML file is loaded at the start of the game.<br>
@@ -95,48 +99,32 @@ public class GuiController implements Initializable {
 
     /**
      * Called once by GameController at the start of the game.<br>
-     * 1. Creates visual playable area (displayMatrix) from boardMatrix (AKA currentGameMatrix).<br>
      * ------------------------------MAYBE CAN SPLIT THESE FUNCTIONALITIES------------------------------<br>
+     * ------------------------------SPLIT TO NEW CLASS: BoardRenderer.java ------------------------------<br>
+     * 1. Creates visual playable area (displayMatrix) from boardMatrix (AKA currentGameMatrix).<br>
+     * ------------------------------SPLIT TO NEW CLASS: BrickRenderer.java ------------------------------<br>
      * 2. Create a box area (rectangles) in which the current Brick-shape-object resides in until it merges with the playable area.<br>
      * 3. Positions bricks at spawn point.<br>
-     * 4. Creates a timeline object that automatically causes Brick objects to naturally fall at specific intervals, Duration,millis( x ).
+     * ------------------------------SPLIT TO NEW CLASS: GameTimeLine.java ------------------------------<br>
+     * 4. Creates a timeline object that automatically causes Brick objects to naturally fall at specific intervals, Duration,millis( x ).<br>
+     * All of this now happens in GameTimeLine.java.
      * @param boardMatrix   Matrix of the playable area (currentGameMatrix in SimpleBoard).
      * @param brick         Object containing info on the current and next in line Brick-shape-object.
      */
     public void initGameView(int[][] boardMatrix, ViewData brick) {
 //        1.
-        displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
-        for (int i = 2; i < boardMatrix.length; i++) {
-            for (int j = 0; j < boardMatrix[i].length; j++) {
-                Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
-                rectangle.setFill(Color.TRANSPARENT);
-                displayMatrix[i][j] = rectangle;
-                gamePanel.add(rectangle, j, i - 2);
-            }
-        }
+        displayMatrix = boardRenderer.createPlayableAreaMatrix(gamePanel, boardMatrix);
 
 //        2.
-        rectangles = new Rectangle[brick.getBrickData().length][brick.getBrickData()[0].length];
-        for (int i = 0; i < brick.getBrickData().length; i++) {
-            for (int j = 0; j < brick.getBrickData()[i].length; j++) {
-                Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
-                rectangle.setFill(getFillColor(brick.getBrickData()[i][j]));
-                rectangles[i][j] = rectangle;
-                brickPanel.add(rectangle, j, i);
-            }
-        }
+        rectangles = brickRenderer.createBrickAreaMatrix(brickPanel, brick);
 
 //        3.
         brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
         brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
 
 //        4.
-        timeLine = new Timeline(new KeyFrame(
-                Duration.millis(400),
-                ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
-        ));
-        timeLine.setCycleCount(Timeline.INDEFINITE);
-        timeLine.play();
+        gameTimeLine.setGameTimeline(this);
+        gameTimeLine.start();
     }
 
     /**
@@ -144,7 +132,7 @@ public class GuiController implements Initializable {
      * @param i Index to choose colour.
      * @return  Color object.
      */
-    private Paint getFillColor(int i) {
+    protected static Paint getFillColor(int i) {
         Paint returnPaint;
         switch (i) {
             case 0:
@@ -216,7 +204,7 @@ public class GuiController implements Initializable {
      * @param color     A single pixel of board (in this class) (AKA playable area, currentGameMatrix) or a Brick-shape-object.
      * @param rectangle A single pixel displayMatrix.
      */
-    private void setRectangleData(int color, Rectangle rectangle) {
+    protected void setRectangleData(int color, Rectangle rectangle) {
         rectangle.setFill(getFillColor(color));
         rectangle.setArcHeight(9);
         rectangle.setArcWidth(9);
@@ -239,6 +227,7 @@ public class GuiController implements Initializable {
                 groupNotification.getChildren().add(notificationPanel);
                 notificationPanel.showScore(groupNotification.getChildren());
             }
+//            Refresh.refreshBrick(downData.getViewData(), rectangles, brickPanel, gamePanel);
             refreshBrick(downData.getViewData());
         }
         gamePanel.requestFocus();
@@ -251,7 +240,10 @@ public class GuiController implements Initializable {
     public void setEventListener(InputEventListener eventListener) {
         this.eventListener = eventListener;
 
-        inputHandler = new InputHandler(eventListener, this, gamePanel);
+        inputHandler = new InputHandler(
+                this,
+                eventListener,
+                gamePanel);
         inputHandler.setKeyListener();
     }
 
@@ -266,7 +258,7 @@ public class GuiController implements Initializable {
      * Stops the timeLine, unhides game over label, and set game over checker to true.
      */
     public void gameOver() {
-        timeLine.stop();
+        gameTimeLine.stop();
         gameOverPanel.setVisible(true);
         isGameOver.setValue(Boolean.TRUE);
     }
@@ -281,11 +273,11 @@ public class GuiController implements Initializable {
      * @param actionEvent   null
      */
     public void newGame(ActionEvent actionEvent) {
-        timeLine.stop();
+        gameTimeLine.stop();
         gameOverPanel.setVisible(false);
         eventListener.createNewGame();
         gamePanel.requestFocus();
-        timeLine.play();
+        gameTimeLine.start();
         isPause.setValue(Boolean.FALSE);
         isGameOver.setValue(Boolean.FALSE);
     }

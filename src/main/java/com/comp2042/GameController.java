@@ -61,6 +61,7 @@ public class GameController implements InputEventListener {
             }
 
             viewGuiController.refreshGameBackground(board.getBoardMatrix());
+//            Refresh.refreshGameBackground(board.getBoardMatrix(), viewGuiController.displayMatrix);
 
         } else {
             if (event.getEventSource() == EventSource.USER) {
@@ -114,6 +115,7 @@ public class GameController implements InputEventListener {
     @Override
     public void createNewGame() {
         board.newGame();
+//        Refresh.refreshGameBackground(board.getBoardMatrix(), viewGuiController.displayMatrix);
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
     }
 }
