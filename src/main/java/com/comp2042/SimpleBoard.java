@@ -58,18 +58,7 @@ public class SimpleBoard implements Board {
      * if INVALID, moveBrickDown() returns FALSE.
      */
     @Override
-    public boolean moveBrickDown() {
-        int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
-        Point p = new Point(currentOffset);
-        p.translate(0, 1);
-        boolean conflict = MatrixOperations.intersect(currentMatrix, brickRotator.getCurrentShape(), (int) p.getX(), (int) p.getY());
-        if (conflict) {
-            return false;
-        } else {
-            currentOffset = p;
-            return true;
-        }
-    }
+    public boolean moveBrickDown () { return moveBrick(0, 1); }
 
     /**
      * Creates a point object to hold desired changes to Brick-shape-object's relative coordinates in playable area (currentGameMatrix).<br>
@@ -78,18 +67,7 @@ public class SimpleBoard implements Board {
      * if INVALID, moveBrickDown() returns FALSE.
      */
     @Override
-    public boolean moveBrickLeft() {
-        int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
-        Point p = new Point(currentOffset);
-        p.translate(-1, 0);
-        boolean conflict = MatrixOperations.intersect(currentMatrix, brickRotator.getCurrentShape(), (int) p.getX(), (int) p.getY());
-        if (conflict) {
-            return false;
-        } else {
-            currentOffset = p;
-            return true;
-        }
-    }
+    public boolean moveBrickLeft () { return moveBrick(-1, 0); }
 
     /**
      * Creates a point object to hold desired changes to Brick-shape-object's relative coordinates in playable area (currentGameMatrix).<br>
@@ -98,20 +76,27 @@ public class SimpleBoard implements Board {
      * if INVALID, moveBrickDown() returns FALSE.
      */
     @Override
-    public boolean moveBrickRight() {
+    public boolean moveBrickRight () { return moveBrick(1, 0); }
+
+    /**
+     * Takes in desired translation values and processes them via intersect() method call.
+     * @param dx    x-axis translation.
+     * @param dy    y-axis translation.
+     * @return      TRUE if VALID, FALSE if INVALID.
+     */
+    private boolean moveBrick (int dx, int dy) {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
         Point p = new Point(currentOffset);
-        p.translate(1, 0);
-        boolean conflict = MatrixOperations.intersect(currentMatrix, brickRotator.getCurrentShape(), (int) p.getX(), (int) p.getY());
-        if (conflict) {
+        p.translate(dx, dy);
+        if (MatrixOperations.intersect(currentMatrix, brickRotator.getCurrentShape(), (int) p.getX(), (int) p.getY())) {
             return false;
-        } else {
-            currentOffset = p;
-            return true;
         }
+        currentOffset = p;
+        return true;
     }
 
     /**
+     * ------------------------------------ADD A ROTATE RIGHT METHOD------------------------------------<br>
      * Creates a nextShape object to hold the next orientation in the Brick-shape-object's brickMatrix List. <br>
      * Calls intersect() to check if the next orientation of the Brick-shape-object is valid within the playable area. <br>
      * @return  If VALID -> else statement runs and sets the Brick-shape-object's current orientation to the new desired orientation
@@ -184,7 +169,6 @@ public class SimpleBoard implements Board {
         ClearRow clearRow = MatrixOperations.checkRemoving(currentGameMatrix);
         currentGameMatrix = clearRow.newMatrix();
         return clearRow;
-
     }
 
     /**
