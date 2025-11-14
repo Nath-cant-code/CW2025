@@ -1,39 +1,41 @@
-package com.comp2042.logic.bricks;
+package com.comp2042.bricks.brick_shape_classes;
+
+import com.comp2042.bricks.AbstractBrick;
 
 /**
  * This class is final to ensure the shape of the brick never changes.
  */
-final class TBrick extends AbstractBrick {
+public final class LBrick extends AbstractBrick {
     /**
      * The constructor defines the shape of the brick in all possible orientations
      * and stores all the orientations in the List matrix, brickMatrix.
      * <p></p>
      * An object of the class will be randomly generated.
-     * @see RandomBrickGenerator
+     * @see com.comp2042.bricks.brick_generation_system.RandomBrickGenerator
      */
-    public TBrick() {
+    public LBrick() {
         brickMatrix.add(new int[][]{
                 {0, 0, 0, 0},
-                {6, 6, 6, 0},
-                {0, 6, 0, 0},
+                {0, 3, 3, 3},
+                {0, 3, 0, 0},
                 {0, 0, 0, 0}
         });
         brickMatrix.add(new int[][]{
-                {0, 6, 0, 0},
-                {0, 6, 6, 0},
-                {0, 6, 0, 0},
-                {0, 0, 0, 0}
-        });
-        brickMatrix.add(new int[][]{
-                {0, 6, 0, 0},
-                {6, 6, 6, 0},
                 {0, 0, 0, 0},
+                {0, 3, 3, 0},
+                {0, 0, 3, 0},
+                {0, 0, 3, 0}
+        });
+        brickMatrix.add(new int[][]{
+                {0, 0, 0, 0},
+                {0, 0, 3, 0},
+                {3, 3, 3, 0},
                 {0, 0, 0, 0}
         });
         brickMatrix.add(new int[][]{
-                {0, 6, 0, 0},
-                {6, 6, 0, 0},
-                {0, 6, 0, 0},
+                {0, 3, 0, 0},
+                {0, 3, 0, 0},
+                {0, 3, 3, 0},
                 {0, 0, 0, 0}
         });
     }

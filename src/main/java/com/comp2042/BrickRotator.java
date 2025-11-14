@@ -1,6 +1,6 @@
 package com.comp2042;
 
-import com.comp2042.logic.bricks.Brick;
+import com.comp2042.bricks.Brick;
 
 /**
  * This class manages the selection of the possible orientations of a Brick-shape-object.

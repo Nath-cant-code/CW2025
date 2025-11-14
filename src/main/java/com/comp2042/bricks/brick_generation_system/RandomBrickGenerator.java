@@ -1,5 +1,7 @@
-package com.comp2042.logic.bricks;
+package com.comp2042.bricks.brick_generation_system;
 
+import com.comp2042.bricks.Brick;
+import com.comp2042.bricks.industrial_factory.*;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.ThreadLocalRandom;
