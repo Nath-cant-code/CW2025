@@ -69,6 +69,8 @@ public class GuiController implements Initializable {
 
     protected GameTimeLine gameTimeLine = new GameTimeLine();
 
+    protected Refresh refresh = new Refresh(this);
+
     /**
      * Initialises the GUI when the FXML file is loaded at the start of the game.<br>
      * Loads a custom font from resources directory.<br>
@@ -100,14 +102,21 @@ public class GuiController implements Initializable {
 
     /**
      * Called once by GameController at the start of the game.<br>
-     * ------------------------------MAYBE CAN SPLIT THESE FUNCTIONALITIES------------------------------<br>
+     * -------------------------FUNCTIONALITIES MAINTAINED, BUT LOGIC MOVED TO NEW CLASSES-------------------------<br>
      * ------------------------------SPLIT TO NEW CLASS: BoardRenderer.java ------------------------------<br>
      * 1. Creates visual playable area (displayMatrix) from boardMatrix (AKA currentGameMatrix).<br>
+     *
      * ------------------------------SPLIT TO NEW CLASS: BrickRenderer.java ------------------------------<br>
      * 2. Create a box area (rectangles) in which the current Brick-shape-object resides in until it merges with the playable area.<br>
+     *
      * 3. Positions bricks at spawn point.<br>
+     *
+     * ------------------------------NEW CLASS: InputHandler.java ------------------------------<br>
+     * 4. Creates an InputHandler object here.<br>
+     * ***IMPORTANT*** Object creation used to be in setEventListener() which caused lag due to rectangles being passed as null.<br>
+     *
      * ------------------------------SPLIT TO NEW CLASS: GameTimeLine.java ------------------------------<br>
-     * 4. Creates a timeline object that automatically causes Brick objects to naturally fall at specific intervals, Duration,millis( x ).<br>
+     * 5. Creates a timeline object that automatically causes Brick objects to naturally fall at specific intervals, Duration,millis( x ).<br>
      * All of this now happens in GameTimeLine.java.
      * @param boardMatrix   Matrix of the playable area (currentGameMatrix in SimpleBoard).
      * @param brick         Object containing info on the current and next in line Brick-shape-object.
@@ -124,71 +133,17 @@ public class GuiController implements Initializable {
         brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.yPosition() * brickPanel.getHgap() + brick.yPosition() * BRICK_SIZE);
 
 //        4.
+        inputHandler = new InputHandler(
+                this,
+                eventListener,
+                rectangles,
+                brickPanel,
+                gamePanel);
+        inputHandler.setKeyListener();
+
+//        5.
         gameTimeLine.setGameTimeline(this);
         gameTimeLine.start();
-    }
-
-    /**
-     * Sets a colour for the Brick-shape-object.
-     * @param i Index to choose colour.
-     * @return  Color object.
-     */
-    protected static Paint getFillColor(int i) {
-        return switch (i) {
-            case 0 -> Color.TRANSPARENT;
-            case 1 -> Color.AQUA;
-            case 2 -> Color.BLUEVIOLET;
-            case 3 -> Color.DARKGREEN;
-            case 4 -> Color.YELLOW;
-            case 5 -> Color.RED;
-            case 6 -> Color.BEIGE;
-            case 7 -> Color.BURLYWOOD;
-            default -> Color.WHITE;
-        };
-    }
-
-    /**
-     * Only has functionality if game is not paused.<br>
-     * Updates the position of the Brick object everytime is naturally falls.<br>
-     * Hence, this method has to recolor the orientation of the Brick-shape-object inside the Rectangle box object it resides in.<br>
-     * Is also called when the player does any action on the Brick object.<br>
-     * @param brick Info on current and next in line Brick-shape-object.
-     */
-    protected void refreshBrick(ViewData brick) {
-        if (isPause.getValue() == Boolean.FALSE) {
-            brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.xPosition() * brickPanel.getVgap() + brick.xPosition() * BRICK_SIZE);
-            brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.yPosition() * brickPanel.getHgap() + brick.yPosition() * BRICK_SIZE);
-            for (int i = 0; i < brick.brickData().length; i++) {
-                for (int j = 0; j < brick.brickData()[i].length; j++) {
-                    setRectangleData(brick.brickData()[i][j], rectangles[i][j]);
-                }
-            }
-        }
-    }
-
-    /**
-     * Recolours the displayMatrix to match currentGameMatrix.
-     * @param board Matrix of playable area (currentGameMatrix in SimpleBoard).
-     */
-    public void refreshGameBackground(int[][] board) {
-        for (int i = 2; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                setRectangleData(board[i][j], displayMatrix[i][j]);
-            }
-        }
-    }
-
-    /**
-     * ---------------------------------------CAN BE INLINE?-------------------------------------
-     * setRectangleData(src, dest).<br>
-     * Updates the colour of each pixel of object passed as dest to match the colour of src.
-     * @param color     A single pixel of board (in this class) (AKA playable area, currentGameMatrix) or a Brick-shape-object.
-     * @param rectangle A single pixel displayMatrix.
-     */
-    protected void setRectangleData(int color, Rectangle rectangle) {
-        rectangle.setFill(getFillColor(color));
-        rectangle.setArcHeight(9);
-        rectangle.setArcWidth(9);
     }
 
     /**
@@ -208,8 +163,7 @@ public class GuiController implements Initializable {
                 groupNotification.getChildren().add(notificationPanel);
                 notificationPanel.showScore(groupNotification.getChildren());
             }
-//            Refresh.refreshBrick(downData.getViewData(), rectangles, brickPanel, gamePanel);
-            refreshBrick(downData.viewData());
+            refresh.refreshBrick(downData.viewData(), rectangles, brickPanel, gamePanel);
         }
         gamePanel.requestFocus();
     }
@@ -220,12 +174,6 @@ public class GuiController implements Initializable {
      */
     public void setEventListener(InputEventListener eventListener) {
         this.eventListener = eventListener;
-
-        inputHandler = new InputHandler(
-                this,
-                eventListener,
-                gamePanel);
-        inputHandler.setKeyListener();
     }
 
     /**

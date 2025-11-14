@@ -9,7 +9,8 @@ public class GameController implements InputEventListener {
     private final Board board = new SimpleBoard(25, 10);
 //    private Board board = new SimpleBoard(50, 20);
 
-    private final GuiController viewGuiController;
+    private final GuiController gc;
+    private final Refresh rf;
 
     /**
      * Creates new brick via createNewBrick() method in SimpleBoard object.<br>
@@ -20,11 +21,12 @@ public class GameController implements InputEventListener {
      * @param c GuiController created in start() in Main class.
      */
     public GameController(GuiController c) {
-        viewGuiController = c;
+        gc = c;
+        this.rf = gc.refresh;
         board.createNewBrick();
-        viewGuiController.setEventListener(this);
-        viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData());
-        viewGuiController.bindScore(board.getScore().scoreProperty());
+        gc.setEventListener(this);
+        gc.initGameView(board.getBoardMatrix(), board.getViewData());
+        gc.bindScore(board.getScore().scoreProperty());
     }
 
     /**
@@ -57,11 +59,11 @@ public class GameController implements InputEventListener {
                 board.getScore().add(clearRow.scoreBonus());
             }
             if (board.createNewBrick()) {
-                viewGuiController.gameOver();
+                gc.gameOver();
             }
 
-            viewGuiController.refreshGameBackground(board.getBoardMatrix());
-//            Refresh.refreshGameBackground(board.getBoardMatrix(), viewGuiController.displayMatrix);
+//            viewGuiController.refreshGameBackground(board.getBoardMatrix());
+            rf.refreshGameBackground(board.getBoardMatrix(), gc.displayMatrix);
 
         } else {
             if (event.eventSource() == EventSource.USER) {
@@ -115,7 +117,7 @@ public class GameController implements InputEventListener {
     @Override
     public void createNewGame() {
         board.newGame();
-//        Refresh.refreshGameBackground(board.getBoardMatrix(), viewGuiController.displayMatrix);
-        viewGuiController.refreshGameBackground(board.getBoardMatrix());
+        rf.refreshGameBackground(board.getBoardMatrix(), gc.displayMatrix);
+//        gc.refreshGameBackground(board.getBoardMatrix());
     }
 }

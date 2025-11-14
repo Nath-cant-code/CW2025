@@ -3,13 +3,19 @@ package com.comp2042;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Rectangle;
+
+import java.awt.*;
 
 /**
  * This class was created to separate the user input handling from the initialise() method in GuiController.
  */
 public class InputHandler {
     private final GuiController gc;
+    private final Refresh rf;
     private final InputEventListener eventListener;
+    private final Rectangle[][] rectangles;
+    private final GridPane brickPanel;
     private final GridPane gamePanel;
 
     /**
@@ -18,9 +24,16 @@ public class InputHandler {
      * @param gc GuiController class to access its methods.
      * @param gamePanel     gamePanel.
      */
-    public InputHandler (GuiController gc, InputEventListener eventListener, GridPane gamePanel) {
+    public InputHandler (GuiController gc,
+                         InputEventListener eventListener,
+                         Rectangle[][] rectangles,
+                         GridPane brickPanel,
+                         GridPane gamePanel) {
         this.gc = gc;
+        this.rf = gc.refresh;
         this.eventListener = eventListener;
+        this.rectangles = rectangles;
+        this.brickPanel = brickPanel;
         this.gamePanel = gamePanel;
     }
 
@@ -58,18 +71,15 @@ public class InputHandler {
     private void handleKeyEvent(KeyEvent keyEvent) {
         if (gc.isPause.getValue() == Boolean.FALSE && gc.isGameOver.getValue() == Boolean.FALSE) {
             if (keyEvent.getCode() == KeyCode.LEFT || keyEvent.getCode() == KeyCode.A) {
-//                Refresh.refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)), rectangles, brickPanel, gamePanel);
-                gc.refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)));
+                rf.refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)), rectangles, brickPanel, gamePanel);
                 keyEvent.consume();
             }
             if (keyEvent.getCode() == KeyCode.RIGHT || keyEvent.getCode() == KeyCode.D) {
-//                Refresh.refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)), rectangles, brickPanel, gamePanel);
-                gc.refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)));
+                rf.refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)), rectangles, brickPanel, gamePanel);
                 keyEvent.consume();
             }
             if (keyEvent.getCode() == KeyCode.UP || keyEvent.getCode() == KeyCode.W) {
-//                Refresh.refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)), rectangles, brickPanel, gamePanel);
-                gc.refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)));
+                rf.refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)), rectangles, brickPanel, gamePanel);
                 keyEvent.consume();
             }
             if (keyEvent.getCode() == KeyCode.DOWN || keyEvent.getCode() == KeyCode.S) {
