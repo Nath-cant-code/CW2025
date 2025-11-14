@@ -5,8 +5,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
-import java.awt.*;
-
 /**
  * This class was created to separate the user input handling from the initialise() method in GuiController.
  */
@@ -78,8 +76,16 @@ public class InputHandler {
                 rf.refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)), rectangles, brickPanel, gamePanel);
                 keyEvent.consume();
             }
+            if (keyEvent.getCode() == KeyCode.X) {
+                rf.refreshBrick(eventListener.onRotateClock(new MoveEvent(EventType.ROTATE_CLOCK, EventSource.USER)), rectangles, brickPanel, gamePanel);
+                keyEvent.consume();
+            }
+            if (keyEvent.getCode() == KeyCode.Z) {
+                rf.refreshBrick(eventListener.onRotateAntiClock(new MoveEvent(EventType.ROTATE_ANTICLOCK, EventSource.USER)), rectangles, brickPanel, gamePanel);
+                keyEvent.consume();
+            }
             if (keyEvent.getCode() == KeyCode.UP || keyEvent.getCode() == KeyCode.W) {
-                rf.refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)), rectangles, brickPanel, gamePanel);
+                rf.refreshBrick(eventListener.onRotateAntiClock(new MoveEvent(EventType.ROTATE_ANTICLOCK, EventSource.USER)), rectangles, brickPanel, gamePanel);
                 keyEvent.consume();
             }
             if (keyEvent.getCode() == KeyCode.DOWN || keyEvent.getCode() == KeyCode.S) {

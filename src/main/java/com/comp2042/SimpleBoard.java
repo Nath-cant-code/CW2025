@@ -95,17 +95,35 @@ public class SimpleBoard implements Board {
     }
 
     /**
-     * ------------------------------------ADD A ROTATE RIGHT METHOD------------------------------------<br>
+     * Calls clockwise rotation logic in BrickRotater. <br>
+     * Passes a RotationDirection based accordingly.
+     * @return TRUE if VALID rotation, FALSE if INVALID rotation.
+     */
+    @Override
+    public boolean rotateBrickRight () {return rotateBrick(RotationDirection.CLOCKWISE); }
+
+    /**
+     * ------------------------------------ADDED A ROTATE RIGHT METHOD------------------------------------<br>
+     * Calls clockwise rotation logic in BrickRotater. <br>
+     * Passes a RotationDirection based accordingly.
+     * @return TRUE if VALID rotation, FALSE if INVALID rotation.
+     */
+    @Override
+    public boolean rotateBrickLeft () { return rotateBrick(RotationDirection.ANTI_CLOCKWISE); }
+
+    /**
+     * ------------------------------------ADDED A GENERAL ROTATE METHOD------------------------------------<br>
+     * Extracted logic out of rotateLeftBrick() and placed it in a new method rotateBrick(). <br>
      * Creates a nextShape object to hold the next orientation in the Brick-shape-object's brickMatrix List. <br>
      * Calls intersect() to check if the next orientation of the Brick-shape-object is valid within the playable area. <br>
      * @return  If VALID -> else statement runs and sets the Brick-shape-object's current orientation to the new desired orientation
-     * and rotateLeftBrick() returns TRUE,
-     * if INVALID, rotateLeftBrick() returns FALSE.
+     * and rotateBrickLeft() returns TRUE,
+     * if INVALID, rotateBrickLeft() returns FALSE.
      */
     @Override
-    public boolean rotateLeftBrick() {
+    public boolean rotateBrick (RotationDirection rd) {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
-        NextShapeInfo nextShape = brickRotator.getNextShape();
+        NextShapeInfo nextShape = brickRotator.nextRotation(rd);
         boolean conflict = MatrixOperations.intersect(currentMatrix, nextShape.shape(), (int) currentOffset.getX(), (int) currentOffset.getY());
         if (conflict) {
             return false;

@@ -11,7 +11,9 @@ public interface InputEventListener {
 
     ViewData onRightEvent(MoveEvent event);
 
-    ViewData onRotateEvent(MoveEvent event);
+    ViewData onRotateClock(MoveEvent event);
+
+    ViewData onRotateAntiClock(MoveEvent event);
 
     void createNewGame();
 }

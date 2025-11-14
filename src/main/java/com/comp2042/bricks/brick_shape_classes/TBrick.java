@@ -22,7 +22,7 @@ public final class TBrick extends AbstractBrick {
         });
         brickMatrix.add(new int[][]{
                 {0, 6, 0, 0},
-                {0, 6, 6, 0},
+                {6, 6, 0, 0},
                 {0, 6, 0, 0},
                 {0, 0, 0, 0}
         });
@@ -34,7 +34,7 @@ public final class TBrick extends AbstractBrick {
         });
         brickMatrix.add(new int[][]{
                 {0, 6, 0, 0},
-                {6, 6, 0, 0},
+                {0, 6, 6, 0},
                 {0, 6, 0, 0},
                 {0, 0, 0, 0}
         });

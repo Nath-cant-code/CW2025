@@ -13,7 +13,11 @@ public interface Board {
 
     boolean moveBrickRight();
 
-    boolean rotateLeftBrick();
+    boolean rotateBrickLeft();
+
+    boolean rotateBrickRight();
+
+    boolean rotateBrick(RotationDirection rd);
 
     boolean createNewBrick();
 

@@ -6,8 +6,8 @@ package com.comp2042;
  */
 public class GameController implements InputEventListener {
 
-    private final Board board = new SimpleBoard(25, 10);
-//    private Board board = new SimpleBoard(50, 20);
+//    private final Board board = new SimpleBoard(25, 10);
+    private Board board = new SimpleBoard(50, 20);
 
     private final GuiController gc;
     private final Refresh rf;
@@ -98,14 +98,26 @@ public class GameController implements InputEventListener {
     }
 
     /**
-     * Calls rotateLeftBrick() in SimpleBoard.
+     * Connects InputHandler to SimpleBoard + BrickRotater.
      * @param event MoveEvent object containing EventType (keystroke) and EventSource.
      * @return      ViewData object containing information on current Brick-shape-object after alterations from player action
      * and info on next Brick-shape-object.
      */
     @Override
-    public ViewData onRotateEvent(MoveEvent event) {
-        board.rotateLeftBrick();
+    public ViewData onRotateClock(MoveEvent event) {
+        board.rotateBrickRight();
+        return board.getViewData();
+    }
+
+    /**
+     * Connects InputHandler to SimpleBoard + BrickRotater.
+     * @param event MoveEvent object containing EventType (keystroke) and EventSource.
+     * @return      ViewData object containing information on current Brick-shape-object after alterations from player action
+     * and info on next Brick-shape-object.
+     */
+    @Override
+    public ViewData onRotateAntiClock(MoveEvent event) {
+        board.rotateBrickLeft();
         return board.getViewData();
     }
 
