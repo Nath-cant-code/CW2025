@@ -12,11 +12,9 @@ public class GameTimeLine {
 
     /**
      * Creates a timeline object that automatically causes Brick objects to naturally fall at specific intervals, Duration,millis( x ).
-     * @param gc
+     * @param gc    GuiController object to call methods.
      */
     public void setGameTimeline (GuiController gc) {
-//        this.timeline = new Timeline(new KeyFrame(Duration.millis(400), e -> onTick.run()));
-//        timeline.setCycleCount(Timeline.INDEFINITE);
         timeLine = new Timeline(new KeyFrame(
                 Duration.millis(400),
                 ae -> gc.moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))

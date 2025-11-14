@@ -6,42 +6,39 @@ package com.comp2042;
  * This class contains information about the number of lines being cleared (linesRemoved),
  * new game state of playable area (newMatrix), and the points obtained by the player for clearing a number of rows (scoreBonus).
  */
-public final class ClearRow {
-
-    private final int linesRemoved;
-    private final int[][] newMatrix;
-    private final int scoreBonus;
+public record ClearRow(int linesRemoved, int[][] newMatrix, int scoreBonus) {
 
     /**
      * This constructor is used to create an object in checkRemoving() in MatrixOperations. <br>
-     * @param linesRemoved  clearedRows.size().
-     * @param newMatrix     tmp -> holder for the newly formed currentGameMatrix in checkRemoving().
-     * @param scoreBonus    score for clearing a number of rows.
+     *
+     * @param linesRemoved clearedRows.size().
+     * @param newMatrix    tmp -> holder for the newly formed currentGameMatrix in checkRemoving().
+     * @param scoreBonus   score for clearing a number of rows.
      */
-    public ClearRow(int linesRemoved, int[][] newMatrix, int scoreBonus) {
-        this.linesRemoved = linesRemoved;
-        this.newMatrix = newMatrix;
-        this.scoreBonus = scoreBonus;
+    public ClearRow {
     }
 
     /**
-     * @return  clearedRows.size().
+     * @return clearedRows.size().
      */
-    public int getLinesRemoved() {
+    @Override
+    public int linesRemoved() {
         return linesRemoved;
     }
 
     /**
-     * @return  tmp -> holder for the newly formed currentGameMatrix in checkRemoving().
+     * @return tmp -> holder for the newly formed currentGameMatrix in checkRemoving().
      */
-    public int[][] getNewMatrix() {
+    @Override
+    public int[][] newMatrix() {
         return MatrixOperations.copy(newMatrix);
     }
 
     /**
-     * @return  score for clearing a number of rows.
+     * @return score for clearing a number of rows.
      */
-    public int getScoreBonus() {
+    @Override
+    public int scoreBonus() {
         return scoreBonus;
     }
 }

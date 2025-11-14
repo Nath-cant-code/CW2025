@@ -6,7 +6,7 @@ package com.comp2042;
  */
 public class GameController implements InputEventListener {
 
-    private Board board = new SimpleBoard(25, 10);
+    private final Board board = new SimpleBoard(25, 10);
 //    private Board board = new SimpleBoard(50, 20);
 
     private final GuiController viewGuiController;
@@ -53,8 +53,8 @@ public class GameController implements InputEventListener {
         if (!canMove) {
             board.mergeBrickToBackground();
             clearRow = board.clearRows();
-            if (clearRow.getLinesRemoved() > 0) {
-                board.getScore().add(clearRow.getScoreBonus());
+            if (clearRow.linesRemoved() > 0) {
+                board.getScore().add(clearRow.scoreBonus());
             }
             if (board.createNewBrick()) {
                 viewGuiController.gameOver();
@@ -64,7 +64,7 @@ public class GameController implements InputEventListener {
 //            Refresh.refreshGameBackground(board.getBoardMatrix(), viewGuiController.displayMatrix);
 
         } else {
-            if (event.getEventSource() == EventSource.USER) {
+            if (event.eventSource() == EventSource.USER) {
                 board.getScore().add(1);
             }
         }

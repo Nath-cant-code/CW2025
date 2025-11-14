@@ -3,31 +3,29 @@ package com.comp2042;
 /**
  * This class contains info on EventType (keystroke) and EventSource for checking and validation.
  */
-public final class MoveEvent {
-    private final EventType eventType;
-    private final EventSource eventSource;
-
+public record MoveEvent(EventType eventType, EventSource eventSource) {
     /**
      * When an object of this class is initialised, an EventType and EventSource must be passed.
-     * @param eventType     Keystroke or direction.
-     * @param eventSource   User or system's automatic processing.
+     *
+     * @param eventType   Keystroke or direction.
+     * @param eventSource User or system's automatic processing.
      */
-    public MoveEvent(EventType eventType, EventSource eventSource) {
-        this.eventType = eventType;
-        this.eventSource = eventSource;
+    public MoveEvent {
     }
 
     /**
-     * @return  eventType.
+     * @return eventType.
      */
-    public EventType getEventType() {
+    @Override
+    public EventType eventType() {
         return eventType;
     }
 
     /**
      * @return eventSource.
      */
-    public EventSource getEventSource() {
+    @Override
+    public EventSource eventSource() {
         return eventSource;
     }
 }

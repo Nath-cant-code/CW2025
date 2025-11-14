@@ -14,7 +14,7 @@ public class BoardRenderer {
      *
      * @param gamePanel     gamePanel.
      * @param boardMatrix   Playable area matrix.
-     * @return
+     * @return              Playable area matrix.
      */
     public Rectangle[][] createPlayableAreaMatrix (GridPane gamePanel, int[][] boardMatrix) {
         displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];

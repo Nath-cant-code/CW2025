@@ -11,17 +11,17 @@ public class BrickRenderer {
 
     /**
      * Create a box area (rectangles) in which the current Brick-shape-object resides in until it merges with the playable area.
-     * @param brickPanel
-     * @param brick
-     * @return
+     * @param brickPanel    brickPanel.
+     * @param brick         Brick object info.
+     * @return              Box area matrix.
      */
     public Rectangle[][] createBrickAreaMatrix (GridPane brickPanel, ViewData brick) {
-        rectangles = new Rectangle[brick.getBrickData().length][brick.getBrickData()[0].length];
+        rectangles = new Rectangle[brick.brickData().length][brick.brickData()[0].length];
 
-        for (int i = 0; i < brick.getBrickData().length; i++) {
-            for (int j = 0; j < brick.getBrickData()[i].length; j++) {
+        for (int i = 0; i < brick.brickData().length; i++) {
+            for (int j = 0; j < brick.brickData()[i].length; j++) {
                 Rectangle rectangle = new Rectangle(GuiController.BRICK_SIZE, GuiController.BRICK_SIZE);
-                rectangle.setFill(GuiController.getFillColor(brick.getBrickData()[i][j]));
+                rectangle.setFill(GuiController.getFillColor(brick.brickData()[i][j]));
                 rectangles[i][j] = rectangle;
                 brickPanel.add(rectangle, j, i);
             }

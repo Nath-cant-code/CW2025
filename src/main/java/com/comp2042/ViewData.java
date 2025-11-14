@@ -4,12 +4,7 @@ package com.comp2042;
  * This class is to create an object that contains information on the current Brick-shape-object's
  * current orientation, coordinates, and the first orientation of the next Brick-shape-object in line.
  */
-public final class ViewData {
-
-    private final int[][] brickData;
-    private final int xPosition;
-    private final int yPosition;
-    private final int[][] nextBrickData;
+public record ViewData(int[][] brickData, int xPosition, int yPosition, int[][] nextBrickData) {
 
     /**
      * @param brickData     Current Brick-shape-object's current orientation.
@@ -17,38 +12,38 @@ public final class ViewData {
      * @param yPosition     Brick-shape-object's current y-coordinates.
      * @param nextBrickData The first orientation in the brickMatrix of the first (top) Brick-shape-object in the Deque, nextBricks.
      */
-    public ViewData(int[][] brickData, int xPosition, int yPosition, int[][] nextBrickData) {
-        this.brickData = brickData;
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
-        this.nextBrickData = nextBrickData;
+    public ViewData {
     }
 
     /**
-     * @return  Copy of the current orientation of the Brick-shape-object that was passed.
+     * @return Copy of the current orientation of the Brick-shape-object that was passed.
      */
-    public int[][] getBrickData() {
+    @Override
+    public int[][] brickData() {
         return MatrixOperations.copy(brickData);
     }
 
     /**
      * @return x-coordinates of the Brick-shape-object that was passed.
      */
-    public int getxPosition() {
+    @Override
+    public int xPosition() {
         return xPosition;
     }
 
     /**
-     * @return  y-coordinates of the Brick-shape-object that was passed.
+     * @return y-coordinates of the Brick-shape-object that was passed.
      */
-    public int getyPosition() {
+    @Override
+    public int yPosition() {
         return yPosition;
     }
 
     /**
-     * @return  Copy of the first orientation in the brickMatrix of the first (top) Brick-shape-object in the Deque, nextBricks.
+     * @return Copy of the first orientation in the brickMatrix of the first (top) Brick-shape-object in the Deque, nextBricks.
      */
-    public int[][] getNextBrickData() {
+    @Override
+    public int[][] nextBrickData() {
         return MatrixOperations.copy(nextBrickData);
     }
 }

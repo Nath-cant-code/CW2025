@@ -1,10 +1,8 @@
 package com.comp2042;
 
-import javafx.fxml.FXML;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.shape.Rectangle;
 
 /**
  * This class was created to separate the user input handling from the initialise() method in GuiController.
@@ -13,8 +11,6 @@ public class InputHandler {
     private final GuiController gc;
     private final InputEventListener eventListener;
     private final GridPane gamePanel;
-//    private final GridPane brickPanel;
-//    private final Rectangle[][] rectangles;
 
     /**
      * Passes object required for input handling over from GuiController.java.
@@ -26,8 +22,6 @@ public class InputHandler {
         this.gc = gc;
         this.eventListener = eventListener;
         this.gamePanel = gamePanel;
-//        this.brickPanel = brickPanel;
-//        this.rectangles = rectangles;
     }
 
     /**
