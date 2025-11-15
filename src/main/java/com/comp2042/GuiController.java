@@ -1,5 +1,6 @@
 package com.comp2042;
 
+import javafx.animation.KeyFrame;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -11,6 +12,8 @@ import javafx.scene.effect.Reflection;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+
+import javafx.animation.Timeline;
 
 import java.net.URL;
 import java.util.Objects;
@@ -69,6 +72,8 @@ public class GuiController implements Initializable {
 
     @FXML
     protected PausePanel pausePanel;
+
+    private boolean countdownRunning = false;
 
     /**
      * Initialises the GUI when the FXML file is loaded at the start of the game.<br>
@@ -213,23 +218,51 @@ public class GuiController implements Initializable {
     }
 
     /**
-     * -------------------------------------FUNCTIONALITY ADDED--------------------------------------
+     * -------------------------------------FUNCTIONALITY ADDED--------------------------------------<br>
+     * If game is running and user presses pause key, boolean paused = true -> runs true if statement
      * @param actionEvent no uses
      */
     public void pauseGame (ActionEvent actionEvent) {
 
-        if (!isPause.get()) {
+        if (!isPause.getValue()) {
             gameTimeLine.stop();
-            inputHandler.toggleInputReceiver();
+            isPause.setValue(true);
+            pausePanel.setString("GAME\nPAUSED");
             pausePanel.setVisible(true);
             pausePanel.toFront();
         }
         else {
-            gameTimeLine.start();
-            inputHandler.toggleInputReceiver();
-            pausePanel.setVisible(false);
+            if (!countdownRunning) {
+                startResumeCountdown();
+            }
         }
-
         gamePanel.requestFocus();
+    }
+
+    private void startResumeCountdown () {
+        if (countdownRunning) return;
+        countdownRunning = true;
+
+        pausePanel.setVisible(true);
+        pausePanel.toFront();
+
+        final int[] count = {3};
+
+        Timeline countdown = new Timeline(
+                new KeyFrame(javafx.util.Duration.seconds(1), e -> {
+                    if (count[0] > 0) {
+                        pausePanel.setString("GAME RESUMING IN\n\t" + count[0]);
+                        count[0]--;
+                    }
+                    else {
+                        pausePanel.setVisible(false);
+                        isPause.setValue(false);
+                        countdownRunning = false;
+                        gameTimeLine.start();
+                    }
+                })
+        );
+        countdown.setCycleCount(4);
+        countdown.play();
     }
 }

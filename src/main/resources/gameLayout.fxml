@@ -23,6 +23,7 @@
     </Group>
 
     <PausePanel fx:id="pausePanel" visible="false"
+                styleClass="pauseOverlay"
                 layoutX="50" layoutY="120"  />
 
     <stylesheets>

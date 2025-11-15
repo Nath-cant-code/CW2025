@@ -50,11 +50,8 @@ public class InputHandler {
         gamePanel.setOnKeyPressed(this::handleKeyEvent);
     }
 
-    public void toggleInputReceiver () {
-        gc.isPause.setValue(!gc.isPause.getValue());
-    }
-
     /**
+     * ----------------------------------REFACTOR IN THE FUTURE----------------------------------<br>
      * First checks if the game is paused or is over. <br>
      * If either the game is in either state,
      * <p>
