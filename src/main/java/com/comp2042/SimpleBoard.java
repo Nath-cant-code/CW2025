@@ -4,6 +4,7 @@ import com.comp2042.bricks.Brick;
 import com.comp2042.bricks.brick_generation_system.*;
 
 import java.awt.*;
+import javafx.scene.shape.Rectangle;
 
 /**
  * This class implements Board and creates useful methods. <br>
@@ -27,8 +28,7 @@ public class SimpleBoard implements Board {
     private int[][] currentGameMatrix;
     private Point currentOffset;
     private final Score score;
-    private Refresh rf;
-    private final GuiController gc;
+//    private Refresh rf;
 
     /**
      * This constructor makes it so that when a SimpleBoard object is created in GameController,
@@ -43,10 +43,9 @@ public class SimpleBoard implements Board {
      * @param height    the values represent how many Brick sub-blocks (or pixels)
      *                  can stack on top of each other in the playable area up until the Brick generation area (spawn point).
      */
-    public SimpleBoard(int width, int height, GuiController gc) {
+    public SimpleBoard(int width, int height) {
         this.width = width;
         this.height = height;
-        this.gc = gc;
         currentGameMatrix = new int[width][height];
         brickGenerator = new RandomBrickGenerator();
         brickRotator = new BrickRotator();
@@ -137,7 +136,7 @@ public class SimpleBoard implements Board {
     }
 
     @Override
-    public DownData snapBrick () {
+    public DownData snapBrick (Refresh rf, Rectangle[][] displayMatrix) {
         Point p = new Point(currentOffset);
         currentOffset.y = MatrixOperations.findSnapPosition(
                 currentGameMatrix,
@@ -146,7 +145,7 @@ public class SimpleBoard implements Board {
                 (int) p.getY()
         );
         mergeBrickToBackground();
-        rf.refreshGameBackground(currentGameMatrix, gc.displayMatrix);
+        rf.refreshGameBackground(currentGameMatrix, displayMatrix);
         ClearRow clearRow = clearRows();
         boolean gameOver = createNewBrick();
         ViewData vd = getViewData();
