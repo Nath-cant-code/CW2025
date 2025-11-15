@@ -19,6 +19,8 @@ public interface Board {
 
     boolean rotateBrick(RotationDirection rd);
 
+    DownData snapBrick ();
+
     boolean createNewBrick();
 
     int[][] getBoardMatrix();

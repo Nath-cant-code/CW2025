@@ -5,10 +5,7 @@ package com.comp2042;
  * by creating methods that link the player's actions to the game's responses towards player actions.
  */
 public class GameController implements InputEventListener {
-
-//    private final Board board = new SimpleBoard(25, 10);
-    private Board board = new SimpleBoard(50, 20);
-
+    private final Board board;
     private final GuiController gc;
     private final Refresh rf;
 
@@ -22,6 +19,7 @@ public class GameController implements InputEventListener {
      */
     public GameController(GuiController c) {
         gc = c;
+        board = new SimpleBoard(25, 10, gc);
         this.rf = gc.refresh;
         board.createNewBrick();
         gc.setEventListener(this);
@@ -121,6 +119,11 @@ public class GameController implements InputEventListener {
         return board.getViewData();
     }
 
+    @Override
+    public ViewData onSnapEvent(MoveEvent event) {
+        board.snapBrick();
+        return board.getViewData();
+    }
 
     /**
      * Calls newGame() in SimpleBoard.<br>

@@ -92,6 +92,10 @@ public class InputHandler {
                 gc.moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
                 keyEvent.consume();
             }
+            if (keyEvent.getCode() == KeyCode.SPACE) {
+                rf.refreshBrick(eventListener.onSnapEvent(new MoveEvent(EventType.SNAP, EventSource.USER)), rectangles, brickPanel, gamePanel);
+                keyEvent.consume();
+            }
         }
         if (keyEvent.getCode() == KeyCode.N) {
             gc.newGame(null);

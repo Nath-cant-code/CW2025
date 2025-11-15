@@ -27,6 +27,8 @@ public class SimpleBoard implements Board {
     private int[][] currentGameMatrix;
     private Point currentOffset;
     private final Score score;
+    private Refresh rf;
+    private final GuiController gc;
 
     /**
      * This constructor makes it so that when a SimpleBoard object is created in GameController,
@@ -41,9 +43,10 @@ public class SimpleBoard implements Board {
      * @param height    the values represent how many Brick sub-blocks (or pixels)
      *                  can stack on top of each other in the playable area up until the Brick generation area (spawn point).
      */
-    public SimpleBoard(int width, int height) {
+    public SimpleBoard(int width, int height, GuiController gc) {
         this.width = width;
         this.height = height;
+        this.gc = gc;
         currentGameMatrix = new int[width][height];
         brickGenerator = new RandomBrickGenerator();
         brickRotator = new BrickRotator();
@@ -131,6 +134,23 @@ public class SimpleBoard implements Board {
             brickRotator.setCurrentShape(nextShape.position());
             return true;
         }
+    }
+
+    @Override
+    public DownData snapBrick () {
+        Point p = new Point(currentOffset);
+        currentOffset.y = MatrixOperations.findSnapPosition(
+                currentGameMatrix,
+                brickRotator.getCurrentShape(),
+                (int) p.getX(),
+                (int) p.getY()
+        );
+        mergeBrickToBackground();
+        rf.refreshGameBackground(currentGameMatrix, gc.displayMatrix);
+        ClearRow clearRow = clearRows();
+        boolean gameOver = createNewBrick();
+        ViewData vd = getViewData();
+        return new DownData(clearRow, vd);
     }
 
     /**

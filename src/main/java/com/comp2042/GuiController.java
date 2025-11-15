@@ -50,8 +50,6 @@ public class GuiController implements Initializable {
 
     protected Rectangle[][] rectangles;
 
-//    private Timeline timeLine;
-
     protected final BooleanProperty isPause = new SimpleBooleanProperty();
 
     protected final BooleanProperty isGameOver = new SimpleBooleanProperty();

@@ -15,5 +15,7 @@ public interface InputEventListener {
 
     ViewData onRotateAntiClock(MoveEvent event);
 
+    ViewData onSnapEvent(MoveEvent event);
+
     void createNewGame();
 }
