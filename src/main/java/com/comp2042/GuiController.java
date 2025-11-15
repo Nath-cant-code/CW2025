@@ -67,6 +67,9 @@ public class GuiController implements Initializable {
 
     protected Refresh refresh = new Refresh(this);
 
+    @FXML
+    protected PausePanel pausePanel;
+
     /**
      * Initialises the GUI when the FXML file is loaded at the start of the game.<br>
      * Loads a custom font from resources directory.<br>
@@ -89,6 +92,7 @@ public class GuiController implements Initializable {
         gamePanel.requestFocus();
 
         gameOverPanel.setVisible(false);
+        pausePanel.setVisible(false);
 
         final Reflection reflection = new Reflection();
         reflection.setFraction(0.8);
@@ -200,6 +204,7 @@ public class GuiController implements Initializable {
     public void newGame(ActionEvent actionEvent) {
         gameTimeLine.stop();
         gameOverPanel.setVisible(false);
+        pausePanel.setVisible(false);
         eventListener.createNewGame();
         gamePanel.requestFocus();
         gameTimeLine.start();
@@ -208,10 +213,23 @@ public class GuiController implements Initializable {
     }
 
     /**
-     * -------------------------------------FUNCTIONALITY NEEDED--------------------------------------
+     * -------------------------------------FUNCTIONALITY ADDED--------------------------------------
      * @param actionEvent no uses
      */
-    public void pauseGame(ActionEvent actionEvent) {
+    public void pauseGame (ActionEvent actionEvent) {
+
+        if (!isPause.get()) {
+            gameTimeLine.stop();
+            inputHandler.toggleInputReceiver();
+            pausePanel.setVisible(true);
+            pausePanel.toFront();
+        }
+        else {
+            gameTimeLine.start();
+            inputHandler.toggleInputReceiver();
+            pausePanel.setVisible(false);
+        }
+
         gamePanel.requestFocus();
     }
 }

@@ -5,6 +5,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
+import java.util.concurrent.ThreadPoolExecutor;
+
 /**
  * This class was created to separate the user input handling from the initialise() method in GuiController.
  */
@@ -46,6 +48,10 @@ public class InputHandler {
      */
     public void setKeyListener() {
         gamePanel.setOnKeyPressed(this::handleKeyEvent);
+    }
+
+    public void toggleInputReceiver () {
+        gc.isPause.setValue(!gc.isPause.getValue());
     }
 
     /**
@@ -96,6 +102,9 @@ public class InputHandler {
                 rf.refreshBrick(eventListener.onSnapEvent(new MoveEvent(EventType.SNAP, EventSource.USER)), rectangles, brickPanel, gamePanel);
                 keyEvent.consume();
             }
+        }
+        if (keyEvent.getCode() == KeyCode.ESCAPE) {
+            gc.pauseGame(null);
         }
         if (keyEvent.getCode() == KeyCode.N) {
             gc.newGame(null);

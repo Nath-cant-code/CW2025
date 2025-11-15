@@ -183,7 +183,17 @@ public class SimpleBoard implements Board {
      */
     @Override
     public ViewData getViewData() {
-        return new ViewData(brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY(), brickGenerator.getNextBrick().getShapeMatrix().getFirst());
+//        int snapDropPosition = MatrixOperations.findSnapPosition(
+//                currentGameMatrix,
+//                brickRotator.getCurrentShape(),
+//                (int) currentOffset.getX(),
+//                (int) currentOffset.getY()
+//        );
+        return new ViewData (
+                brickRotator.getCurrentShape(),
+                (int) currentOffset.getX(),
+                (int) currentOffset.getY(),
+                brickGenerator.getNextBrick().getShapeMatrix().getFirst());
     }
 
     /**

@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import java.net.URL?>
+<?import com.comp2042.PausePanel?>
 <Pane fx:controller="com.comp2042.GuiController"
       xmlns:fx="http://javafx.com/fxml">
     <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
@@ -20,6 +21,10 @@
             <GameOverPanel fx:id="gameOverPanel"/>
         </VBox>
     </Group>
+
+    <PausePanel fx:id="pausePanel" visible="false"
+                layoutX="50" layoutY="120"  />
+
     <stylesheets>
         <URL value="@window_style.css"/>
     </stylesheets>
