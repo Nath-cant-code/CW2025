@@ -24,6 +24,7 @@ public class GameController implements InputEventListener {
         gc.setEventListener(this);
         gc.initGameView(board.getBoardMatrix(), board.getViewData());
         gc.bindScore(board.getScore().scoreProperty());
+        gc.setSimpleBoard((SimpleBoard) this.board);
     }
 
     /**

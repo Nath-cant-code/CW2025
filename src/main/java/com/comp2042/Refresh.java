@@ -1,5 +1,6 @@
 package com.comp2042;
 
+import com.comp2042.bricks.AbstractBrick;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -51,6 +52,48 @@ public class Refresh {
         for (int i = 2; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 setRectangleData(board[i][j], displayMatrix[i][j]);
+            }
+        }
+    }
+
+    public void drawHoldBrick(AbstractBrick holdBrick) {
+        GridPane holdPanel = gc.holdPanel;
+        Rectangle[][] holdMatrix = gc.holdMatrix;
+
+        for (int i = 0; i < holdMatrix.length; i++) {
+            for (int j = 0; j < holdMatrix[i].length; j++) {
+                setRectangleData(0, holdMatrix[i][j]);
+            }
+        }
+
+        if (holdBrick == null) {
+            return;
+        }
+
+        int[][] shape = holdBrick.getShapeMatrix().getFirst();
+        int shapeWidth = shape.length;
+        int shapeHeight = shape[0].length;
+
+        int panelWidth = holdMatrix.length;
+        int panelHeight = holdMatrix[0].length;
+
+        int offsetX = (panelWidth - shapeWidth) / 2;
+        int offsetY = (panelHeight - shapeHeight) / 2;
+
+        for (int x = 0; x < shapeWidth; x++) {
+            for (int y = 0; y < shapeHeight; y++) {
+
+                int color = shape[x][y];
+                if (color != 0) {
+                    int drawX = x + offsetX;
+                    int drawY = y + offsetY;
+
+                    if (drawX >= 0 && drawX < panelWidth &&
+                            drawY >= 0 && drawY < panelHeight) {
+
+                        setRectangleData(color, holdMatrix[drawX][drawY]);
+                    }
+                }
             }
         }
     }

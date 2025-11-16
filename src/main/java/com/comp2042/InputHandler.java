@@ -99,6 +99,10 @@ public class InputHandler {
                 rf.refreshBrick(eventListener.onSnapEvent(new MoveEvent(EventType.SNAP, EventSource.USER)), rectangles, brickPanel, gamePanel);
                 keyEvent.consume();
             }
+            if (keyEvent.getCode() == KeyCode.C) {
+                gc.onHoldEvent();
+                keyEvent.consume();
+            }
         }
         if (keyEvent.getCode() == KeyCode.ESCAPE) {
             gc.pauseGame(null);

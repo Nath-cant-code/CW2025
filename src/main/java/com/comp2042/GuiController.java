@@ -1,5 +1,6 @@
 package com.comp2042;
 
+import com.comp2042.bricks.AbstractBrick;
 import javafx.animation.KeyFrame;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -11,11 +12,13 @@ import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
 import javafx.animation.Timeline;
 
+import javax.swing.text.View;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -61,6 +64,8 @@ public class GuiController implements Initializable {
     /**
      * New class objects created.
      */
+    protected SimpleBoard simpleBoard;
+
     protected InputHandler inputHandler;
 
     protected BoardRenderer boardRenderer = new BoardRenderer();
@@ -78,6 +83,11 @@ public class GuiController implements Initializable {
     private Label scoreLabel;
 
     private boolean countdownRunning = false;
+
+    @FXML
+    public GridPane holdPanel;
+
+    public Rectangle[][] holdMatrix;
 
     /**
      * Initialises the GUI when the FXML file is loaded at the start of the game.<br>
@@ -102,6 +112,8 @@ public class GuiController implements Initializable {
 
         gameOverPanel.setVisible(false);
         pausePanel.setVisible(false);
+
+        initHoldMatrix();
 
         final Reflection reflection = new Reflection();
         reflection.setFraction(0.8);
@@ -175,6 +187,11 @@ public class GuiController implements Initializable {
             refresh.refreshBrick(downData.viewData(), rectangles, brickPanel, gamePanel);
         }
         gamePanel.requestFocus();
+    }
+
+    public void setSimpleBoard (SimpleBoard simpleBoard) {
+        this.simpleBoard = simpleBoard;
+        refresh.drawHoldBrick((AbstractBrick) simpleBoard.getHeldBrick());
     }
 
     /**
@@ -269,5 +286,29 @@ public class GuiController implements Initializable {
         );
         countdown.setCycleCount(4);
         countdown.play();
+    }
+
+    private void initHoldMatrix () {
+        int size = 4;
+        holdMatrix = new Rectangle[size][size];
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                Rectangle r = new Rectangle(BRICK_SIZE,BRICK_SIZE);
+                r.setFill(Color.TRANSPARENT);
+                holdMatrix[i][j] = r;
+                holdPanel.add(r, i, j);
+            }
+        }
+    }
+
+    public void onHoldEvent () {
+        if (simpleBoard == null) return;
+
+        simpleBoard.holdBrick();
+        refresh.drawHoldBrick((AbstractBrick) simpleBoard.getHeldBrick());
+
+        ViewData viewData = simpleBoard.getViewData();
+        refresh.refreshBrick(viewData, rectangles, brickPanel, gamePanel);
     }
 }

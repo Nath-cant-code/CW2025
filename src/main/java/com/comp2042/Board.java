@@ -24,6 +24,8 @@ public interface Board {
 
     DownData snapBrick (Refresh rf, Rectangle[][] displayMatrix);
 
+    ViewData holdBrick ();
+
     boolean createNewBrick();
 
     int[][] getBoardMatrix();

@@ -1,5 +1,6 @@
 package com.comp2042;
 
+import com.comp2042.bricks.AbstractBrick;
 import com.comp2042.bricks.Brick;
 import com.comp2042.bricks.brick_generation_system.*;
 
@@ -28,7 +29,8 @@ public class SimpleBoard implements Board {
     private int[][] currentGameMatrix;
     private Point currentOffset;
     private final Score score;
-//    private Refresh rf;
+    private Brick heldBrick = null;
+    private boolean holdUsedThisTurn = false;
 
     /**
      * This constructor makes it so that when a SimpleBoard object is created in GameController,
@@ -158,7 +160,9 @@ public class SimpleBoard implements Board {
         if (clearRow.linesRemoved() > 0) { getScore().add(clearRow.scoreBonus()); }
 
         boolean gameOver = createNewBrick();
+//        holdUsedThisTurn = false;
         ViewData vd = getViewData();
+
         return new DownData(clearRow, vd);
     }
 
@@ -175,7 +179,7 @@ public class SimpleBoard implements Board {
     public boolean createNewBrick() {
         Brick currentBrick = brickGenerator.getBrick();
         brickRotator.setBrick(currentBrick);
-        currentOffset = new Point(4, 10);
+        currentOffset = new Point(4, 1);
         return MatrixOperations.intersect(currentGameMatrix, brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
     }
 
@@ -211,6 +215,7 @@ public class SimpleBoard implements Board {
      */
     @Override
     public void mergeBrickToBackground() {
+        holdUsedThisTurn = false;
         currentGameMatrix = MatrixOperations.merge(currentGameMatrix, brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
     }
 
@@ -245,5 +250,30 @@ public class SimpleBoard implements Board {
         currentGameMatrix = new int[width][height];
         score.reset();
         createNewBrick();
+    }
+
+    @Override
+    public ViewData holdBrick () {
+        if (holdUsedThisTurn) { return getViewData(); }
+
+        Brick curr = brickRotator.getBrick();
+
+        if (heldBrick == null) {
+            heldBrick = curr;
+            createNewBrick();
+        }
+        else {
+            Brick tmp = heldBrick;
+            heldBrick = curr;
+            brickRotator.setBrick(tmp);
+            currentOffset = new Point(4, 1);
+        }
+
+        holdUsedThisTurn = true;
+        return getViewData();
+    }
+
+    public Brick getHeldBrick () {
+        return heldBrick;
     }
 }

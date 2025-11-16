@@ -10,6 +10,17 @@
 <HBox fx:controller="com.comp2042.GuiController"
       xmlns:fx="http://javafx.com/fxml"
       spacing="20">
+
+    <VBox spacing="5" alignment="CENTER">
+        <Label text="HOLD" styleClass="scoreClass"/>
+        <GridPane fx:id="holdPanel" hgap="1" vgap="1"/>
+    </VBox>
+
+    <VBox spacing="10">
+        <Label text="Score" styleClass="scoreClass"/>
+        <Label fx:id="scoreLabel" styleClass="scoreClass"/>
+    </VBox>
+
     <Pane>
         <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
         <BorderPane styleClass="gameBoard" fx:id="gameBoard">
@@ -29,11 +40,6 @@
                     layoutX="50" layoutY="120"  />
 
     </Pane>
-
-    <VBox spacing="10">
-        <Label text="Score" styleClass="scoreClass"/>
-        <Label fx:id="scoreLabel" styleClass="scoreClass"/>
-    </VBox>
 
     <stylesheets>
         <URL value="@window_style.css"/>
