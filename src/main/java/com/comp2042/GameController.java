@@ -19,7 +19,6 @@ public class GameController implements InputEventListener {
      */
     public GameController(GuiController c) {
         gc = c;
-//        board = new SimpleBoard(25, 10, gc);
         this.rf = gc.refresh;
         board.createNewBrick();
         gc.setEventListener(this);
@@ -53,6 +52,7 @@ public class GameController implements InputEventListener {
         if (!canMove) {
             board.mergeBrickToBackground();
             clearRow = board.clearRows();
+
             if (clearRow.linesRemoved() > 0) {
                 board.getScore().add(clearRow.scoreBonus());
             }
@@ -60,7 +60,6 @@ public class GameController implements InputEventListener {
                 gc.gameOver();
             }
 
-//            viewGuiController.refreshGameBackground(board.getBoardMatrix());
             rf.refreshGameBackground(board.getBoardMatrix(), gc.displayMatrix);
 
         } else {
@@ -133,6 +132,5 @@ public class GameController implements InputEventListener {
     public void createNewGame() {
         board.newGame();
         rf.refreshGameBackground(board.getBoardMatrix(), gc.displayMatrix);
-//        gc.refreshGameBackground(board.getBoardMatrix());
     }
 }

@@ -138,17 +138,25 @@ public class SimpleBoard implements Board {
     @Override
     public DownData snapBrick (Refresh rf, Rectangle[][] displayMatrix) {
         Point p = new Point(currentOffset);
-        currentOffset.y = MatrixOperations.findSnapPosition(
+
+        int targetY = MatrixOperations.findSnapPosition(
                 currentGameMatrix,
                 brickRotator.getCurrentShape(),
                 (int) p.getX(),
                 (int) p.getY()
         );
+
+        getScore().add((targetY - currentOffset.y) * 5);
+        currentOffset.y = targetY;
         mergeBrickToBackground();
+
         rf.refreshGameBackground(currentGameMatrix, displayMatrix);
         ClearRow clearRow = clearRows();
 //        THIS COSTED ME 1 DAY OF PROGRESS WALAO
         rf.refreshGameBackground(currentGameMatrix, displayMatrix);
+
+        if (clearRow.linesRemoved() > 0) { getScore().add(clearRow.scoreBonus()); }
+
         boolean gameOver = createNewBrick();
         ViewData vd = getViewData();
         return new DownData(clearRow, vd);

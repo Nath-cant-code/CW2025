@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
@@ -72,6 +73,9 @@ public class GuiController implements Initializable {
 
     @FXML
     protected PausePanel pausePanel;
+
+    @FXML
+    private Label scoreLabel;
 
     private boolean countdownRunning = false;
 
@@ -186,6 +190,7 @@ public class GuiController implements Initializable {
      * @param integerProperty   Current SimpleBoard object's overall score, i.e. current game's overall score.
      */
     public void bindScore(IntegerProperty integerProperty) {
+        scoreLabel.textProperty().bind(integerProperty.asString());
     }
 
     /**
