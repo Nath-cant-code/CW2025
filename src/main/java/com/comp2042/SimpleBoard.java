@@ -147,6 +147,8 @@ public class SimpleBoard implements Board {
         mergeBrickToBackground();
         rf.refreshGameBackground(currentGameMatrix, displayMatrix);
         ClearRow clearRow = clearRows();
+//        THIS COSTED ME 1 DAY OF PROGRESS WALAO
+        rf.refreshGameBackground(currentGameMatrix, displayMatrix);
         boolean gameOver = createNewBrick();
         ViewData vd = getViewData();
         return new DownData(clearRow, vd);
