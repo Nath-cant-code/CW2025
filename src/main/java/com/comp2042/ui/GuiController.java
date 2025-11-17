@@ -1,6 +1,18 @@
-package com.comp2042;
+package com.comp2042.ui;
 
+import com.comp2042.board.composite_bricks.DownData;
+import com.comp2042.board.SimpleBoard;
+import com.comp2042.board.composite_bricks.ViewData;
 import com.comp2042.bricks.AbstractBrick;
+import com.comp2042.input.InputEventListener;
+import com.comp2042.input.InputHandler;
+import com.comp2042.renderer.BoardRenderer;
+import com.comp2042.renderer.BrickRenderer;
+import com.comp2042.renderer.Refresh;
+import com.comp2042.system_events.MoveEvent;
+import com.comp2042.ui.panels.GameOverPanel;
+import com.comp2042.ui.panels.NotificationPanel;
+import com.comp2042.ui.panels.PausePanel;
 import javafx.animation.KeyFrame;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -18,7 +30,6 @@ import javafx.scene.text.Font;
 
 import javafx.animation.Timeline;
 
-import javax.swing.text.View;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -37,7 +48,7 @@ import java.util.ResourceBundle;
  */
 public class GuiController implements Initializable {
 
-    protected static final int BRICK_SIZE = 20;
+    public static final int BRICK_SIZE = 20;
 
     @FXML
     private GridPane gamePanel;
@@ -51,20 +62,20 @@ public class GuiController implements Initializable {
     @FXML
     private GameOverPanel gameOverPanel;
 
-    protected Rectangle[][] displayMatrix;
+    public Rectangle[][] displayMatrix;
 
     private InputEventListener eventListener;
 
     protected Rectangle[][] rectangles;
 
-    protected final BooleanProperty isPause = new SimpleBooleanProperty();
+    public static final BooleanProperty isPause = new SimpleBooleanProperty();
 
-    protected final BooleanProperty isGameOver = new SimpleBooleanProperty();
+    public static final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
     /**
      * New class objects created.
      */
-    protected SimpleBoard simpleBoard;
+    public SimpleBoard simpleBoard;
 
     protected InputHandler inputHandler;
 
@@ -74,7 +85,7 @@ public class GuiController implements Initializable {
 
     protected GameTimeLine gameTimeLine = new GameTimeLine();
 
-    protected Refresh refresh = new Refresh(this);
+    public Refresh refresh = new Refresh(this);
 
     @FXML
     protected PausePanel pausePanel;
@@ -205,7 +216,7 @@ public class GuiController implements Initializable {
      * gamePanel.requestFocus() to ensure the keystrokes are still being taken in by system.
      * @param event MoveEvent object to check if source of action is from system (THREAD) or player (USER).
      */
-    protected void moveDown(MoveEvent event) {
+    public void moveDown(MoveEvent event) {
         if (isPause.getValue() == Boolean.FALSE) {
             DownData downData = eventListener.onDownEvent(event);
             if (downData.clearRow() != null && downData.clearRow().linesRemoved() > 0) {

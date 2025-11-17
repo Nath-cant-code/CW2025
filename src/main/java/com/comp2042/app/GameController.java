@@ -1,4 +1,13 @@
-package com.comp2042;
+package com.comp2042.app;
+
+import com.comp2042.board.*;
+import com.comp2042.board.composite_bricks.DownData;
+import com.comp2042.board.composite_bricks.ViewData;
+import com.comp2042.renderer.Refresh;
+import com.comp2042.system_events.EventSource;
+import com.comp2042.input.InputEventListener;
+import com.comp2042.system_events.MoveEvent;
+import com.comp2042.ui.GuiController;
 
 /**
  * This class acts as one of the bridges (after GuiController) between player actions and the game logic

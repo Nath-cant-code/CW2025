@@ -1,4 +1,4 @@
-package com.comp2042;
+package com.comp2042.system_events;
 
 /**
  * This class contains info on EventType (keystroke) and EventSource for checking and validation.

@@ -1,6 +1,10 @@
-package com.comp2042;
+package com.comp2042.board;
 
-import java.awt.*;
+import com.comp2042.board.composite_bricks.DownData;
+import com.comp2042.board.composite_bricks.ViewData;
+import com.comp2042.brick_actions.RotationDirection;
+import com.comp2042.renderer.Refresh;
+import com.comp2042.ui.Score;
 import javafx.scene.shape.Rectangle;
 
 /**

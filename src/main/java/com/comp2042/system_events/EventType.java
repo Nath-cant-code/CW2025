@@ -1,4 +1,4 @@
-package com.comp2042;
+package com.comp2042.system_events;
 
 /**
  * Defines the direction determined by a keystroke or from the system's automatic processing.

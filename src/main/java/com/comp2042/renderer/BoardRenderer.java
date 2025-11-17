@@ -1,5 +1,6 @@
-package com.comp2042;
+package com.comp2042.renderer;
 
+import com.comp2042.ui.GuiController;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;

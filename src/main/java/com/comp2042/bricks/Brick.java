@@ -1,5 +1,8 @@
 package com.comp2042.bricks;
 
+import com.comp2042.board.SimpleBoard;
+import com.comp2042.brick_actions.BrickRotator;
+
 import java.util.List;
 
 /**
@@ -13,8 +16,8 @@ public interface Brick {
      * getShapeMatrix method is abstract to ensure it is implemented by all Brick-shape-classes.
      * This ensures that when an object of a Brick-shape-class is created, the methods in classes BrickRotater and SimpleBoard
      * can obtain all orientations of the shape of the Brick-shape-class (object) in the form of a matrix.
-     * @see com.comp2042.BrickRotator
-     * @see com.comp2042.SimpleBoard
+     * @see BrickRotator
+     * @see SimpleBoard
      */
     List<int[][]> getShapeMatrix();
 }

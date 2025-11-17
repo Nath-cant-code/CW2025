@@ -1,5 +1,7 @@
-package com.comp2042;
+package com.comp2042.renderer;
 
+import com.comp2042.ui.GuiController;
+import com.comp2042.board.composite_bricks.ViewData;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 

@@ -1,18 +1,20 @@
-package com.comp2042;
+package com.comp2042.board;
 
-import com.comp2042.bricks.AbstractBrick;
+import com.comp2042.board.composite_bricks.DownData;
+import com.comp2042.board.composite_bricks.NextShapeInfo;
+import com.comp2042.board.composite_bricks.ViewData;
+import com.comp2042.brick_actions.BrickRotator;
+import com.comp2042.brick_actions.RotationDirection;
 import com.comp2042.bricks.Brick;
 import com.comp2042.bricks.brick_generation_system.*;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
+import com.comp2042.renderer.Refresh;
+import com.comp2042.ui.Score;
 import javafx.scene.shape.Rectangle;
-
-import javax.swing.text.View;
 
 /**
  * This class implements Board and creates useful methods. <br>

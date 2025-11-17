@@ -1,4 +1,4 @@
-package com.comp2042;
+package com.comp2042.system_events;
 
 /**
  * Defines if the source of an action is from the player (USER),

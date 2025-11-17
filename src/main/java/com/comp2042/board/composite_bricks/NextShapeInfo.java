@@ -1,4 +1,6 @@
-package com.comp2042;
+package com.comp2042.board.composite_bricks;
+
+import com.comp2042.board.MatrixOperations;
 
 /**
  * This class holds fields with information on shape (the matrix of the next orientation of the

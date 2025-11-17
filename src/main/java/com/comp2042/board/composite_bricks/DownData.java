@@ -1,4 +1,6 @@
-package com.comp2042;
+package com.comp2042.board.composite_bricks;
+
+import com.comp2042.board.ClearRow;
 
 /**
  * A class that just contains a ClearRow object together with a ViewData object mainly for when a Brick object is moving down

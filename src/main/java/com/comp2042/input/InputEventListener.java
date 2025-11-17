@@ -1,4 +1,8 @@
-package com.comp2042;
+package com.comp2042.input;
+
+import com.comp2042.board.composite_bricks.DownData;
+import com.comp2042.board.composite_bricks.ViewData;
+import com.comp2042.system_events.MoveEvent;
 
 /**
  * Interface implemented by GameController.

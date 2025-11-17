@@ -1,4 +1,4 @@
-package com.comp2042;
+package com.comp2042.board;
 
 /**
  * This class is important for when the player completely fills a row with blocks from Brick-shape-objects

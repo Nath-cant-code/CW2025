@@ -1,5 +1,6 @@
 package com.comp2042.bricks.brick_generation_system;
 
+import com.comp2042.board.SimpleBoard;
 import com.comp2042.bricks.Brick;
 
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 /**
  * Interface to be implemented by RandomBrickGenerator and SimpleBoard.
  * @see RandomBrickGenerator
- * @see com.comp2042.SimpleBoard
+ * @see SimpleBoard
  */
 public interface BrickGenerator {
 
@@ -20,7 +21,7 @@ public interface BrickGenerator {
     /**
      * Implemented by RandomBrickGenerator, then used by SimpleBoard.
      * @see RandomBrickGenerator
-     * @see com.comp2042.SimpleBoard
+     * @see SimpleBoard
      */
     Brick getNextBrick();
 

@@ -1,11 +1,14 @@
-package com.comp2042;
+package com.comp2042.input;
 
+import com.comp2042.ui.GuiController;
+import com.comp2042.renderer.Refresh;
+import com.comp2042.system_events.EventSource;
+import com.comp2042.system_events.EventType;
+import com.comp2042.system_events.MoveEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
-
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * This class was created to separate the user input handling from the initialise() method in GuiController.

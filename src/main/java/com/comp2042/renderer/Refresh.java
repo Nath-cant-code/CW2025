@@ -1,5 +1,7 @@
-package com.comp2042;
+package com.comp2042.renderer;
 
+import com.comp2042.ui.GuiController;
+import com.comp2042.board.composite_bricks.ViewData;
 import com.comp2042.bricks.AbstractBrick;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -32,7 +34,7 @@ public class Refresh {
          * @param gamePanel     gamePanel.
          */
         public void refreshBrick (ViewData brick, Rectangle[][] rectangles, GridPane brickPanel, GridPane gamePanel) {
-            if (gc.isPause.getValue() == Boolean.FALSE) {
+            if (GuiController.isPause.getValue() == Boolean.FALSE) {
                 brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.xPosition() * brickPanel.getVgap()
                         + brick.xPosition() * GuiController.BRICK_SIZE);
                 brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.yPosition() * brickPanel.getHgap()

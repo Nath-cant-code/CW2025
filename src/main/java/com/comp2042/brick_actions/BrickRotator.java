@@ -1,8 +1,7 @@
-package com.comp2042;
+package com.comp2042.brick_actions;
 
+import com.comp2042.board.composite_bricks.NextShapeInfo;
 import com.comp2042.bricks.Brick;
-
-import java.util.BitSet;
 
 /**
  * This class manages the selection of the possible orientations of a Brick-shape-object.
