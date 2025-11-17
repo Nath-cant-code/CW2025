@@ -41,6 +41,11 @@
 
     </Pane>
 
+    <VBox spacing="5" alignment="CENTER">
+        <Label text="NEXT" styleClass="scoreClass"/>
+        <GridPane fx:id="nextPanel" hgap="1" vgap="1"/>
+    </VBox>
+
     <stylesheets>
         <URL value="@window_style.css"/>
     </stylesheets>

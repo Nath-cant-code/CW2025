@@ -5,7 +5,14 @@ import com.comp2042.bricks.Brick;
 import com.comp2042.bricks.brick_generation_system.*;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 import javafx.scene.shape.Rectangle;
+
+import javax.swing.text.View;
 
 /**
  * This class implements Board and creates useful methods. <br>
@@ -52,6 +59,28 @@ public class SimpleBoard implements Board {
         brickGenerator = new RandomBrickGenerator();
         brickRotator = new BrickRotator();
         score = new Score();
+    }
+
+    public List<ViewData> getNextBricksPreview() {
+        List<ViewData> previews = new ArrayList<>();
+
+        // Get the actual queue from the brick generator
+        List<Brick> actualQueue = brickGenerator.getUpcomingBricks();
+
+        for (int i = 0; i < Math.min(3, actualQueue.size()); i++) {
+            Brick brick = actualQueue.get(i);
+            int[][] shape = brick.getShapeMatrix().getFirst();
+
+            ViewData vd = new ViewData(
+                    shape,
+                    0,
+                    i * 4,  // Vertical offset for each preview
+                    null
+            );
+            previews.add(vd);
+        }
+
+        return previews;
     }
 
     /**
@@ -152,7 +181,7 @@ public class SimpleBoard implements Board {
         currentOffset.y = targetY;
         mergeBrickToBackground();
 
-        rf.refreshGameBackground(currentGameMatrix, displayMatrix);
+//        rf.refreshGameBackground(currentGameMatrix, displayMatrix);
         ClearRow clearRow = clearRows();
 //        THIS COSTED ME 1 DAY OF PROGRESS WALAO
         rf.refreshGameBackground(currentGameMatrix, displayMatrix);

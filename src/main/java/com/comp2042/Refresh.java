@@ -6,42 +6,44 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
+import java.util.List;
+
 /**
  * Separates rendering of background, Brick objects, and Brick colouring into a another file from GuiController.
  */
 public class Refresh {
-    private final GuiController gc;
+        private final GuiController gc;
 
-    /**
-     * @param gc    GuiController object to use its fields.
-     */
-    public Refresh (GuiController gc) {
-        this.gc = gc;
-    }
+        /**
+         * @param gc    GuiController object to use its fields.
+         */
+        public Refresh (GuiController gc) {
+            this.gc = gc;
+        }
 
-    /**
-     * Only has functionality if game is not paused.<br>
-     * Updates the position of the Brick object everytime is naturally falls.<br>
-     * Hence, this method has to recolor the orientation of the Brick-shape-object inside the Rectangle box object it resides in.<br>
-     * Is also called when the player does any action on the Brick object.<br>
-     * @param brick         Info on current and next in line Brick-shape-object.
-     * @param rectangles    Box area matrix.
-     * @param brickPanel    brickPanel.
-     * @param gamePanel     gamePanel.
-     */
-    public void refreshBrick (ViewData brick, Rectangle[][] rectangles, GridPane brickPanel, GridPane gamePanel) {
-        if (gc.isPause.getValue() == Boolean.FALSE) {
-            brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.xPosition() * brickPanel.getVgap()
-                    + brick.xPosition() * GuiController.BRICK_SIZE);
-            brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.yPosition() * brickPanel.getHgap()
-                    + brick.yPosition() * GuiController.BRICK_SIZE);
-            for (int i = 0; i < brick.brickData().length; i++) {
-                for (int j = 0; j < brick.brickData()[i].length; j++) {
-                    setRectangleData(brick.brickData()[i][j], rectangles[i][j]);
+        /**
+         * Only has functionality if game is not paused.<br>
+         * Updates the position of the Brick object everytime is naturally falls.<br>
+         * Hence, this method has to recolor the orientation of the Brick-shape-object inside the Rectangle box object it resides in.<br>
+         * Is also called when the player does any action on the Brick object.<br>
+         * @param brick         Info on current and next in line Brick-shape-object.
+         * @param rectangles    Box area matrix.
+         * @param brickPanel    brickPanel.
+         * @param gamePanel     gamePanel.
+         */
+        public void refreshBrick (ViewData brick, Rectangle[][] rectangles, GridPane brickPanel, GridPane gamePanel) {
+            if (gc.isPause.getValue() == Boolean.FALSE) {
+                brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.xPosition() * brickPanel.getVgap()
+                        + brick.xPosition() * GuiController.BRICK_SIZE);
+                brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.yPosition() * brickPanel.getHgap()
+                        + brick.yPosition() * GuiController.BRICK_SIZE);
+                for (int i = 0; i < brick.brickData().length; i++) {
+                    for (int j = 0; j < brick.brickData()[i].length; j++) {
+                        setRectangleData(brick.brickData()[i][j], rectangles[i][j]);
+                    }
                 }
             }
         }
-    }
 
     /**
      * Recolours the displayMatrix to match currentGameMatrix.
@@ -95,6 +97,39 @@ public class Refresh {
                     }
                 }
             }
+        }
+    }
+
+    public void refreshNextBricks() {
+        if (gc.simpleBoard == null) return;
+
+        // Clear preview area
+        for (int i = 0; i < gc.nextMatrix.length; i++) {
+            for (int j = 0; j < gc.nextMatrix[0].length; j++) {
+                gc.nextMatrix[i][j].setFill(Color.TRANSPARENT);
+            }
+        }
+
+        List<ViewData> previews = gc.simpleBoard.getNextBricksPreview();
+        int index = 0;
+
+        for (ViewData vd : previews) {
+            int[][] shape = vd.brickData();
+
+            int offsetY = index * 4; // brick #1 at rows 0-3, #2 at 4-7, #3 at 8-11
+            int offsetX = 0;
+
+            for (int x = 0; x < shape.length; x++) {
+                for (int y = 0; y < shape[0].length; y++) {
+
+                    if (shape[x][y] != 0) {
+                        Rectangle r = gc.nextMatrix[offsetY + y][offsetX + x];
+                        r.setFill(getFillColor(shape[x][y]));
+                    }
+                }
+            }
+
+            index++;
         }
     }
 

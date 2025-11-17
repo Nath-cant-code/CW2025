@@ -89,6 +89,11 @@ public class GuiController implements Initializable {
 
     public Rectangle[][] holdMatrix;
 
+    @FXML
+    public GridPane nextPanel;
+
+    public Rectangle[][] nextMatrix;
+
     /**
      * Initialises the GUI when the FXML file is loaded at the start of the game.<br>
      * Loads a custom font from resources directory.<br>
@@ -146,6 +151,8 @@ public class GuiController implements Initializable {
 //        1.
         displayMatrix = boardRenderer.createPlayableAreaMatrix(gamePanel, boardMatrix);
 
+        initNextPanel();
+
 //        2.
         rectangles = brickRenderer.createBrickAreaMatrix(brickPanel, brick);
 
@@ -167,6 +174,28 @@ public class GuiController implements Initializable {
         gameTimeLine.start();
     }
 
+    private void initNextPanel() {
+        BrickRenderer renderer = new BrickRenderer();
+
+        // Create an empty 12x4 matrix (your preview size)
+        int rows = 12;
+        int cols = 4;
+
+        int[][] emptyMatrix = new int[rows][cols]; // all zeros
+
+        // ViewData requires 4 parameters, so we supply all of them
+        ViewData emptyView = new ViewData(
+                emptyMatrix, // brickData
+                0,           // xPosition (unused in preview)
+                0,           // yPosition (unused in preview)
+                emptyMatrix  // nextBrickData (not important for preview)
+        );
+
+        // Only one nextPanel, only one nextMatrix
+        nextMatrix = renderer.createBrickAreaMatrix(nextPanel, emptyView);
+    }
+
+
     /**
      * Only has functionality if game is not paused.<br>
      * Checks if the action of moving the Brick-shape-object down, regardless if caused by system or player,
@@ -185,6 +214,7 @@ public class GuiController implements Initializable {
                 notificationPanel.showScore(groupNotification.getChildren());
             }
             refresh.refreshBrick(downData.viewData(), rectangles, brickPanel, gamePanel);
+            refresh.refreshNextBricks();
         }
         gamePanel.requestFocus();
     }
@@ -192,6 +222,7 @@ public class GuiController implements Initializable {
     public void setSimpleBoard (SimpleBoard simpleBoard) {
         this.simpleBoard = simpleBoard;
         refresh.drawHoldBrick((AbstractBrick) simpleBoard.getHeldBrick());
+        refresh.refreshNextBricks();
     }
 
     /**
