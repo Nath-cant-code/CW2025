@@ -3,7 +3,9 @@ package com.comp2042.bricks.brick_generation_system;
 import com.comp2042.bricks.Brick;
 import com.comp2042.bricks.industrial_factory.*;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -30,6 +32,8 @@ public class RandomBrickGenerator implements BrickGenerator {
     public RandomBrickGenerator() {
         nextBricks.add(randomBrick());
         nextBricks.add(randomBrick());
+        nextBricks.add(randomBrick());
+        nextBricks.add(randomBrick());
     }
 
     /**
@@ -51,7 +55,7 @@ public class RandomBrickGenerator implements BrickGenerator {
      */
     @Override
     public Brick getBrick() {
-        if (nextBricks.size() <= 1) {
+        if (nextBricks.size() <= 3) {
             nextBricks.add(randomBrick());
         }
         return nextBricks.poll();
@@ -64,4 +68,7 @@ public class RandomBrickGenerator implements BrickGenerator {
     public Brick getNextBrick() {
         return nextBricks.peek();
     }
+
+    @Override
+    public List<Brick> getUpcomingBricks() { return new ArrayList<>(nextBricks); }
 }

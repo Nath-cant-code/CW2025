@@ -6,21 +6,47 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import java.net.URL?>
-<Pane fx:controller="com.comp2042.GuiController"
-      xmlns:fx="http://javafx.com/fxml">
-    <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
-    <BorderPane styleClass="gameBoard" fx:id="gameBoard">
-        <center>
-            <GridPane fx:id="gamePanel" hgap="1" vgap="1" layoutY="30" layoutX="40"/>
-        </center>
-    </BorderPane>
+<?import com.comp2042.PausePanel?>
+<HBox fx:controller="com.comp2042.GuiController"
+      xmlns:fx="http://javafx.com/fxml"
+      spacing="20">
 
-    <Group fx:id="groupNotification" layoutX="14" layoutY="203">
-        <VBox alignment="CENTER">
-            <GameOverPanel fx:id="gameOverPanel"/>
-        </VBox>
-    </Group>
+    <VBox spacing="5" alignment="CENTER">
+        <Label text="HOLD" styleClass="scoreClass"/>
+        <GridPane fx:id="holdPanel" hgap="1" vgap="1"/>
+    </VBox>
+
+    <VBox spacing="10">
+        <Label text="Score" styleClass="scoreClass"/>
+        <Label fx:id="scoreLabel" styleClass="scoreClass"/>
+    </VBox>
+
+    <Pane>
+        <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
+        <BorderPane styleClass="gameBoard" fx:id="gameBoard">
+            <center>
+                <GridPane fx:id="gamePanel" hgap="1" vgap="1" layoutY="30" layoutX="40"/>
+            </center>
+        </BorderPane>
+
+        <Group fx:id="groupNotification" layoutX="14" layoutY="203">
+            <VBox alignment="CENTER">
+                <GameOverPanel fx:id="gameOverPanel"/>
+            </VBox>
+        </Group>
+
+        <PausePanel fx:id="pausePanel" visible="false"
+                    styleClass="pauseOverlay"
+                    layoutX="50" layoutY="120"  />
+
+    </Pane>
+
+    <VBox spacing="5" alignment="CENTER">
+        <Label text="NEXT" styleClass="scoreClass"/>
+        <GridPane fx:id="nextPanel" hgap="1" vgap="1"/>
+    </VBox>
+
     <stylesheets>
         <URL value="@window_style.css"/>
     </stylesheets>
-</Pane>
+</HBox>

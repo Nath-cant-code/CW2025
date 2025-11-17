@@ -1,9 +1,18 @@
 package com.comp2042;
 
+import com.comp2042.bricks.AbstractBrick;
 import com.comp2042.bricks.Brick;
 import com.comp2042.bricks.brick_generation_system.*;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+import javafx.scene.shape.Rectangle;
+
+import javax.swing.text.View;
 
 /**
  * This class implements Board and creates useful methods. <br>
@@ -27,6 +36,8 @@ public class SimpleBoard implements Board {
     private int[][] currentGameMatrix;
     private Point currentOffset;
     private final Score score;
+    private Brick heldBrick = null;
+    private boolean holdUsedThisTurn = false;
 
     /**
      * This constructor makes it so that when a SimpleBoard object is created in GameController,
@@ -48,6 +59,28 @@ public class SimpleBoard implements Board {
         brickGenerator = new RandomBrickGenerator();
         brickRotator = new BrickRotator();
         score = new Score();
+    }
+
+    public List<ViewData> getNextBricksPreview() {
+        List<ViewData> previews = new ArrayList<>();
+
+        // Get the actual queue from the brick generator
+        List<Brick> actualQueue = brickGenerator.getUpcomingBricks();
+
+        for (int i = 0; i < Math.min(3, actualQueue.size()); i++) {
+            Brick brick = actualQueue.get(i);
+            int[][] shape = brick.getShapeMatrix().getFirst();
+
+            ViewData vd = new ViewData(
+                    shape,
+                    0,
+                    i * 4,  // Vertical offset for each preview
+                    null
+            );
+            previews.add(vd);
+        }
+
+        return previews;
     }
 
     /**
@@ -95,17 +128,35 @@ public class SimpleBoard implements Board {
     }
 
     /**
-     * ------------------------------------ADD A ROTATE RIGHT METHOD------------------------------------<br>
+     * Calls clockwise rotation logic in BrickRotater. <br>
+     * Passes a RotationDirection based accordingly.
+     * @return TRUE if VALID rotation, FALSE if INVALID rotation.
+     */
+    @Override
+    public boolean rotateBrickRight () {return rotateBrick(RotationDirection.CLOCKWISE); }
+
+    /**
+     * ------------------------------------ADDED A ROTATE RIGHT METHOD------------------------------------<br>
+     * Calls clockwise rotation logic in BrickRotater. <br>
+     * Passes a RotationDirection based accordingly.
+     * @return TRUE if VALID rotation, FALSE if INVALID rotation.
+     */
+    @Override
+    public boolean rotateBrickLeft () { return rotateBrick(RotationDirection.ANTI_CLOCKWISE); }
+
+    /**
+     * ------------------------------------ADDED A GENERAL ROTATE METHOD------------------------------------<br>
+     * Extracted logic out of rotateLeftBrick() and placed it in a new method rotateBrick(). <br>
      * Creates a nextShape object to hold the next orientation in the Brick-shape-object's brickMatrix List. <br>
      * Calls intersect() to check if the next orientation of the Brick-shape-object is valid within the playable area. <br>
      * @return  If VALID -> else statement runs and sets the Brick-shape-object's current orientation to the new desired orientation
-     * and rotateLeftBrick() returns TRUE,
-     * if INVALID, rotateLeftBrick() returns FALSE.
+     * and rotateBrickLeft() returns TRUE,
+     * if INVALID, rotateBrickLeft() returns FALSE.
      */
     @Override
-    public boolean rotateLeftBrick() {
+    public boolean rotateBrick (RotationDirection rd) {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
-        NextShapeInfo nextShape = brickRotator.getNextShape();
+        NextShapeInfo nextShape = brickRotator.nextRotation(rd);
         boolean conflict = MatrixOperations.intersect(currentMatrix, nextShape.shape(), (int) currentOffset.getX(), (int) currentOffset.getY());
         if (conflict) {
             return false;
@@ -113,6 +164,35 @@ public class SimpleBoard implements Board {
             brickRotator.setCurrentShape(nextShape.position());
             return true;
         }
+    }
+
+    @Override
+    public DownData snapBrick (Refresh rf, Rectangle[][] displayMatrix) {
+        Point p = new Point(currentOffset);
+
+        int targetY = MatrixOperations.findSnapPosition(
+                currentGameMatrix,
+                brickRotator.getCurrentShape(),
+                (int) p.getX(),
+                (int) p.getY()
+        );
+
+        getScore().add((targetY - currentOffset.y) * 5);
+        currentOffset.y = targetY;
+        mergeBrickToBackground();
+
+//        rf.refreshGameBackground(currentGameMatrix, displayMatrix);
+        ClearRow clearRow = clearRows();
+//        THIS COSTED ME 1 DAY OF PROGRESS WALAO
+        rf.refreshGameBackground(currentGameMatrix, displayMatrix);
+
+        if (clearRow.linesRemoved() > 0) { getScore().add(clearRow.scoreBonus()); }
+
+        boolean gameOver = createNewBrick();
+//        holdUsedThisTurn = false;
+        ViewData vd = getViewData();
+
+        return new DownData(clearRow, vd);
     }
 
     /**
@@ -128,7 +208,7 @@ public class SimpleBoard implements Board {
     public boolean createNewBrick() {
         Brick currentBrick = brickGenerator.getBrick();
         brickRotator.setBrick(currentBrick);
-        currentOffset = new Point(4, 10);
+        currentOffset = new Point(4, 1);
         return MatrixOperations.intersect(currentGameMatrix, brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
     }
 
@@ -146,7 +226,17 @@ public class SimpleBoard implements Board {
      */
     @Override
     public ViewData getViewData() {
-        return new ViewData(brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY(), brickGenerator.getNextBrick().getShapeMatrix().getFirst());
+//        int snapDropPosition = MatrixOperations.findSnapPosition(
+//                currentGameMatrix,
+//                brickRotator.getCurrentShape(),
+//                (int) currentOffset.getX(),
+//                (int) currentOffset.getY()
+//        );
+        return new ViewData (
+                brickRotator.getCurrentShape(),
+                (int) currentOffset.getX(),
+                (int) currentOffset.getY(),
+                brickGenerator.getNextBrick().getShapeMatrix().getFirst());
     }
 
     /**
@@ -154,6 +244,7 @@ public class SimpleBoard implements Board {
      */
     @Override
     public void mergeBrickToBackground() {
+        holdUsedThisTurn = false;
         currentGameMatrix = MatrixOperations.merge(currentGameMatrix, brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
     }
 
@@ -188,5 +279,30 @@ public class SimpleBoard implements Board {
         currentGameMatrix = new int[width][height];
         score.reset();
         createNewBrick();
+    }
+
+    @Override
+    public ViewData holdBrick () {
+        if (holdUsedThisTurn) { return getViewData(); }
+
+        Brick curr = brickRotator.getBrick();
+
+        if (heldBrick == null) {
+            heldBrick = curr;
+            createNewBrick();
+        }
+        else {
+            Brick tmp = heldBrick;
+            heldBrick = curr;
+            brickRotator.setBrick(tmp);
+            currentOffset = new Point(4, 1);
+        }
+
+        holdUsedThisTurn = true;
+        return getViewData();
+    }
+
+    public Brick getHeldBrick () {
+        return heldBrick;
     }
 }

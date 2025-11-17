@@ -5,10 +5,7 @@ package com.comp2042;
  * by creating methods that link the player's actions to the game's responses towards player actions.
  */
 public class GameController implements InputEventListener {
-
     private final Board board = new SimpleBoard(25, 10);
-//    private Board board = new SimpleBoard(50, 20);
-
     private final GuiController gc;
     private final Refresh rf;
 
@@ -27,6 +24,7 @@ public class GameController implements InputEventListener {
         gc.setEventListener(this);
         gc.initGameView(board.getBoardMatrix(), board.getViewData());
         gc.bindScore(board.getScore().scoreProperty());
+        gc.setSimpleBoard((SimpleBoard) this.board);
     }
 
     /**
@@ -55,6 +53,7 @@ public class GameController implements InputEventListener {
         if (!canMove) {
             board.mergeBrickToBackground();
             clearRow = board.clearRows();
+
             if (clearRow.linesRemoved() > 0) {
                 board.getScore().add(clearRow.scoreBonus());
             }
@@ -62,7 +61,6 @@ public class GameController implements InputEventListener {
                 gc.gameOver();
             }
 
-//            viewGuiController.refreshGameBackground(board.getBoardMatrix());
             rf.refreshGameBackground(board.getBoardMatrix(), gc.displayMatrix);
 
         } else {
@@ -98,17 +96,34 @@ public class GameController implements InputEventListener {
     }
 
     /**
-     * Calls rotateLeftBrick() in SimpleBoard.
+     * Connects InputHandler to SimpleBoard + BrickRotater.
      * @param event MoveEvent object containing EventType (keystroke) and EventSource.
      * @return      ViewData object containing information on current Brick-shape-object after alterations from player action
      * and info on next Brick-shape-object.
      */
     @Override
-    public ViewData onRotateEvent(MoveEvent event) {
-        board.rotateLeftBrick();
+    public ViewData onRotateClock(MoveEvent event) {
+        board.rotateBrickRight();
         return board.getViewData();
     }
 
+    /**
+     * Connects InputHandler to SimpleBoard + BrickRotater.
+     * @param event MoveEvent object containing EventType (keystroke) and EventSource.
+     * @return      ViewData object containing information on current Brick-shape-object after alterations from player action
+     * and info on next Brick-shape-object.
+     */
+    @Override
+    public ViewData onRotateAntiClock(MoveEvent event) {
+        board.rotateBrickLeft();
+        return board.getViewData();
+    }
+
+    @Override
+    public ViewData onSnapEvent(MoveEvent event) {
+        board.snapBrick(rf, gc.displayMatrix);
+        return board.getViewData();
+    }
 
     /**
      * Calls newGame() in SimpleBoard.<br>
@@ -118,6 +133,5 @@ public class GameController implements InputEventListener {
     public void createNewGame() {
         board.newGame();
         rf.refreshGameBackground(board.getBoardMatrix(), gc.displayMatrix);
-//        gc.refreshGameBackground(board.getBoardMatrix());
     }
 }

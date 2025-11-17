@@ -1,5 +1,7 @@
 package com.comp2042;
 
+import com.comp2042.bricks.AbstractBrick;
+import javafx.animation.KeyFrame;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -7,11 +9,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
+import javafx.animation.Timeline;
+
+import javax.swing.text.View;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -50,8 +57,6 @@ public class GuiController implements Initializable {
 
     protected Rectangle[][] rectangles;
 
-//    private Timeline timeLine;
-
     protected final BooleanProperty isPause = new SimpleBooleanProperty();
 
     protected final BooleanProperty isGameOver = new SimpleBooleanProperty();
@@ -59,6 +64,8 @@ public class GuiController implements Initializable {
     /**
      * New class objects created.
      */
+    protected SimpleBoard simpleBoard;
+
     protected InputHandler inputHandler;
 
     protected BoardRenderer boardRenderer = new BoardRenderer();
@@ -68,6 +75,24 @@ public class GuiController implements Initializable {
     protected GameTimeLine gameTimeLine = new GameTimeLine();
 
     protected Refresh refresh = new Refresh(this);
+
+    @FXML
+    protected PausePanel pausePanel;
+
+    @FXML
+    private Label scoreLabel;
+
+    private boolean countdownRunning = false;
+
+    @FXML
+    public GridPane holdPanel;
+
+    public Rectangle[][] holdMatrix;
+
+    @FXML
+    public GridPane nextPanel;
+
+    public Rectangle[][] nextMatrix;
 
     /**
      * Initialises the GUI when the FXML file is loaded at the start of the game.<br>
@@ -91,6 +116,9 @@ public class GuiController implements Initializable {
         gamePanel.requestFocus();
 
         gameOverPanel.setVisible(false);
+        pausePanel.setVisible(false);
+
+        initHoldMatrix();
 
         final Reflection reflection = new Reflection();
         reflection.setFraction(0.8);
@@ -123,6 +151,8 @@ public class GuiController implements Initializable {
 //        1.
         displayMatrix = boardRenderer.createPlayableAreaMatrix(gamePanel, boardMatrix);
 
+        initNextPanel();
+
 //        2.
         rectangles = brickRenderer.createBrickAreaMatrix(brickPanel, brick);
 
@@ -144,6 +174,28 @@ public class GuiController implements Initializable {
         gameTimeLine.start();
     }
 
+    private void initNextPanel() {
+        BrickRenderer renderer = new BrickRenderer();
+
+        // Create an empty 12x4 matrix (your preview size)
+        int rows = 12;
+        int cols = 4;
+
+        int[][] emptyMatrix = new int[rows][cols]; // all zeros
+
+        // ViewData requires 4 parameters, so we supply all of them
+        ViewData emptyView = new ViewData(
+                emptyMatrix, // brickData
+                0,           // xPosition (unused in preview)
+                0,           // yPosition (unused in preview)
+                emptyMatrix  // nextBrickData (not important for preview)
+        );
+
+        // Only one nextPanel, only one nextMatrix
+        nextMatrix = renderer.createBrickAreaMatrix(nextPanel, emptyView);
+    }
+
+
     /**
      * Only has functionality if game is not paused.<br>
      * Checks if the action of moving the Brick-shape-object down, regardless if caused by system or player,
@@ -162,8 +214,15 @@ public class GuiController implements Initializable {
                 notificationPanel.showScore(groupNotification.getChildren());
             }
             refresh.refreshBrick(downData.viewData(), rectangles, brickPanel, gamePanel);
+            refresh.refreshNextBricks();
         }
         gamePanel.requestFocus();
+    }
+
+    public void setSimpleBoard (SimpleBoard simpleBoard) {
+        this.simpleBoard = simpleBoard;
+        refresh.drawHoldBrick((AbstractBrick) simpleBoard.getHeldBrick());
+        refresh.refreshNextBricks();
     }
 
     /**
@@ -179,6 +238,7 @@ public class GuiController implements Initializable {
      * @param integerProperty   Current SimpleBoard object's overall score, i.e. current game's overall score.
      */
     public void bindScore(IntegerProperty integerProperty) {
+        scoreLabel.textProperty().bind(integerProperty.asString());
     }
 
     /**
@@ -202,6 +262,7 @@ public class GuiController implements Initializable {
     public void newGame(ActionEvent actionEvent) {
         gameTimeLine.stop();
         gameOverPanel.setVisible(false);
+        pausePanel.setVisible(false);
         eventListener.createNewGame();
         gamePanel.requestFocus();
         gameTimeLine.start();
@@ -210,10 +271,75 @@ public class GuiController implements Initializable {
     }
 
     /**
-     * -------------------------------------FUNCTIONALITY NEEDED--------------------------------------
+     * -------------------------------------FUNCTIONALITY ADDED--------------------------------------<br>
+     * If game is running and user presses pause key, boolean paused = true -> runs true if statement
      * @param actionEvent no uses
      */
-    public void pauseGame(ActionEvent actionEvent) {
+    public void pauseGame (ActionEvent actionEvent) {
+
+        if (!isPause.getValue()) {
+            gameTimeLine.stop();
+            isPause.setValue(true);
+            pausePanel.setString("GAME\nPAUSED");
+            pausePanel.setVisible(true);
+            pausePanel.toFront();
+        }
+        else {
+            if (!countdownRunning) {
+                startResumeCountdown();
+            }
+        }
         gamePanel.requestFocus();
+    }
+
+    private void startResumeCountdown () {
+        if (countdownRunning) return;
+        countdownRunning = true;
+
+        pausePanel.setVisible(true);
+        pausePanel.toFront();
+
+        final int[] count = {3};
+
+        Timeline countdown = new Timeline(
+                new KeyFrame(javafx.util.Duration.seconds(1), e -> {
+                    if (count[0] > 0) {
+                        pausePanel.setString("GAME RESUMING IN\n\t" + count[0]);
+                        count[0]--;
+                    }
+                    else {
+                        pausePanel.setVisible(false);
+                        isPause.setValue(false);
+                        countdownRunning = false;
+                        gameTimeLine.start();
+                    }
+                })
+        );
+        countdown.setCycleCount(4);
+        countdown.play();
+    }
+
+    private void initHoldMatrix () {
+        int size = 4;
+        holdMatrix = new Rectangle[size][size];
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                Rectangle r = new Rectangle(BRICK_SIZE,BRICK_SIZE);
+                r.setFill(Color.TRANSPARENT);
+                holdMatrix[i][j] = r;
+                holdPanel.add(r, i, j);
+            }
+        }
+    }
+
+    public void onHoldEvent () {
+        if (simpleBoard == null) return;
+
+        simpleBoard.holdBrick();
+        refresh.drawHoldBrick((AbstractBrick) simpleBoard.getHeldBrick());
+
+        ViewData viewData = simpleBoard.getViewData();
+        refresh.refreshBrick(viewData, rectangles, brickPanel, gamePanel);
     }
 }

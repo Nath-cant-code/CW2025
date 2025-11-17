@@ -2,6 +2,8 @@ package com.comp2042.bricks.brick_generation_system;
 
 import com.comp2042.bricks.Brick;
 
+import java.util.List;
+
 /**
  * Interface to be implemented by RandomBrickGenerator and SimpleBoard.
  * @see RandomBrickGenerator
@@ -21,4 +23,6 @@ public interface BrickGenerator {
      * @see com.comp2042.SimpleBoard
      */
     Brick getNextBrick();
+
+    List<Brick> getUpcomingBricks();
 }

@@ -1,5 +1,8 @@
 package com.comp2042;
 
+import java.awt.*;
+import javafx.scene.shape.Rectangle;
+
 /**
  * This interface and its abstract methods are implemented by SimpleBoard.
  * <p></p>
@@ -13,7 +16,15 @@ public interface Board {
 
     boolean moveBrickRight();
 
-    boolean rotateLeftBrick();
+    boolean rotateBrickLeft();
+
+    boolean rotateBrickRight();
+
+    boolean rotateBrick(RotationDirection rd);
+
+    DownData snapBrick (Refresh rf, Rectangle[][] displayMatrix);
+
+    ViewData holdBrick ();
 
     boolean createNewBrick();
 

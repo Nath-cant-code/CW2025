@@ -2,6 +2,8 @@ package com.comp2042;
 
 import com.comp2042.bricks.Brick;
 
+import java.util.BitSet;
+
 /**
  * This class manages the selection of the possible orientations of a Brick-shape-object.
  */
@@ -9,6 +11,18 @@ public class BrickRotator {
 
     private Brick brick;
     private int currentShape = 0;
+
+    /**
+     * Calls a method based on the RotationDirection received.
+     * @param rd    RotationDirection from rotateBrick().
+     * @return      Respective method call.
+     */
+    public NextShapeInfo nextRotation (RotationDirection rd) {
+        return switch (rd) {
+            case CLOCKWISE      -> nextClockRotation();
+            case ANTI_CLOCKWISE -> nextAntiClockRotation();
+        };
+    }
 
     /**
      * Everytime this method is called, currentShape increments. <br>
@@ -21,9 +35,26 @@ public class BrickRotator {
      *     - and the index of said orientation in the (Brick-shape-object orientations) List, i.e. getShapeMatrix
      * </p>
      */
-    public NextShapeInfo getNextShape() {
+    public NextShapeInfo nextClockRotation() {
         int nextShape = currentShape;
         nextShape = (++nextShape) % brick.getShapeMatrix().size();
+        return new NextShapeInfo(brick.getShapeMatrix().get(nextShape), nextShape);
+    }
+
+    /**
+     * This method is the opposite of nextClockRotation. <br>
+     * ***IMPORTANT***<br>
+     * All Brick-shape-classes have been adjusted to rotate in a clockwise manner in ascending index value.<br>
+     * Hence, for anti-clockwise rotation, we need to loop to the last index and return back to the first index.<br>
+     * <p>
+     *     @return an object (with class NextShapeInfo) that contains: <br>
+     *     - the matrix of the next orientation of the current Brick-shape-object <br>
+     *     - and the index of said orientation in the (Brick-shape-object orientations) List, i.e. getShapeMatrix
+     * </p>
+     */
+    public NextShapeInfo nextAntiClockRotation() {
+        int nextShape = currentShape;
+        nextShape = (nextShape == 0) ? (brick.getShapeMatrix().size() - 1) : (nextShape - 1);
         return new NextShapeInfo(brick.getShapeMatrix().get(nextShape), nextShape);
     }
 
@@ -36,7 +67,7 @@ public class BrickRotator {
     }
 
     /**
-     * Only used once in SimpleBoard.rotateLeftBrick() to set a NEW orientation for the current Brick-shape-object.<br>
+     * Only used once in SimpleBoard.rotateBrickLeft() to set a NEW orientation for the current Brick-shape-object.<br>
      * @param currentShape  New counter value to be used as the index (nextShape) to select the new orientation.
      */
     public void setCurrentShape(int currentShape) {
@@ -52,5 +83,7 @@ public class BrickRotator {
         currentShape = 0;
     }
 
-
+    public Brick getBrick () {
+        return this.brick;
+    }
 }
