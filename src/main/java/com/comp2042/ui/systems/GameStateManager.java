@@ -1,4 +1,4 @@
-package com.comp2042.app;
+package com.comp2042.ui.systems;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -13,34 +13,42 @@ public class GameStateManager {
     private final BooleanProperty isPaused = new SimpleBooleanProperty(false);
     private final BooleanProperty isGameOver = new SimpleBooleanProperty(false);
 
-    public boolean isPaused() {
-        return isPaused.getValue();
-    }
-
     public void setPaused(boolean paused) {
         isPaused.setValue(paused);
-    }
-
-    public BooleanProperty pausedProperty() {
-        return isPaused;
-    }
-
-    public boolean isGameOver() {
-        return isGameOver.getValue();
     }
 
     public void setGameOver(boolean gameOver) {
         isGameOver.setValue(gameOver);
     }
 
+    public boolean isPaused() {
+        return isPaused.getValue();
+    }
+
+    public boolean isGameOver() {
+        return isGameOver.getValue();
+    }
+
+    public BooleanProperty pausedProperty() {
+        return isPaused;
+    }
+
     public BooleanProperty gameOverProperty() {
         return isGameOver;
     }
 
+    /**
+     * To determine if program should be taking in input.<br>
+     * Used by InputHandler.
+     * @return TRUE (allow input) if game is not paused and not over
+     */
     public boolean canProcessInput() {
         return !isPaused() && !isGameOver();
     }
 
+    /**
+     * For new game conditions.
+     */
     public void reset() {
         isPaused.setValue(false);
         isGameOver.setValue(false);

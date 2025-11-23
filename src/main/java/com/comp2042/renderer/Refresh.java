@@ -1,11 +1,10 @@
 package com.comp2042.renderer;
 
-import com.comp2042.ui.GuiController;
+import com.comp2042.ui.systems.GuiController;
 import com.comp2042.board.composite_bricks.ViewData;
 import com.comp2042.bricks.AbstractBrick;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
 import java.util.List;
@@ -60,6 +59,10 @@ public class Refresh {
         }
     }
 
+    /**
+     * Draws the Brick object that the player swapped in the panel outside the playable area.
+     * @param holdBrick Shape of the Brick object being swapped.
+     */
     public void drawHoldBrick(AbstractBrick holdBrick) {
         GridPane holdPanel = gc.holdPanel;
         Rectangle[][] holdMatrix = gc.holdMatrix;
@@ -102,6 +105,10 @@ public class Refresh {
         }
     }
 
+    /**
+     * Refreshes the panel that displays the next 3 Bricks in the queue.<br>
+     * Adjusts their position in the grid panel.
+     */
     public void refreshNextBricks() {
         if (gc.simpleBoard == null) return;
 
@@ -126,7 +133,7 @@ public class Refresh {
 
                     if (shape[x][y] != 0) {
                         Rectangle r = gc.nextMatrix[offsetY + y][offsetX + x];
-                        r.setFill(getFillColor(shape[x][y]));
+                        r.setFill(ColorRenderer.getFillColor(shape[x][y]));
                     }
                 }
             }
@@ -142,27 +149,10 @@ public class Refresh {
      * @param rectangle A single pixel displayMatrix.
      */
     public void setRectangleData(int color, Rectangle rectangle) {
-        rectangle.setFill(getFillColor(color));
+        rectangle.setFill(ColorRenderer.getFillColor(color));
         rectangle.setArcHeight(9);
         rectangle.setArcWidth(9);
     }
 
-    /**
-     * Sets a colour for the Brick-shape-object.
-     * @param i Index to choose colour.
-     * @return  Color object.
-     */
-    protected static Paint getFillColor(int i) {
-        return switch (i) {
-            case 0 -> Color.TRANSPARENT;
-            case 1 -> Color.AQUA;
-            case 2 -> Color.BLUEVIOLET;
-            case 3 -> Color.DARKGREEN;
-            case 4 -> Color.YELLOW;
-            case 5 -> Color.RED;
-            case 6 -> Color.BEIGE;
-            case 7 -> Color.BURLYWOOD;
-            default -> Color.WHITE;
-        };
-    }
+
 }

@@ -1,6 +1,5 @@
-package com.comp2042.ui;
+package com.comp2042.ui.systems;
 
-import com.comp2042.app.GameStateManager;
 import com.comp2042.board.composite_bricks.DownData;
 import com.comp2042.board.SimpleBoard;
 import com.comp2042.board.composite_bricks.ViewData;
@@ -11,13 +10,12 @@ import com.comp2042.renderer.BoardRenderer;
 import com.comp2042.renderer.BrickRenderer;
 import com.comp2042.renderer.Refresh;
 import com.comp2042.system_events.MoveEvent;
+import com.comp2042.ui.GameTimeLine;
 import com.comp2042.ui.panels.GameOverPanel;
 import com.comp2042.ui.panels.NotificationPanel;
 import com.comp2042.ui.panels.PausePanel;
 import javafx.animation.KeyFrame;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -68,10 +66,6 @@ public class GuiController implements Initializable {
     private InputEventListener eventListener;
 
     protected Rectangle[][] rectangles;
-
-//    public static final BooleanProperty isPause = new SimpleBooleanProperty();
-
-//    public static final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
     private final GameStateManager gameStateManager = new GameStateManager();
 
