@@ -50,7 +50,7 @@ public class GuiController implements Initializable {
     public static final int BRICK_SIZE = 20;
 
     @FXML
-    private GridPane gamePanel;
+    public GridPane gamePanel;
 
     @FXML
     private Group groupNotification;
