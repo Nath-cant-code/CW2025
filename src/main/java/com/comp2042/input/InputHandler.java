@@ -1,6 +1,6 @@
 package com.comp2042.input;
 
-import com.comp2042.ui.GuiController;
+import com.comp2042.ui.systems.GuiController;
 import com.comp2042.renderer.Refresh;
 import com.comp2042.system_events.EventSource;
 import com.comp2042.system_events.EventType;

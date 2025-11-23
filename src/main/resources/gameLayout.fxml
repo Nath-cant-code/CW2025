@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Text?>
 <?import java.net.URL?>
 <?import com.comp2042.ui.panels.PausePanel?>
-<HBox fx:controller="com.comp2042.ui.GuiController"
+<HBox fx:controller="com.comp2042.ui.systems.GuiController"
       xmlns:fx="http://javafx.com/fxml"
       spacing="20">
 

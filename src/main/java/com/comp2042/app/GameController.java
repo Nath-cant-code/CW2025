@@ -7,7 +7,7 @@ import com.comp2042.renderer.Refresh;
 import com.comp2042.system_events.EventSource;
 import com.comp2042.input.InputEventListener;
 import com.comp2042.system_events.MoveEvent;
-import com.comp2042.ui.GuiController;
+import com.comp2042.ui.systems.GuiController;
 
 /**
  * This class acts as one of the bridges (after GuiController) between player actions and the game logic
