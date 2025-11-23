@@ -34,7 +34,7 @@ public class Refresh {
          * @param gamePanel     gamePanel.
          */
         public void refreshBrick (ViewData brick, Rectangle[][] rectangles, GridPane brickPanel, GridPane gamePanel) {
-            if (GuiController.isPause.getValue() == Boolean.FALSE) {
+            if (!gc.getGameStateManager().isPaused()) {
                 brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.xPosition() * brickPanel.getVgap()
                         + brick.xPosition() * GuiController.BRICK_SIZE);
                 brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.yPosition() * brickPanel.getHgap()

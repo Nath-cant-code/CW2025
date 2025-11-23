@@ -1,5 +1,6 @@
 package com.comp2042.ui;
 
+import com.comp2042.app.GameStateManager;
 import com.comp2042.board.composite_bricks.DownData;
 import com.comp2042.board.SimpleBoard;
 import com.comp2042.board.composite_bricks.ViewData;
@@ -68,9 +69,11 @@ public class GuiController implements Initializable {
 
     protected Rectangle[][] rectangles;
 
-    public static final BooleanProperty isPause = new SimpleBooleanProperty();
+//    public static final BooleanProperty isPause = new SimpleBooleanProperty();
 
-    public static final BooleanProperty isGameOver = new SimpleBooleanProperty();
+//    public static final BooleanProperty isGameOver = new SimpleBooleanProperty();
+
+    private final GameStateManager gameStateManager = new GameStateManager();
 
     /**
      * New class objects created.
@@ -217,7 +220,7 @@ public class GuiController implements Initializable {
      * @param event MoveEvent object to check if source of action is from system (THREAD) or player (USER).
      */
     public void moveDown(MoveEvent event) {
-        if (isPause.getValue() == Boolean.FALSE) {
+        if (!gameStateManager.isPaused()) {
             DownData downData = eventListener.onDownEvent(event);
             if (downData.clearRow() != null && downData.clearRow().linesRemoved() > 0) {
                 NotificationPanel notificationPanel = new NotificationPanel("+" + downData.clearRow().scoreBonus());
@@ -244,6 +247,10 @@ public class GuiController implements Initializable {
         this.eventListener = eventListener;
     }
 
+    public GameStateManager getGameStateManager() {
+        return gameStateManager;
+    }
+
     /**
      * -------------------------------------FUNCTIONALITY NEEDED--------------------------------------
      * @param integerProperty   Current SimpleBoard object's overall score, i.e. current game's overall score.
@@ -258,7 +265,7 @@ public class GuiController implements Initializable {
     public void gameOver() {
         gameTimeLine.stop();
         gameOverPanel.setVisible(true);
-        isGameOver.setValue(Boolean.TRUE);
+        gameStateManager.setGameOver(true);
     }
 
     /**
@@ -277,8 +284,7 @@ public class GuiController implements Initializable {
         eventListener.createNewGame();
         gamePanel.requestFocus();
         gameTimeLine.start();
-        isPause.setValue(Boolean.FALSE);
-        isGameOver.setValue(Boolean.FALSE);
+        gameStateManager.reset();
     }
 
     /**
@@ -288,9 +294,9 @@ public class GuiController implements Initializable {
      */
     public void pauseGame (ActionEvent actionEvent) {
 
-        if (!isPause.getValue()) {
+        if (!gameStateManager.isPaused()) {
             gameTimeLine.stop();
-            isPause.setValue(true);
+            gameStateManager.setPaused(true);
             pausePanel.setString("GAME\nPAUSED");
             pausePanel.setVisible(true);
             pausePanel.toFront();
@@ -320,7 +326,7 @@ public class GuiController implements Initializable {
                     }
                     else {
                         pausePanel.setVisible(false);
-                        isPause.setValue(false);
+                        gameStateManager.setPaused(false);
                         countdownRunning = false;
                         gameTimeLine.start();
                     }

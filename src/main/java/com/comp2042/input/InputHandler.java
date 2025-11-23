@@ -73,7 +73,7 @@ public class InputHandler {
      * @param keyEvent  Player's directional keystroke.
      */
     private void handleKeyEvent(KeyEvent keyEvent) {
-        if (gc.isPause.getValue() == Boolean.FALSE && gc.isGameOver.getValue() == Boolean.FALSE) {
+        if (gc.getGameStateManager().canProcessInput()) {
             if (keyEvent.getCode() == KeyCode.LEFT || keyEvent.getCode() == KeyCode.A) {
                 rf.refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)), rectangles, brickPanel, gamePanel);
                 keyEvent.consume();
