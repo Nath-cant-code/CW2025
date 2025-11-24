@@ -1,6 +1,6 @@
 package com.comp2042.app;
 
-import com.comp2042.ui.systems.GuiController;
+import com.comp2042.ui.ui_systems.GuiController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

@@ -12,7 +12,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.comp2042.renderer.Refresh;
+import com.comp2042.renderer.RefreshCoordinator;
 import com.comp2042.ui.Score;
 import javafx.scene.shape.Rectangle;
 
@@ -169,7 +169,7 @@ public class SimpleBoard implements Board {
     }
 
     @Override
-    public DownData snapBrick (Refresh rf, Rectangle[][] displayMatrix) {
+    public DownData snapBrick (RefreshCoordinator refreshCoordinator, Rectangle[][] displayMatrix) {
         Point p = new Point(currentOffset);
 
         int targetY = MatrixOperations.findSnapPosition(
@@ -183,10 +183,10 @@ public class SimpleBoard implements Board {
         currentOffset.y = targetY;
         mergeBrickToBackground();
 
-//        rf.refreshGameBackground(currentGameMatrix, displayMatrix);
+        refreshCoordinator.renderBackground(currentGameMatrix, displayMatrix);
         ClearRow clearRow = clearRows();
 //        THIS COSTED ME 1 DAY OF PROGRESS WALAO
-        rf.refreshGameBackground(currentGameMatrix, displayMatrix);
+        refreshCoordinator.renderBackground(currentGameMatrix, displayMatrix);
 
         if (clearRow.linesRemoved() > 0) { getScore().add(clearRow.scoreBonus()); }
 
@@ -228,12 +228,6 @@ public class SimpleBoard implements Board {
      */
     @Override
     public ViewData getViewData() {
-//        int snapDropPosition = MatrixOperations.findSnapPosition(
-//                currentGameMatrix,
-//                brickRotator.getCurrentShape(),
-//                (int) currentOffset.getX(),
-//                (int) currentOffset.getY()
-//        );
         return new ViewData (
                 brickRotator.getCurrentShape(),
                 (int) currentOffset.getX(),

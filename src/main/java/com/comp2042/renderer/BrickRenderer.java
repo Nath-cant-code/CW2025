@@ -1,6 +1,6 @@
 package com.comp2042.renderer;
 
-import com.comp2042.ui.systems.GuiController;
+import com.comp2042.ui.ui_systems.GuiController;
 import com.comp2042.board.composite_bricks.ViewData;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
@@ -21,7 +21,7 @@ public class BrickRenderer {
         for (int i = 0; i < brick.brickData().length; i++) {
             for (int j = 0; j < brick.brickData()[i].length; j++) {
                 Rectangle rectangle = new Rectangle(GuiController.BRICK_SIZE, GuiController.BRICK_SIZE);
-                rectangle.setFill(ColorRenderer.getFillColor(brick.brickData()[i][j]));
+                rectangle.setFill(ColorSelector.getFillColor(brick.brickData()[i][j]));
                 rectangles[i][j] = rectangle;
                 brickPanel.add(rectangle, j, i);
             }

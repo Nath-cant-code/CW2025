@@ -3,7 +3,7 @@ package com.comp2042.board;
 import com.comp2042.board.composite_bricks.DownData;
 import com.comp2042.board.composite_bricks.ViewData;
 import com.comp2042.brick_actions.RotationDirection;
-import com.comp2042.renderer.Refresh;
+import com.comp2042.renderer.RefreshCoordinator;
 import com.comp2042.ui.Score;
 import javafx.scene.shape.Rectangle;
 
@@ -26,7 +26,7 @@ public interface Board {
 
     boolean rotateBrick(RotationDirection rd);
 
-    DownData snapBrick (Refresh rf, Rectangle[][] displayMatrix);
+    DownData snapBrick (RefreshCoordinator refreshCoordinator, Rectangle[][] displayMatrix);
 
     ViewData holdBrick ();
 

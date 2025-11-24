@@ -3,7 +3,7 @@ package com.comp2042.ui;
 import com.comp2042.system_events.EventSource;
 import com.comp2042.system_events.EventType;
 import com.comp2042.system_events.MoveEvent;
-import com.comp2042.ui.systems.GuiController;
+import com.comp2042.ui.ui_systems.GuiController;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;

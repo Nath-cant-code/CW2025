@@ -1,4 +1,4 @@
-package com.comp2042.ui.systems;
+package com.comp2042.ui.ui_systems;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

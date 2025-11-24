@@ -1,9 +1,7 @@
 package com.comp2042.input;
 
-import com.comp2042.ui.systems.GuiController;
-import com.comp2042.renderer.Refresh;
+import com.comp2042.ui.ui_systems.GuiController;
 import com.comp2042.system_events.EventSource;
-import com.comp2042.system_events.EventType;
 import com.comp2042.system_events.MoveEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -49,7 +47,7 @@ public class InputHandler {
         // Create key binding manager with all the necessary dependencies
         this.keyBindingManager = new KeyBindingManager(
                 eventListener,
-                gc.refresh,
+                gc.refreshCoordinator,
                 rectangles,
                 brickPanel,
                 gamePanel,

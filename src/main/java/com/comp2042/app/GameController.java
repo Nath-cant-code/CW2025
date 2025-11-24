@@ -3,11 +3,10 @@ package com.comp2042.app;
 import com.comp2042.board.*;
 import com.comp2042.board.composite_bricks.DownData;
 import com.comp2042.board.composite_bricks.ViewData;
-import com.comp2042.renderer.Refresh;
 import com.comp2042.system_events.EventSource;
 import com.comp2042.input.InputEventListener;
 import com.comp2042.system_events.MoveEvent;
-import com.comp2042.ui.systems.GuiController;
+import com.comp2042.ui.ui_systems.GuiController;
 
 /**
  * This class acts as one of the bridges (after GuiController) between player actions and the game logic
@@ -16,7 +15,6 @@ import com.comp2042.ui.systems.GuiController;
 public class GameController implements InputEventListener {
     private final Board board = new SimpleBoard(25, 10);
     private final GuiController gc;
-    private final Refresh rf;
 
     /**
      * Creates new brick via createNewBrick() method in SimpleBoard object.<br>
@@ -28,7 +26,6 @@ public class GameController implements InputEventListener {
      */
     public GameController(GuiController c) {
         gc = c;
-        this.rf = gc.refresh;
         board.createNewBrick();
         gc.setEventListener(this);
         gc.initGameView(board.getBoardMatrix(), board.getViewData());
@@ -70,7 +67,8 @@ public class GameController implements InputEventListener {
                 gc.gameOver();
             }
 
-            rf.refreshGameBackground(board.getBoardMatrix(), gc.displayMatrix);
+//            rf.refreshGameBackground(board.getBoardMatrix(), gc.displayMatrix);
+            gc.refreshCoordinator.renderBackground(board.getBoardMatrix(), gc.displayMatrix);
 
         } else {
             if (event.eventSource() == EventSource.USER) {
@@ -130,7 +128,7 @@ public class GameController implements InputEventListener {
 
     @Override
     public ViewData onSnapEvent(MoveEvent event) {
-        board.snapBrick(rf, gc.displayMatrix);
+        board.snapBrick(gc.refreshCoordinator, gc.displayMatrix);
         return board.getViewData();
     }
 
@@ -141,6 +139,7 @@ public class GameController implements InputEventListener {
     @Override
     public void createNewGame() {
         board.newGame();
-        rf.refreshGameBackground(board.getBoardMatrix(), gc.displayMatrix);
+//        rf.refreshGameBackground(board.getBoardMatrix(), gc.displayMatrix);
+        gc.refreshCoordinator.renderBackground(board.getBoardMatrix(), gc.displayMatrix);
     }
 }

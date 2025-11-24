@@ -3,13 +3,13 @@ package com.comp2042.renderer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-public class ColorRenderer {
+public class ColorSelector {
     /**
      * Sets a colour for the Brick-shape-object.
      * @param i Index to choose colour.
      * @return  Color object.
      */
-    protected static Paint getFillColor(int i) {
+    public static Paint getFillColor(int i) {
         return switch (i) {
             case 0 -> Color.TRANSPARENT;
             case 1 -> Color.AQUA;

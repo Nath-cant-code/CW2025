@@ -1,4 +1,4 @@
-package com.comp2042.ui.systems;
+package com.comp2042.ui.ui_systems;
 
 import com.comp2042.board.composite_bricks.DownData;
 import com.comp2042.board.SimpleBoard;
@@ -8,7 +8,7 @@ import com.comp2042.input.InputEventListener;
 import com.comp2042.input.InputHandler;
 import com.comp2042.renderer.BoardRenderer;
 import com.comp2042.renderer.BrickRenderer;
-import com.comp2042.renderer.Refresh;
+import com.comp2042.renderer.RefreshCoordinator;
 import com.comp2042.system_events.MoveEvent;
 import com.comp2042.ui.GameTimeLine;
 import com.comp2042.ui.panels.GameOverPanel;
@@ -82,7 +82,7 @@ public class GuiController implements Initializable {
 
     protected GameTimeLine gameTimeLine = new GameTimeLine();
 
-    public Refresh refresh = new Refresh(this);
+    public RefreshCoordinator refreshCoordinator;
 
     @FXML
     protected PausePanel pausePanel;
@@ -118,10 +118,11 @@ public class GuiController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
         Font.loadFont(Objects.requireNonNull(getClass().getClassLoader().getResource("digital.ttf")).toExternalForm(), 38);
         gamePanel.setFocusTraversable(true);
         gamePanel.requestFocus();
+
+        refreshCoordinator = new RefreshCoordinator(BRICK_SIZE, gameStateManager);
 
         gameOverPanel.setVisible(false);
         pausePanel.setVisible(false);
@@ -221,16 +222,21 @@ public class GuiController implements Initializable {
                 groupNotification.getChildren().add(notificationPanel);
                 notificationPanel.showScore(groupNotification.getChildren());
             }
-            refresh.refreshBrick(downData.viewData(), rectangles, brickPanel, gamePanel);
-            refresh.refreshNextBricks();
+            refreshCoordinator.renderActiveBrick(downData.viewData(), rectangles, brickPanel, gamePanel);
+            refreshCoordinator.renderNextBricks(simpleBoard.getNextBricksPreview(), nextMatrix);
         }
         gamePanel.requestFocus();
     }
 
+    /**
+     * Creates SimpleBoard object in this class.<br>
+     * Refreshes Hold Brick panel and Preview Bricks panel.
+     * @param simpleBoard SimpleBoard object.
+     */
     public void setSimpleBoard (SimpleBoard simpleBoard) {
         this.simpleBoard = simpleBoard;
-        refresh.drawHoldBrick((AbstractBrick) simpleBoard.getHeldBrick());
-        refresh.refreshNextBricks();
+        refreshCoordinator.renderHoldBrick((AbstractBrick) simpleBoard.getHeldBrick(), holdMatrix, holdPanel);
+        refreshCoordinator.renderNextBricks(simpleBoard.getNextBricksPreview(), nextMatrix);
     }
 
     /**
@@ -241,12 +247,16 @@ public class GuiController implements Initializable {
         this.eventListener = eventListener;
     }
 
+    /**
+     * Retrieve GameStateManager object.
+     * @return  GameStateManager object.
+     */
     public GameStateManager getGameStateManager() {
         return gameStateManager;
     }
 
     /**
-     * -------------------------------------FUNCTIONALITY NEEDED--------------------------------------
+     * -------------------------------------FUNCTIONALITY ADDED--------------------------------------
      * @param integerProperty   Current SimpleBoard object's overall score, i.e. current game's overall score.
      */
     public void bindScore(IntegerProperty integerProperty) {
@@ -348,9 +358,9 @@ public class GuiController implements Initializable {
         if (simpleBoard == null) return;
 
         simpleBoard.holdBrick();
-        refresh.drawHoldBrick((AbstractBrick) simpleBoard.getHeldBrick());
+        refreshCoordinator.renderHoldBrick((AbstractBrick) simpleBoard.getHeldBrick(), holdMatrix, holdPanel);
 
         ViewData viewData = simpleBoard.getViewData();
-        refresh.refreshBrick(viewData, rectangles, brickPanel, gamePanel);
+        refreshCoordinator.renderActiveBrick(viewData, rectangles, brickPanel, gamePanel);
     }
 }

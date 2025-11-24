@@ -1,10 +1,8 @@
 package com.comp2042.input;
 
-import com.comp2042.renderer.Refresh;
-import com.comp2042.system_events.EventSource;
+import com.comp2042.renderer.RefreshCoordinator;
 import com.comp2042.system_events.EventType;
-import com.comp2042.system_events.MoveEvent;
-import com.comp2042.ui.systems.GuiController;
+import com.comp2042.ui.ui_systems.GuiController;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
@@ -33,16 +31,16 @@ public class KeyBindingManager {
     /**
      * Creates a KeyBindingManager with all default bindings.
      *
-     * @param eventListener     The listener for game events
-     * @param refresh           The refresh handler for updating UI
-     * @param rectangles        The brick area rectangles
-     * @param brickPanel        The panel containing the brick
-     * @param gamePanel         The main game panel
-     * @param guiController     The GUI controller
+     * @param eventListener         The listener for game events
+     * @param refreshCoordinator    The refresh handler for updating UI
+     * @param rectangles            The brick area rectangles
+     * @param brickPanel            The panel containing the brick
+     * @param gamePanel             The main game panel
+     * @param guiController         The GUI controller
      */
     public KeyBindingManager(
             InputEventListener eventListener,
-            Refresh refresh,
+            RefreshCoordinator refreshCoordinator,
             Rectangle[][] rectangles,
             GridPane brickPanel,
             GridPane gamePanel,
@@ -51,12 +49,15 @@ public class KeyBindingManager {
         gameplayActions = new HashMap<>();
         systemActions = new HashMap<>();
 
-        initializeGameplayBindings(eventListener, refresh, rectangles, brickPanel, gamePanel, guiController);
+        initializeGameplayBindings(eventListener, refreshCoordinator, rectangles, brickPanel, gamePanel, guiController);
         initializeSystemBindings(guiController);
     }
 
     /**
      * Initialises mappings for gameplay actions (only work when game is running).<br>
+     * ------------------------------------IMPORTANT---------------------------------------<br>
+     * Should there be any new key binds, add here.<br>
+     * ------------------------------------IMPORTANT---------------------------------------<br>
      * Note to self: <br>
      * <p>
      *     In Java, lambda function is: (parameters) -> { body } <br>
@@ -67,14 +68,14 @@ public class KeyBindingManager {
      */
     private void initializeGameplayBindings(
             InputEventListener eventListener,
-            Refresh refresh,
+            RefreshCoordinator refreshCoordinator,
             Rectangle[][] rectangles,
             GridPane brickPanel,
             GridPane gamePanel,
             GuiController guiController) {
 
         // Move left actions
-        InputAction moveLeft = event -> refresh.refreshBrick(
+        InputAction moveLeft = event -> refreshCoordinator.renderActiveBrick(
                 eventListener.onLeftEvent(event),
                 rectangles, brickPanel, gamePanel
         );
@@ -82,7 +83,7 @@ public class KeyBindingManager {
         gameplayActions.put(KeyCode.A, moveLeft);
 
         // Move right actions
-        InputAction moveRight = event -> refresh.refreshBrick(
+        InputAction moveRight = event -> refreshCoordinator.renderActiveBrick(
                 eventListener.onRightEvent(event),
                 rectangles, brickPanel, gamePanel
         );
@@ -90,14 +91,14 @@ public class KeyBindingManager {
         gameplayActions.put(KeyCode.D, moveRight);
 
         // Rotate clockwise actions
-        InputAction rotateClock = event -> refresh.refreshBrick(
+        InputAction rotateClock = event -> refreshCoordinator.renderActiveBrick(
                 eventListener.onRotateClock(event),
                 rectangles, brickPanel, gamePanel
         );
         gameplayActions.put(KeyCode.X, rotateClock);
 
         // Rotate anti-clockwise actions
-        InputAction rotateAntiClock = event -> refresh.refreshBrick(
+        InputAction rotateAntiClock = event -> refreshCoordinator.renderActiveBrick(
                 eventListener.onRotateAntiClock(event),
                 rectangles, brickPanel, gamePanel
         );
@@ -111,7 +112,7 @@ public class KeyBindingManager {
         gameplayActions.put(KeyCode.S, moveDown);
 
         // Snap action
-        InputAction snap = event -> refresh.refreshBrick(
+        InputAction snap = event -> refreshCoordinator.renderActiveBrick(
                 eventListener.onSnapEvent(event),
                 rectangles, brickPanel, gamePanel
         );
