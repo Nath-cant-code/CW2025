@@ -6,13 +6,6 @@ import javafx.scene.shape.Rectangle;
 import java.util.List;
 
 /**
- * Interface Segregation Principle (ISP) applied to rendering.
- *
- * Instead of one large Refresh class doing everything,
- * we split into focused interfaces. Clients only depend on what they need.
- */
-
-/**
  * Renders the preview of upcoming bricks.
  */
 public interface PreviewBricks_RI {

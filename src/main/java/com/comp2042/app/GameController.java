@@ -6,31 +6,45 @@ import com.comp2042.board.composite_bricks.ViewData;
 import com.comp2042.system_events.EventSource;
 import com.comp2042.input.InputEventListener;
 import com.comp2042.system_events.MoveEvent;
-import com.comp2042.ui.ui_systems.GuiController;
+import com.comp2042.ui.GameView;
 
 /**
  * This class acts as one of the bridges (after GuiController) between player actions and the game logic
  * by creating methods that link the player's actions to the game's responses towards player actions.
  */
 public class GameController implements InputEventListener {
-    private final Board board = new SimpleBoard(25, 10);
-    private final GuiController gc;
+    private final Board board;
+    private final GameView gameView;
 
     /**
+     * -----------------------------NEW-------------------------------<br>
+     * SOLID: Dependency Injection<br>
+     * Similar to how in the original code, Board board = new SimpleBoard was used,
+     * I have made a change to mirror that, i.e. GameView gameView = new GuiController <br>
+     * -----------------------------NEW-------------------------------<br>
      * Creates new brick via createNewBrick() method in SimpleBoard object.<br>
      * Player actions will cause the GuiController class to notify the viewGuiController object of this class. <br>
      * Opens a window in which the game will initialise with the state provided by getBoardMatrix (currentGameMatrix),
      * along with data about the Brick-shape-objects in the Deque, nextBricks.<br>
      * Automatically updates the score when a player earns points from clearing rows.
-     * @param c GuiController created in start() in Main class.
+     * @param gameView GameView > GuiController object created in start() in Main class.
      */
-    public GameController(GuiController c) {
-        gc = c;
+    public GameController(GameView gameView, Board board) {
+        this.board = board;
+        this.gameView = gameView;
+
         board.createNewBrick();
-        gc.setEventListener(this);
-        gc.initGameView(board.getBoardMatrix(), board.getViewData());
-        gc.bindScore(board.getScore().scoreProperty());
-        gc.setSimpleBoard((SimpleBoard) this.board);
+        gameView.setEventListener(this);
+        gameView.initialise(board.getBoardMatrix(), board.getViewData());
+        gameView.bindScore(board.getScore().scoreProperty());
+    }
+
+    /**
+     * Convenience constructor that creates a default SimpleBoard.<br>
+     * Used for backward compatibility.
+     */
+    public GameController(GameView gameView) {
+        this(gameView, new SimpleBoard(25, 10));
     }
 
     /**
@@ -56,21 +70,24 @@ public class GameController implements InputEventListener {
     public DownData onDownEvent(MoveEvent event) {
         boolean canMove = board.moveBrickDown();
         ClearRow clearRow = null;
+
         if (!canMove) {
             board.mergeBrickToBackground();
             clearRow = board.clearRows();
 
             if (clearRow.linesRemoved() > 0) {
                 board.getScore().add(clearRow.scoreBonus());
+                gameView.showClearRowNotification(clearRow.scoreBonus());
             }
+
             if (board.createNewBrick()) {
-                gc.gameOver();
+                gameView.notifyGameOver();
             }
 
-//            rf.refreshGameBackground(board.getBoardMatrix(), gc.displayMatrix);
-            gc.refreshCoordinator.renderBackground(board.getBoardMatrix(), gc.displayMatrix);
+            gameView.updateBackground(board.getBoardMatrix());
 
-        } else {
+        }
+        else {
             if (event.eventSource() == EventSource.USER) {
                 board.getScore().add(1);
             }
@@ -126,9 +143,18 @@ public class GameController implements InputEventListener {
         return board.getViewData();
     }
 
+    /**
+     * Calls method to hard drop the current Brick to the bottom.
+     * @param event MoveEvent object containing EventType (keystroke) and EventSource.
+     * @return ViewData object containing information on current Brick-shape-object after alterations from player action
+     * and info on next Brick-shape-object.
+     */
     @Override
     public ViewData onSnapEvent(MoveEvent event) {
-        board.snapBrick(gc.refreshCoordinator, gc.displayMatrix);
+        board.snapBrick(
+                ((com.comp2042.ui.ui_systems.GuiController) gameView).refreshCoordinator,
+                gameView.getDisplayMatrix()
+        );
         return board.getViewData();
     }
 
@@ -139,7 +165,6 @@ public class GameController implements InputEventListener {
     @Override
     public void createNewGame() {
         board.newGame();
-//        rf.refreshGameBackground(board.getBoardMatrix(), gc.displayMatrix);
-        gc.refreshCoordinator.renderBackground(board.getBoardMatrix(), gc.displayMatrix);
+        gameView.updateBackground(board.getBoardMatrix());
     }
 }

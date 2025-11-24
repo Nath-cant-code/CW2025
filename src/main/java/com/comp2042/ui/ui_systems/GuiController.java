@@ -11,6 +11,7 @@ import com.comp2042.renderer.BrickRenderer;
 import com.comp2042.renderer.RefreshCoordinator;
 import com.comp2042.system_events.MoveEvent;
 import com.comp2042.ui.GameTimeLine;
+import com.comp2042.ui.GameView;
 import com.comp2042.ui.panels.GameOverPanel;
 import com.comp2042.ui.panels.NotificationPanel;
 import com.comp2042.ui.panels.PausePanel;
@@ -34,7 +35,14 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
- * ------------------------------CAN PROBABLY SPLIT THIS CLASS INTO 2 OR MORE CLASSES----------------------------<br>
+ * ----------------------------------------CLASS SPLIT ALERT--------------------------------------<br>
+ * The handle() method here was removed and put into a new class, InputHandler.java to increase cohesion of initialise() method.<br>
+ * NOTE: InputHandler object is created in setEventListener() method. <br>
+ * ----------------------------------------CLASS SPLIT ALERT--------------------------------------<br>
+ * ----------------------------------------FUNCTIONALITY SPLIT ALERT--------------------------------------<br>
+ * GuiController no longer handles checking of game states: pause or game over<br>
+ * This is now handled in GameStateManager.<br>
+ * ----------------------------------------FUNCTIONALITY SPLIT ALERT--------------------------------------<br>
  * Acts as a bridge between the GUI and the game logic.<br>
  * This class:
  * <p>
@@ -45,7 +53,7 @@ import java.util.ResourceBundle;
  *     - Handles pause, game over and new game functionalities.
  * </p>
  */
-public class GuiController implements Initializable {
+public class GuiController implements Initializable, GameView {
 
     public static final int BRICK_SIZE = 20;
 
@@ -109,10 +117,6 @@ public class GuiController implements Initializable {
      *     gamePanel.setFocusTraversable(true);
  *         gamePanel.requestFocus();
      * </p>
-     * ----------------------------------------CLASS SPLIT ALERT--------------------------------------<br>
-     * The handle() method here was removed and put into a new class, InputHandler.java to increase cohesion of initialise() method.<br>
-     * NOTE: InputHandler object is created in setEventListener() method. <br>
-     * ----------------------------------------CLASS SPLIT ALERT--------------------------------------<br>
      * Hides the "GAME OVER" panel during gameplay.<br>
      * Creates Reflection object for effects. <br>
      */
@@ -183,6 +187,71 @@ public class GuiController implements Initializable {
         gameTimeLine.start();
     }
 
+    /**
+     * Clearer more concise initialise method.
+     * @param boardMatrix The initial board matrix
+     * @param initialBrick The first brick to display
+     */
+    @Override
+    public void initialise(int[][] boardMatrix, ViewData initialBrick) {
+        initGameView(boardMatrix, initialBrick);
+    }
+
+    /**
+     * Connects GUI to game logic.
+     * @param eventListener viewGuiController object in GameController.
+     */
+    @Override
+    public void setEventListener(InputEventListener eventListener) {
+        this.eventListener = eventListener;
+    }
+
+    /**
+     * -------------------------------------FUNCTIONALITY ADDED--------------------------------------
+     * @param integerProperty   Current SimpleBoard object's overall score, i.e. current game's overall score.
+     */
+    @Override
+    public void bindScore(IntegerProperty integerProperty) {
+        scoreLabel.textProperty().bind(integerProperty.asString());
+    }
+
+    /**
+     * Show points obtained everytime a row is cleared.
+     * @param points The points earned
+     */
+    @Override
+    public void showClearRowNotification(int points) {
+        NotificationPanel notificationPanel = new NotificationPanel("+" + points);
+        groupNotification.getChildren().add(notificationPanel);
+        notificationPanel.showScore(groupNotification.getChildren());
+    }
+
+    /**
+     * Concise method that just calls gameOver.
+     */
+    @Override
+    public void notifyGameOver() {
+        gameOver();
+    }
+
+    /**
+     * Retrieves displayMatrix.
+     * @return  displayMatrix.
+     */
+    @Override
+    public Rectangle[][] getDisplayMatrix() {
+        return displayMatrix;
+    }
+
+    /**
+     * Concise method to update (refresh) background.
+     * @param boardMatrix The current board state.
+     */
+    @Override
+    public void updateBackground(int[][] boardMatrix) {
+        refreshCoordinator.renderBackground(boardMatrix, displayMatrix);
+    }
+
     private void initNextPanel() {
         BrickRenderer renderer = new BrickRenderer();
 
@@ -203,7 +272,6 @@ public class GuiController implements Initializable {
         // Only one nextPanel, only one nextMatrix
         nextMatrix = renderer.createBrickAreaMatrix(nextPanel, emptyView);
     }
-
 
     /**
      * Only has functionality if game is not paused.<br>
@@ -240,27 +308,11 @@ public class GuiController implements Initializable {
     }
 
     /**
-     * Connects GUI to game logic.
-     * @param eventListener viewGuiController object in GameController.
-     */
-    public void setEventListener(InputEventListener eventListener) {
-        this.eventListener = eventListener;
-    }
-
-    /**
      * Retrieve GameStateManager object.
      * @return  GameStateManager object.
      */
     public GameStateManager getGameStateManager() {
         return gameStateManager;
-    }
-
-    /**
-     * -------------------------------------FUNCTIONALITY ADDED--------------------------------------
-     * @param integerProperty   Current SimpleBoard object's overall score, i.e. current game's overall score.
-     */
-    public void bindScore(IntegerProperty integerProperty) {
-        scoreLabel.textProperty().bind(integerProperty.asString());
     }
 
     /**
@@ -313,6 +365,9 @@ public class GuiController implements Initializable {
         gamePanel.requestFocus();
     }
 
+    /**
+     * Start a countdown from 3 when player presses the resume key.
+     */
     private void startResumeCountdown () {
         if (countdownRunning) return;
         countdownRunning = true;
@@ -340,6 +395,9 @@ public class GuiController implements Initializable {
         countdown.play();
     }
 
+    /**
+     * Initialises a hold matrix in the hold panel
+     */
     private void initHoldMatrix () {
         int size = 4;
         holdMatrix = new Rectangle[size][size];
@@ -354,6 +412,9 @@ public class GuiController implements Initializable {
         }
     }
 
+    /**
+     * Refreshes the hold panel to contain the selected held Brick.
+     */
     public void onHoldEvent () {
         if (simpleBoard == null) return;
 

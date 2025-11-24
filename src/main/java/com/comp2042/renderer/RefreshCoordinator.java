@@ -11,15 +11,22 @@ import javafx.scene.shape.Rectangle;
 import java.util.List;
 
 /**
- * Coordinates all rendering operations using the specialized renderers.
- *
- * Design Pattern: Facade Pattern
- * - Provides a unified interface to a set of interfaces (renderers)
- * - Simplifies the subsystem for clients
- *
- * SOLID: Dependency Inversion
- * - Depends on renderer interfaces, not concrete implementations
- * - Easy to swap renderer implementations
+ * ----------------------------REFACTORING DONE----------------------------<br>
+ * SOLID: Interface Segregation > refresher_interfaces > implemented by > concrete_refreshers<br>
+ * Design pattern: Facade > this clas acts as a wrapper class hiding the logic
+ * of all the refresh activity methods.<br>
+ * ----------------------------REFACTORING DONE----------------------------<br>
+ * Coordinates all rendering operations using the specialized renderers.<br>
+ * <p>
+ * Design Pattern: Facade Pattern<br>
+ * - Provides a unified interface to a set of interfaces (renderers)<br>
+ * - Simplifies the subsystem for clients<br>
+ * </p>
+ * <p>
+ * SOLID: Dependency Inversion<br>
+ * - Depends on renderer interfaces, not concrete implementations<br>
+ * - Easy to swap renderer implementations<br>
+ * </p>
  */
 public class RefreshCoordinator {
     private final GameBackground_RI bgRenderer;

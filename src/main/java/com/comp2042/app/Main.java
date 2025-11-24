@@ -1,5 +1,7 @@
 package com.comp2042.app;
 
+import com.comp2042.board.SimpleBoard;
+import com.comp2042.ui.GameView;
 import com.comp2042.ui.ui_systems.GuiController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -25,10 +27,11 @@ public class Main extends Application {
      *     Self note: Scene is what is inside the stage (main window).
      * </p>
      * Attach scene to stage and display the window on player's screen.<br>
-     * !!!!<br>
-     * Connects GuiController to GameController by passing an object of GuiController in:<br>
+     * -----------------------NEW REFACTORING-----------------------<br>
+     * Upcasting of objects: SimpleBoard > Board, GuiController > GameView<br>
+     * Connects GuiController to GameController by passing an object of GameView > GuiController in:<br>
      * new GameController(c);
-     * !!!!<br>
+     * -----------------------NEW REFACTORING-----------------------<br>
      * @param primaryStage  Main window of the game (args).
      * @throws Exception    Self note: This means that this method might throw an exception
      * because FXML files and resource file might fail to load, but the exception is not handled here.
@@ -46,7 +49,11 @@ public class Main extends Application {
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
-        new GameController(c);
+
+        GameView gameView = c;
+        SimpleBoard board = new SimpleBoard(25, 10);
+        new GameController(gameView, board);
+        c.setSimpleBoard(board);
     }
 
     /**
