@@ -1,4 +1,4 @@
-package com.comp2042.renderer;
+package com.comp2042.renderer.basic_renderers;
 
 import com.comp2042.ui.ui_systems.GuiController;
 import javafx.scene.layout.GridPane;

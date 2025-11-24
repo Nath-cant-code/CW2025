@@ -1,9 +1,8 @@
-package com.comp2042.renderer;
+package com.comp2042.renderer.concrete_refreshers;
 
 import com.comp2042.board.composite_bricks.ViewData;
 import com.comp2042.bricks.AbstractBrick;
 import com.comp2042.renderer.refresher_interfaces.*;
-import com.comp2042.renderer.concrete_refreshers.*;
 import com.comp2042.ui.ui_systems.GameStateManager;
 
 import javafx.scene.layout.GridPane;

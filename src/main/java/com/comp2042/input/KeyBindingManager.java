@@ -1,6 +1,6 @@
 package com.comp2042.input;
 
-import com.comp2042.renderer.RefreshCoordinator;
+import com.comp2042.renderer.concrete_refreshers.RefreshCoordinator;
 import com.comp2042.system_events.EventType;
 import com.comp2042.ui.ui_systems.GuiController;
 import javafx.scene.input.KeyCode;
@@ -74,52 +74,46 @@ public class KeyBindingManager {
             GridPane gamePanel,
             GuiController guiController) {
 
-        // Move left actions
         InputAction moveLeft = event -> refreshCoordinator.renderActiveBrick(
                 eventListener.onLeftEvent(event),
                 rectangles, brickPanel, gamePanel
         );
-        gameplayActions.put(KeyCode.LEFT, moveLeft);
-        gameplayActions.put(KeyCode.A, moveLeft);
 
-        // Move right actions
         InputAction moveRight = event -> refreshCoordinator.renderActiveBrick(
                 eventListener.onRightEvent(event),
                 rectangles, brickPanel, gamePanel
         );
-        gameplayActions.put(KeyCode.RIGHT, moveRight);
-        gameplayActions.put(KeyCode.D, moveRight);
 
-        // Rotate clockwise actions
         InputAction rotateClock = event -> refreshCoordinator.renderActiveBrick(
                 eventListener.onRotateClock(event),
                 rectangles, brickPanel, gamePanel
         );
-        gameplayActions.put(KeyCode.X, rotateClock);
 
-        // Rotate anti-clockwise actions
         InputAction rotateAntiClock = event -> refreshCoordinator.renderActiveBrick(
                 eventListener.onRotateAntiClock(event),
                 rectangles, brickPanel, gamePanel
         );
-        gameplayActions.put(KeyCode.Z, rotateAntiClock);
-        gameplayActions.put(KeyCode.UP, rotateAntiClock);
-        gameplayActions.put(KeyCode.W, rotateAntiClock);
 
-        // Move down actions
         InputAction moveDown = guiController::moveDown;
-        gameplayActions.put(KeyCode.DOWN, moveDown);
-        gameplayActions.put(KeyCode.S, moveDown);
 
-        // Snap action
         InputAction snap = event -> refreshCoordinator.renderActiveBrick(
                 eventListener.onSnapEvent(event),
                 rectangles, brickPanel, gamePanel
         );
-        gameplayActions.put(KeyCode.SPACE, snap);
 
-        // Hold action
         InputAction hold = event -> guiController.onHoldEvent();
+
+        gameplayActions.put(KeyCode.LEFT, moveLeft);
+        gameplayActions.put(KeyCode.A, moveLeft);
+        gameplayActions.put(KeyCode.RIGHT, moveRight);
+        gameplayActions.put(KeyCode.D, moveRight);
+        gameplayActions.put(KeyCode.X, rotateClock);
+        gameplayActions.put(KeyCode.Z, rotateAntiClock);
+        gameplayActions.put(KeyCode.UP, rotateAntiClock);
+        gameplayActions.put(KeyCode.W, rotateAntiClock);
+        gameplayActions.put(KeyCode.DOWN, moveDown);
+        gameplayActions.put(KeyCode.S, moveDown);
+        gameplayActions.put(KeyCode.SPACE, snap);
         gameplayActions.put(KeyCode.C, hold);
     }
 

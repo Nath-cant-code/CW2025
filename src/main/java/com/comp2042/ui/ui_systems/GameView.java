@@ -1,4 +1,4 @@
-package com.comp2042.ui;
+package com.comp2042.ui.ui_systems;
 
 import com.comp2042.board.composite_bricks.ViewData;
 import com.comp2042.input.InputEventListener;

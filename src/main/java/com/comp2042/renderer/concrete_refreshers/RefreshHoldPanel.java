@@ -1,7 +1,7 @@
 package com.comp2042.renderer.concrete_refreshers;
 
 import com.comp2042.bricks.AbstractBrick;
-import com.comp2042.renderer.RectangleColorRenderer;
+import com.comp2042.renderer.color_renderers.RectangleColorRenderer;
 import com.comp2042.renderer.refresher_interfaces.HoldBrick_RI;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;

@@ -1,7 +1,7 @@
 package com.comp2042.renderer.concrete_refreshers;
 
 import com.comp2042.board.composite_bricks.ViewData;
-import com.comp2042.renderer.ColorSelector;
+import com.comp2042.renderer.color_renderers.ColorSelector;
 import com.comp2042.renderer.refresher_interfaces.PreviewBricks_RI;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;

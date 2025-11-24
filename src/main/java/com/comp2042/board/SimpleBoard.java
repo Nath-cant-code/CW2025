@@ -12,7 +12,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.comp2042.renderer.RefreshCoordinator;
+import com.comp2042.renderer.concrete_refreshers.RefreshCoordinator;
 import com.comp2042.ui.Score;
 import javafx.scene.shape.Rectangle;
 

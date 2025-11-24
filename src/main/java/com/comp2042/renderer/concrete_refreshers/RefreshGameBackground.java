@@ -1,6 +1,6 @@
 package com.comp2042.renderer.concrete_refreshers;
 
-import com.comp2042.renderer.RectangleColorRenderer;
+import com.comp2042.renderer.color_renderers.RectangleColorRenderer;
 import com.comp2042.renderer.refresher_interfaces.GameBackground_RI;
 import javafx.scene.shape.Rectangle;
 

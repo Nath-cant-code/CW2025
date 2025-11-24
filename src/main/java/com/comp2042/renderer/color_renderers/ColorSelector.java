@@ -1,4 +1,4 @@
-package com.comp2042.renderer;
+package com.comp2042.renderer.color_renderers;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;

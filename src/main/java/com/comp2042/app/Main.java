@@ -1,7 +1,7 @@
 package com.comp2042.app;
 
 import com.comp2042.board.SimpleBoard;
-import com.comp2042.ui.GameView;
+import com.comp2042.ui.ui_systems.GameView;
 import com.comp2042.ui.ui_systems.GuiController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

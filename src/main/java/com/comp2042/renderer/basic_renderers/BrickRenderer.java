@@ -1,5 +1,6 @@
-package com.comp2042.renderer;
+package com.comp2042.renderer.basic_renderers;
 
+import com.comp2042.renderer.color_renderers.ColorSelector;
 import com.comp2042.ui.ui_systems.GuiController;
 import com.comp2042.board.composite_bricks.ViewData;
 import javafx.scene.layout.GridPane;

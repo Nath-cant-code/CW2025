@@ -6,7 +6,7 @@ import com.comp2042.board.composite_bricks.ViewData;
 import com.comp2042.system_events.EventSource;
 import com.comp2042.input.InputEventListener;
 import com.comp2042.system_events.MoveEvent;
-import com.comp2042.ui.GameView;
+import com.comp2042.ui.ui_systems.GameView;
 
 /**
  * This class acts as one of the bridges (after GuiController) between player actions and the game logic

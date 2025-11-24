@@ -3,7 +3,7 @@ package com.comp2042.board;
 import com.comp2042.board.composite_bricks.DownData;
 import com.comp2042.board.composite_bricks.ViewData;
 import com.comp2042.brick_actions.RotationDirection;
-import com.comp2042.renderer.RefreshCoordinator;
+import com.comp2042.renderer.concrete_refreshers.RefreshCoordinator;
 import com.comp2042.ui.Score;
 import javafx.scene.shape.Rectangle;
 
