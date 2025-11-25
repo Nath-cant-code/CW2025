@@ -5,6 +5,9 @@ import com.comp2042.board.MatrixOperations;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Abstract class to extract the getShapeMatrix method from all the brick_shape_classes.
+ */
 public abstract class AbstractBrick implements Brick{
     protected final List<int[][]> brickMatrix = new ArrayList<>();
 

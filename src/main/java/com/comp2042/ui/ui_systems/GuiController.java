@@ -254,13 +254,11 @@ public class GuiController implements Initializable, GameView {
     private void initNextPanel() {
         BrickRenderer renderer = new BrickRenderer();
 
-        // Create an empty 12x4 matrix (your preview size)
         int rows = 12;
         int cols = 4;
 
         int[][] emptyMatrix = new int[rows][cols]; // all zeros
 
-        // ViewData requires 4 parameters, so we supply all of them
         ViewData emptyView = new ViewData(
                 emptyMatrix, // brickData
                 0,           // xPosition (unused in preview)
