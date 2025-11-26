@@ -1,4 +1,4 @@
-package com.comp2042.input;
+package com.comp2042.input.event_controllers;
 
 import com.comp2042.board.composite_bricks.DownData;
 import com.comp2042.board.composite_bricks.ViewData;
@@ -20,6 +20,8 @@ public interface InputEventListener {
     ViewData onRotateAntiClock(MoveEvent event);
 
     ViewData onSnapEvent(MoveEvent event);
+
+    void onHoldEvent();
 
     void createNewGame();
 }

@@ -1,5 +1,6 @@
 package com.comp2042.input;
 
+import com.comp2042.input.event_controllers.InputEventListener;
 import com.comp2042.ui.ui_systems.GuiController;
 import com.comp2042.system_events.EventSource;
 import com.comp2042.system_events.MoveEvent;

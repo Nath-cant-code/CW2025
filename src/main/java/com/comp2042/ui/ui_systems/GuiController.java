@@ -4,7 +4,8 @@ import com.comp2042.board.composite_bricks.DownData;
 import com.comp2042.board.SimpleBoard;
 import com.comp2042.board.composite_bricks.ViewData;
 import com.comp2042.bricks.AbstractBrick;
-import com.comp2042.input.InputEventListener;
+import com.comp2042.bricks.Brick;
+import com.comp2042.input.event_controllers.InputEventListener;
 import com.comp2042.input.InputHandler;
 import com.comp2042.renderer.basic_renderers.BoardRenderer;
 import com.comp2042.renderer.basic_renderers.BrickRenderer;
@@ -251,6 +252,18 @@ public class GuiController implements Initializable, GameView {
         refreshCoordinator.renderBackground(boardMatrix, displayMatrix);
     }
 
+    /**
+     * Called by onHoldEvent() in GameController to render Brick object
+     * in hold panel and playable area after swap.
+     * @param viewData Info for falling Brick.
+     * @param heldBrick Info on held Brick object in hold panel.
+     */
+    @Override
+    public void refreshHoldPanel(ViewData viewData, Brick heldBrick) {
+        refreshCoordinator.renderActiveBrick(viewData, rectangles, brickPanel, gamePanel);
+        refreshCoordinator.renderHoldBrick((AbstractBrick) heldBrick, holdMatrix, holdPanel);
+    }
+
     private void initNextPanel() {
         BrickRenderer renderer = new BrickRenderer();
 
@@ -300,6 +313,13 @@ public class GuiController implements Initializable, GameView {
      */
     public void setSimpleBoard (SimpleBoard simpleBoard) {
         this.simpleBoard = simpleBoard;
+    }
+
+    /**
+     * Calls rendering methods for rendering Hold and Preview panels. <br>
+     * Called by Main.java after calling setSimpleBoard().
+     */
+    public void refreshAllPanels () {
         refreshCoordinator.renderHoldBrick((AbstractBrick) simpleBoard.getHeldBrick(), holdMatrix, holdPanel);
         refreshCoordinator.renderNextBricks(simpleBoard.getNextBricksPreview(), nextMatrix);
     }
@@ -407,18 +427,5 @@ public class GuiController implements Initializable, GameView {
                 holdPanel.add(r, i, j);
             }
         }
-    }
-
-    /**
-     * Refreshes the hold panel to contain the selected held Brick.
-     */
-    public void onHoldEvent () {
-        if (simpleBoard == null) return;
-
-        simpleBoard.holdBrick();
-        refreshCoordinator.renderHoldBrick((AbstractBrick) simpleBoard.getHeldBrick(), holdMatrix, holdPanel);
-
-        ViewData viewData = simpleBoard.getViewData();
-        refreshCoordinator.renderActiveBrick(viewData, rectangles, brickPanel, gamePanel);
     }
 }

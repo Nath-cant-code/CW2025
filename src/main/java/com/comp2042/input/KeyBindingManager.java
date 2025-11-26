@@ -1,5 +1,6 @@
 package com.comp2042.input;
 
+import com.comp2042.input.event_controllers.InputEventListener;
 import com.comp2042.renderer.concrete_refreshers.RefreshCoordinator;
 import com.comp2042.system_events.EventType;
 import com.comp2042.ui.ui_systems.GuiController;
@@ -101,7 +102,7 @@ public class KeyBindingManager {
                 rectangles, brickPanel, gamePanel
         );
 
-        InputAction hold = event -> guiController.onHoldEvent();
+        InputAction hold = event -> eventListener.onHoldEvent();
 
         gameplayActions.put(KeyCode.LEFT, moveLeft);
         gameplayActions.put(KeyCode.A, moveLeft);

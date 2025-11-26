@@ -1,10 +1,9 @@
-package com.comp2042.app;
+package com.comp2042.input.event_controllers;
 
 import com.comp2042.board.*;
 import com.comp2042.board.composite_bricks.DownData;
 import com.comp2042.board.composite_bricks.ViewData;
 import com.comp2042.system_events.EventSource;
-import com.comp2042.input.InputEventListener;
 import com.comp2042.system_events.MoveEvent;
 import com.comp2042.ui.ui_systems.GameView;
 
@@ -156,6 +155,18 @@ public class GameController implements InputEventListener {
                 gameView.getDisplayMatrix()
         );
         return board.getViewData();
+    }
+
+    /**
+     * Refreshes the hold panel to contain the selected held Brick.
+     */
+    @Override
+    public void onHoldEvent () {
+        if (board == null) return;
+
+        board.holdBrick();
+        ViewData viewData = board.getViewData();
+        gameView.refreshHoldPanel(viewData, board.getHeldBrick());
     }
 
     /**

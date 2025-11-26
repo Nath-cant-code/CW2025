@@ -1,9 +1,12 @@
 package com.comp2042.ui.ui_systems;
 
 import com.comp2042.board.composite_bricks.ViewData;
-import com.comp2042.input.InputEventListener;
+import com.comp2042.bricks.Brick;
+import com.comp2042.input.event_controllers.InputEventListener;
 import javafx.beans.property.IntegerProperty;
 import javafx.scene.shape.Rectangle;
+
+import javax.swing.text.View;
 
 /**
  * Abstraction for the game view/UI layer.<br>
@@ -67,4 +70,11 @@ public interface GameView {
      * @param boardMatrix The current board state
      */
     void updateBackground(int[][] boardMatrix);
+
+    /**
+     * Refreshes the hold panel Brick and the currently falling Brick.
+     * @param viewData  Info for currently falling Brick.
+     * @param heldBrick Info for held Brick in hold panel.
+     */
+    void refreshHoldPanel(ViewData viewData, Brick heldBrick);
 }

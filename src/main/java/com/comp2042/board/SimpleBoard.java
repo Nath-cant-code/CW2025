@@ -298,6 +298,7 @@ public class SimpleBoard implements Board {
         return getViewData();
     }
 
+    @Override
     public Brick getHeldBrick () {
         return heldBrick;
     }

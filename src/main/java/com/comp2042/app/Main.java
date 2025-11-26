@@ -1,6 +1,7 @@
 package com.comp2042.app;
 
 import com.comp2042.board.SimpleBoard;
+import com.comp2042.input.event_controllers.GameController;
 import com.comp2042.ui.ui_systems.GameView;
 import com.comp2042.ui.ui_systems.GuiController;
 import javafx.application.Application;
@@ -54,6 +55,7 @@ public class Main extends Application {
         SimpleBoard board = new SimpleBoard(25, 10);
         new GameController(gameView, board);
         c.setSimpleBoard(board);
+        c.refreshAllPanels();
     }
 
     /**
