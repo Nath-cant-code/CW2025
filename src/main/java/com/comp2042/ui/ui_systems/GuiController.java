@@ -92,6 +92,8 @@ public class GuiController implements Initializable, GameView {
 
     public RefreshCoordinator refreshCoordinator;
 
+    private UIPanelManager panelManager;
+
     @FXML
     protected PausePanel pausePanel;
 
@@ -128,6 +130,7 @@ public class GuiController implements Initializable, GameView {
 
         refreshCoordinator = new RefreshCoordinator(BRICK_SIZE, gameStateManager);
 
+        panelManager = new UIPanelManager(gameOverPanel, pausePanel);
         gameOverPanel.setVisible(false);
         pausePanel.setVisible(false);
 
@@ -204,6 +207,15 @@ public class GuiController implements Initializable, GameView {
     @Override
     public void setEventListener(InputEventListener eventListener) {
         this.eventListener = eventListener;
+    }
+
+    /**
+     * Creates SimpleBoard object in this class.<br>
+     * Refreshes Hold Brick panel and Preview Bricks panel.
+     * @param simpleBoard SimpleBoard object.
+     */
+    public void setSimpleBoard (SimpleBoard simpleBoard) {
+        this.simpleBoard = simpleBoard;
     }
 
     /**
@@ -307,15 +319,6 @@ public class GuiController implements Initializable, GameView {
     }
 
     /**
-     * Creates SimpleBoard object in this class.<br>
-     * Refreshes Hold Brick panel and Preview Bricks panel.
-     * @param simpleBoard SimpleBoard object.
-     */
-    public void setSimpleBoard (SimpleBoard simpleBoard) {
-        this.simpleBoard = simpleBoard;
-    }
-
-    /**
      * Calls rendering methods for rendering Hold and Preview panels. <br>
      * Called by Main.java after calling setSimpleBoard().
      */
@@ -333,15 +336,6 @@ public class GuiController implements Initializable, GameView {
     }
 
     /**
-     * Stops the timeLine, unhides game over label, and set game over checker to true.
-     */
-    public void gameOver() {
-        gameTimeLine.stop();
-        gameOverPanel.setVisible(true);
-        gameStateManager.setGameOver(true);
-    }
-
-    /**
      * Stops the timeLine, <br>
      * re-hides the game over label, <br>
      * calls createNewGame() method to run code that resets the game, <br>
@@ -352,8 +346,8 @@ public class GuiController implements Initializable, GameView {
      */
     public void newGame(ActionEvent actionEvent) {
         gameTimeLine.stop();
-        gameOverPanel.setVisible(false);
-        pausePanel.setVisible(false);
+        panelManager.hideGameOver();
+        panelManager.hidePause();
         eventListener.createNewGame();
         gamePanel.requestFocus();
         gameTimeLine.start();
@@ -366,50 +360,30 @@ public class GuiController implements Initializable, GameView {
      * @param actionEvent no uses
      */
     public void pauseGame (ActionEvent actionEvent) {
-
         if (!gameStateManager.isPaused()) {
             gameTimeLine.stop();
             gameStateManager.setPaused(true);
-            pausePanel.setString("GAME\nPAUSED");
-            pausePanel.setVisible(true);
-            pausePanel.toFront();
+            panelManager.showPause();
         }
         else {
-            if (!countdownRunning) {
-                startResumeCountdown();
+            if (!panelManager.isCountdownRunning()) {
+//                passes methods that startResumeCountdown() executes at the end of its functionality
+                panelManager.startResumeCountdown(() -> {
+                    gameStateManager.setPaused(false);
+                    gameTimeLine.start();
+                });
             }
         }
         gamePanel.requestFocus();
     }
 
     /**
-     * Start a countdown from 3 when player presses the resume key.
+     * Stops the timeLine, unhides game over label, and set game over checker to true.
      */
-    private void startResumeCountdown () {
-        if (countdownRunning) return;
-        countdownRunning = true;
-
-        pausePanel.setVisible(true);
-        pausePanel.toFront();
-
-        final int[] count = {3};
-
-        Timeline countdown = new Timeline(
-                new KeyFrame(javafx.util.Duration.seconds(1), e -> {
-                    if (count[0] > 0) {
-                        pausePanel.setString("GAME RESUMING IN\n\t" + count[0]);
-                        count[0]--;
-                    }
-                    else {
-                        pausePanel.setVisible(false);
-                        gameStateManager.setPaused(false);
-                        countdownRunning = false;
-                        gameTimeLine.start();
-                    }
-                })
-        );
-        countdown.setCycleCount(4);
-        countdown.play();
+    public void gameOver() {
+        gameTimeLine.stop();
+        panelManager.showGameOver();
+        gameStateManager.setGameOver(true);
     }
 
     /**
