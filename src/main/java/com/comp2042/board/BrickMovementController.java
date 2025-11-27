@@ -16,23 +16,25 @@ public class BrickMovementController {
      * @param currentOffset Current Tetromino coordinates.
      * @param dx            x-coordinate offset.
      * @param dy            y-coordinate offset.
-     * @return true if movement was successful
+     * @return Point containing new position if valid, null if collision detected.
      */
-    public static boolean tryMoveBrick(int[][] gameMatrix, int[][] brickShape,
+    public static Point tryMoveBrick(int[][] gameMatrix, int[][] brickShape,
                                 Point currentOffset, int dx, int dy) {
+
         Point newPosition = new Point(currentOffset);
         newPosition.translate(dx, dy);
 
-        if (CollisionDetector.wouldCollide(gameMatrix, brickShape,
-                (int)newPosition.getX(),
-                (int)newPosition.getY())) {
-            System.out.println("false");
-            return false;
+        if (CollisionDetector.wouldCollide(gameMatrix,
+                                           brickShape,
+                                           (int)newPosition.getX(),
+                                           (int)newPosition.getY())) {
+            System.out.println("null");
+            return null;
         }
 
-        currentOffset.setLocation(newPosition);
-        System.out.println("true");
-        return true;
+//        currentOffset.setLocation(newPosition);
+        System.out.println("newPos");
+        return newPosition;
     }
 
     public static int findSnapPosition(int[][] board, int[][] shape, int x, int y) {

@@ -6,8 +6,6 @@ import com.comp2042.input.event_controllers.InputEventListener;
 import javafx.beans.property.IntegerProperty;
 import javafx.scene.shape.Rectangle;
 
-import javax.swing.text.View;
-
 /**
  * Abstraction for the game view/UI layer.<br>
  * <p>
@@ -65,11 +63,17 @@ public interface GameView {
      */
     Rectangle[][] getDisplayMatrix();
 
+    void refreshActiveBrick (ViewData viewData);
+
     /**
      * Updates the background rendering.
      * @param boardMatrix The current board state
      */
-    void updateBackground(int[][] boardMatrix);
+    void refreshBackground (int[][] boardMatrix);
+
+    void refreshHoldBrick ();
+
+    void refreshPreviewPanel ();
 
     /**
      * Refreshes the hold panel Brick and the currently falling Brick.

@@ -1,5 +1,6 @@
 package com.comp2042.ui;
 
+import com.comp2042.input.event_controllers.InputEventListener;
 import com.comp2042.system_events.EventSource;
 import com.comp2042.system_events.EventType;
 import com.comp2042.system_events.MoveEvent;
@@ -17,20 +18,22 @@ public class GameTimeLine {
     private Timeline timeLine;
     private int currentSpeed = 400;
 
-    public void setGameTimeline(GuiController gc) {
-        createTimeline(gc, currentSpeed);
+    public void setGameTimeline(InputEventListener eventListener) {
+        createTimeline(eventListener, currentSpeed);
     }
 
     /**
      * Creates a timeline object that automatically causes Brick objects to naturally fall at specific intervals, Duration,millis( x ).
      * @param gc    GuiController object to call methods.
      */
-    public void createTimeline (GuiController gc, int currSpeed) {
+    public void createTimeline (InputEventListener eventListener, int currSpeed) {
         if (timeLine != null) { timeLine.stop(); }
 
         timeLine = new Timeline(new KeyFrame(
+//                Duration.millis(currSpeed),
+//                ae -> gc.moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
                 Duration.millis(currSpeed),
-                ae -> gc.moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
+                ae -> eventListener.onDownEvent(new MoveEvent(EventType.DOWN, EventSource.THREAD))
         ));
         timeLine.setCycleCount(Timeline.INDEFINITE);
     }
@@ -40,11 +43,11 @@ public class GameTimeLine {
      * @param newSpeed New fall speed in milliseconds
      * @param gc GuiController reference
      */
-    public void updateSpeed(int newSpeed, GuiController gc) {
+    public void updateSpeed(int newSpeed, InputEventListener eventListener) {
         boolean wasPlaying = timeLine != null &&
                 timeLine.getStatus() == Timeline.Status.RUNNING;
         currentSpeed = newSpeed;
-        createTimeline(gc, newSpeed);
+        createTimeline(eventListener, newSpeed);
 
         if (wasPlaying) { start(); }
     }

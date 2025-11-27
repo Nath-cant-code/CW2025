@@ -71,7 +71,7 @@ public class GameController implements InputEventListener {
         boolean canMove = board.moveBrickDown();
         ClearRow clearRow = null;
 
-//        System.out.println("canmove: " + canMove);
+        System.out.println("canmove: " + canMove);
         if (!canMove) {
             board.mergeBrickToBackground();
             clearRow = board.clearRows();
@@ -103,7 +103,7 @@ public class GameController implements InputEventListener {
                 gameView.notifyGameOver();
             }
 
-            gameView.updateBackground(board.getBoardMatrix());
+            gameView.refreshBackground(board.getBoardMatrix());
 
         }
         else {
@@ -111,6 +111,8 @@ public class GameController implements InputEventListener {
                 board.getScore().add(1);
             }
         }
+        gameView.refreshActiveBrick(board.getViewData());
+        gameView.refreshPreviewPanel();
         return new DownData(clearRow, board.getViewData());
     }
 
@@ -170,10 +172,32 @@ public class GameController implements InputEventListener {
      */
     @Override
     public ViewData onSnapEvent(MoveEvent event) {
-        board.snapBrick(
-                ((com.comp2042.ui.ui_systems.GuiController) gameView).refreshCoordinator,
-                gameView.getDisplayMatrix()
+        DownData downData = board.snapBrick(
+                            ((com.comp2042.ui.ui_systems.GuiController) gameView).refreshCoordinator,
+                            gameView.getDisplayMatrix()
         );
+
+        if (downData.clearRow().linesRemoved() > 0) {
+            System.out.println("clearrow ran");
+            board.getScore().add(downData.clearRow().scoreBonus());
+            gameView.showClearRowNotification(downData.clearRow().scoreBonus());
+
+            boolean leveledUp = board.getLevelSystem().addClearedRows(
+                    downData.clearRow().linesRemoved()
+            );
+
+            System.out.println("GC LevelSystem hash: " + board.getLevelSystem());
+
+            System.out.println("leveledUp: " + leveledUp);
+
+            if (leveledUp) {
+                System.out.println("Game level up");
+                int newLevel = board.getLevelSystem().getCurrentLevel();
+                gameView.notifyLevelUp(newLevel);
+                gameView.updateFallSpeed(board.getLevelSystem().getFallSpeedMs());
+            }
+        }
+
         return board.getViewData();
     }
 
@@ -186,7 +210,9 @@ public class GameController implements InputEventListener {
 
         board.holdBrick();
         ViewData viewData = board.getViewData();
-        gameView.refreshHoldPanel(viewData, board.getHeldBrick());
+//        gameView.refreshHoldPanel(viewData, board.getHeldBrick());
+        gameView.refreshHoldBrick();
+        gameView.refreshActiveBrick(viewData);
     }
 
     /**
@@ -196,6 +222,6 @@ public class GameController implements InputEventListener {
     @Override
     public void createNewGame() {
         board.newGame();
-        gameView.updateBackground(board.getBoardMatrix());
+        gameView.refreshBackground(board.getBoardMatrix());
     }
 }

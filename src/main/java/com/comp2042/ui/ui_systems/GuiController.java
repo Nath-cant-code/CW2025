@@ -101,7 +101,7 @@ public class GuiController implements Initializable, GameView {
     @FXML
     private Label scoreLabel;
 
-    private boolean countdownRunning = false;
+//    private boolean countdownRunning = false;
 
     @FXML
     public GridPane holdPanel;
@@ -190,7 +190,7 @@ public class GuiController implements Initializable, GameView {
         inputHandler.setKeyListener();
 
 //        5.
-        gameTimeLine.setGameTimeline(this);
+        gameTimeLine.setGameTimeline(eventListener);
         gameTimeLine.start();
     }
 
@@ -259,14 +259,6 @@ public class GuiController implements Initializable, GameView {
         return displayMatrix;
     }
 
-    /**
-     * Concise method to update (refresh) background.
-     * @param boardMatrix The current board state.
-     */
-    @Override
-    public void updateBackground(int[][] boardMatrix) {
-        refreshCoordinator.renderBackground(boardMatrix, displayMatrix);
-    }
 
     /**
      * Called by onHoldEvent() in GameController to render Brick object
@@ -289,12 +281,36 @@ public class GuiController implements Initializable, GameView {
 
     @Override
     public void updateFallSpeed(int speedMs) {
-        gameTimeLine.updateSpeed(speedMs, this);
+        gameTimeLine.updateSpeed(speedMs, eventListener);
     }
 
     @Override
     public void bindLevel(IntegerProperty levelProperty) {
         levelLabel.textProperty().bind(levelProperty.asString("Level: %d"));
+    }
+
+    @Override
+    public void refreshActiveBrick (ViewData viewData) {
+        refreshCoordinator.renderActiveBrick(viewData, rectangles, brickPanel, gamePanel);
+    }
+
+    /**
+     * Concise method to update (refresh) background.
+     * @param boardMatrix The current board state.
+     */
+    @Override
+    public void refreshBackground(int[][] boardMatrix) {
+        refreshCoordinator.renderBackground(boardMatrix, displayMatrix);
+    }
+
+    @Override
+    public void refreshHoldBrick () {
+        refreshCoordinator.renderHoldBrick((AbstractBrick) simpleBoard.getHeldBrick(), holdMatrix, holdPanel);
+    }
+
+    @Override
+    public void refreshPreviewPanel () {
+        refreshCoordinator.renderNextBricks(simpleBoard.getNextBricksPreview(), nextMatrix);
     }
 
     /**

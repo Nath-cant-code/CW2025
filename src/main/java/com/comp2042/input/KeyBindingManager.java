@@ -2,7 +2,9 @@ package com.comp2042.input;
 
 import com.comp2042.input.event_controllers.InputEventListener;
 import com.comp2042.renderer.concrete_refreshers.RefreshCoordinator;
+import com.comp2042.system_events.EventSource;
 import com.comp2042.system_events.EventType;
+import com.comp2042.system_events.MoveEvent;
 import com.comp2042.ui.ui_systems.GuiController;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
@@ -95,7 +97,11 @@ public class KeyBindingManager {
                 rectangles, brickPanel, gamePanel
         );
 
-        InputAction moveDown = guiController::moveDown;
+//        InputAction moveDown = guiController::moveDown;
+        InputAction moveDown = event -> refreshCoordinator.renderActiveBrick(
+                eventListener.onDownEvent(event).viewData(),
+                rectangles, brickPanel, gamePanel
+        );
 
         InputAction snap = event -> refreshCoordinator.renderActiveBrick(
                 eventListener.onSnapEvent(event),

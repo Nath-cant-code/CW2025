@@ -76,13 +76,22 @@ public class SimpleBoard implements Board {
      */
     @Override
     public boolean moveBrickDown () {
-//        return moveBrick(0, 1);
-        return BrickMovementController.tryMoveBrick(
-            currentGameMatrix,
-            brickRotator.getCurrentShape(),
-            currentOffset,
-            0, 1
+        System.out.println("Move Brick Down ran");
+        Point newPosition = BrickMovementController.tryMoveBrick(
+                currentGameMatrix,
+                brickRotator.getCurrentShape(),
+                currentOffset,
+                0, 1
         );
+
+        // Collision detected
+        if (newPosition == null) {
+            return false;
+        }
+
+        // Update position and return true for successful movement
+        currentOffset = newPosition;
+        return true;
     }
 
     /**
@@ -93,13 +102,19 @@ public class SimpleBoard implements Board {
      */
     @Override
     public boolean moveBrickLeft () {
-//        return moveBrick(-1, 0);
-        return BrickMovementController.tryMoveBrick(
+        Point newPosition = BrickMovementController.tryMoveBrick(
                 currentGameMatrix,
                 brickRotator.getCurrentShape(),
                 currentOffset,
                 -1, 0
         );
+
+        if (newPosition == null) {
+            return false;
+        }
+
+        currentOffset = newPosition;
+        return true;
     }
 
     /**
@@ -110,13 +125,19 @@ public class SimpleBoard implements Board {
      */
     @Override
     public boolean moveBrickRight () {
-//        return moveBrick(1, 0);
-        return BrickMovementController.tryMoveBrick(
+        Point newPosition = BrickMovementController.tryMoveBrick(
                 currentGameMatrix,
                 brickRotator.getCurrentShape(),
                 currentOffset,
                 1, 0
         );
+
+        if (newPosition == null) {
+            return false;
+        }
+
+        currentOffset = newPosition;
+        return true;
     }
 
     /**
