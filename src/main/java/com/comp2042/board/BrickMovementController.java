@@ -26,10 +26,12 @@ public class BrickMovementController {
         if (CollisionDetector.wouldCollide(gameMatrix, brickShape,
                 (int)newPosition.getX(),
                 (int)newPosition.getY())) {
+            System.out.println("false");
             return false;
         }
 
         currentOffset.setLocation(newPosition);
+        System.out.println("true");
         return true;
     }
 

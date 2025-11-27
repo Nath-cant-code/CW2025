@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.comp2042.renderer.concrete_refreshers.RefreshCoordinator;
+import com.comp2042.ui.LevelSystem;
 import com.comp2042.ui.Score;
 import javafx.scene.shape.Rectangle;
 
@@ -40,10 +41,9 @@ public class SimpleBoard implements Board {
     private int[][] currentGameMatrix;
     private Point currentOffset;
     private final Score score;
+    private final LevelSystem levelSystem;
 
     private final BrickRotator brickRotator;
-//    private final BrickMovementController movementController;
-//    private final CollisionDetector collisionDetector;
     private final BrickQueueManager queueManager;
     /**
      * This constructor makes it so that when a SimpleBoard object is created in GameController,
@@ -63,14 +63,9 @@ public class SimpleBoard implements Board {
         this.height = height;
         currentGameMatrix = new int[width][height];
         brickRotator = new BrickRotator();
-
-//        brickGenerator = new RandomBrickGenerator();
-//        this.collisionDetector = new CollisionDetector();
-//        this.movementController = new BrickMovementController();
-
         this.queueManager = new BrickQueueManager(new RandomBrickGenerator());
-
         score = new Score();
+        this.levelSystem = new LevelSystem();
     }
 
     /**
@@ -223,6 +218,7 @@ public class SimpleBoard implements Board {
         return queueManager.getHeldBrick();
     }
 
+    @Override
     public List<ViewData> getNextBricksPreview() {
         return queueManager.getPreviewData();
     }
@@ -246,6 +242,11 @@ public class SimpleBoard implements Board {
                 (int) currentOffset.getX(),
                 (int) currentOffset.getY(),
                 queueManager.getNextBrick().getShapeMatrix().getFirst());
+    }
+
+    @Override
+    public LevelSystem getLevelSystem() {
+        return levelSystem;
     }
 
     /**
@@ -272,6 +273,11 @@ public class SimpleBoard implements Board {
     public ClearRow clearRows() {
         ClearRow clearRow = MatrixOperations.checkRemoving(currentGameMatrix);
         currentGameMatrix = clearRow.newMatrix();
+
+        if (clearRow.linesRemoved() > 0) {
+            levelSystem.addClearedRows(clearRow.linesRemoved());
+        }
+
         return clearRow;
     }
 
@@ -314,6 +320,7 @@ public class SimpleBoard implements Board {
     public void newGame() {
         currentGameMatrix = new int[width][height];
         score.reset();
+        levelSystem.reset();
         createNewBrick();
     }
 }

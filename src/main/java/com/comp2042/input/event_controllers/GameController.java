@@ -36,6 +36,7 @@ public class GameController implements InputEventListener {
         gameView.setEventListener(this);
         gameView.initialise(board.getBoardMatrix(), board.getViewData());
         gameView.bindScore(board.getScore().scoreProperty());
+        gameView.bindLevel(board.getLevelSystem().currentLevelProperty());
     }
 
     /**
@@ -70,13 +71,32 @@ public class GameController implements InputEventListener {
         boolean canMove = board.moveBrickDown();
         ClearRow clearRow = null;
 
+//        System.out.println("canmove: " + canMove);
         if (!canMove) {
             board.mergeBrickToBackground();
             clearRow = board.clearRows();
 
+            System.out.println("lines removed = " + clearRow.linesRemoved());
+
             if (clearRow.linesRemoved() > 0) {
+                System.out.println("clearrow ran");
                 board.getScore().add(clearRow.scoreBonus());
                 gameView.showClearRowNotification(clearRow.scoreBonus());
+
+                boolean leveledUp = board.getLevelSystem().addClearedRows(
+                        clearRow.linesRemoved()
+                );
+
+                System.out.println("GC LevelSystem hash: " + board.getLevelSystem());
+
+                System.out.println("leveledUp: " + leveledUp);
+
+                if (leveledUp) {
+                    System.out.println("Game level up");
+                    int newLevel = board.getLevelSystem().getCurrentLevel();
+                    gameView.notifyLevelUp(newLevel);
+                    gameView.updateFallSpeed(board.getLevelSystem().getFallSpeedMs());
+                }
             }
 
             if (board.createNewBrick()) {

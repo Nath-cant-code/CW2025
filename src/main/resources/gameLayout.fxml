@@ -19,7 +19,11 @@
     <VBox spacing="10">
         <Label text="Score" styleClass="scoreClass"/>
         <Label fx:id="scoreLabel" styleClass="scoreClass"/>
+        <Label text="Level" styleClass="scoreClass"/>
+        <Label fx:id="levelLabel" styleClass="scoreClass"/>
     </VBox>
+
+
 
     <Pane>
         <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>

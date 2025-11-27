@@ -13,6 +13,7 @@ import com.comp2042.renderer.concrete_refreshers.RefreshCoordinator;
 import com.comp2042.system_events.MoveEvent;
 import com.comp2042.ui.GameTimeLine;
 import com.comp2042.ui.panels.GameOverPanel;
+import com.comp2042.ui.panels.LevelUpPanel;
 import com.comp2042.ui.panels.NotificationPanel;
 import com.comp2042.ui.panels.PausePanel;
 import javafx.animation.KeyFrame;
@@ -111,6 +112,9 @@ public class GuiController implements Initializable, GameView {
     public GridPane nextPanel;
 
     public Rectangle[][] nextMatrix;
+
+    @FXML
+    private Label levelLabel;
 
     /**
      * Initialises the GUI when the FXML file is loaded at the start of the game.<br>
@@ -276,6 +280,32 @@ public class GuiController implements Initializable, GameView {
         refreshCoordinator.renderHoldBrick((AbstractBrick) heldBrick, holdMatrix, holdPanel);
     }
 
+    @Override
+    public void notifyLevelUp(int newLevel) {
+        LevelUpPanel levelUpPanel = new LevelUpPanel(newLevel);
+        groupNotification.getChildren().add(levelUpPanel);
+        levelUpPanel.showLevelUp(groupNotification.getChildren());
+    }
+
+    @Override
+    public void updateFallSpeed(int speedMs) {
+        gameTimeLine.updateSpeed(speedMs, this);
+    }
+
+    @Override
+    public void bindLevel(IntegerProperty levelProperty) {
+        levelLabel.textProperty().bind(levelProperty.asString("Level: %d"));
+    }
+
+    /**
+     * Calls rendering methods for rendering Hold and Preview panels. <br>
+     * Called by Main.java after calling setSimpleBoard().
+     */
+    public void refreshAllPanels () {
+        refreshCoordinator.renderHoldBrick((AbstractBrick) simpleBoard.getHeldBrick(), holdMatrix, holdPanel);
+        refreshCoordinator.renderNextBricks(simpleBoard.getNextBricksPreview(), nextMatrix);
+    }
+
     private void initNextPanel() {
         BrickRenderer renderer = new BrickRenderer();
 
@@ -316,15 +346,6 @@ public class GuiController implements Initializable, GameView {
             refreshCoordinator.renderNextBricks(simpleBoard.getNextBricksPreview(), nextMatrix);
         }
         gamePanel.requestFocus();
-    }
-
-    /**
-     * Calls rendering methods for rendering Hold and Preview panels. <br>
-     * Called by Main.java after calling setSimpleBoard().
-     */
-    public void refreshAllPanels () {
-        refreshCoordinator.renderHoldBrick((AbstractBrick) simpleBoard.getHeldBrick(), holdMatrix, holdPanel);
-        refreshCoordinator.renderNextBricks(simpleBoard.getNextBricksPreview(), nextMatrix);
     }
 
     /**

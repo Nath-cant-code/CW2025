@@ -77,4 +77,10 @@ public interface GameView {
      * @param heldBrick Info for held Brick in hold panel.
      */
     void refreshHoldPanel(ViewData viewData, Brick heldBrick);
+
+    void notifyLevelUp(int newLevel);
+
+    void updateFallSpeed(int speedMs);
+
+    void bindLevel(IntegerProperty levelProperty);
 }
