@@ -153,11 +153,11 @@ public class MatrixOperations {
         return list.stream().map(MatrixOperations::copy).collect(Collectors.toList());
     }
 
-    public static int findSnapPosition (int [][] board, int [][] currShape, int currX, int currY) {
-        int y = currY;
-        while (true) {
-            if (intersect(board, currShape, currX, y + 1)) { return y; }
-            y++;
-        }
-    }
+//    public static int findSnapPosition (int [][] board, int [][] currShape, int currX, int currY) {
+//        int y = currY;
+//        while (true) {
+//            if (intersect(board, currShape, currX, y + 1)) { return y; }
+//            y++;
+//        }
+//    }
 }
