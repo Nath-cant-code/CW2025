@@ -1,22 +1,17 @@
 package com.comp2042.ui.ui_systems;
 
-import com.comp2042.board.composite_bricks.DownData;
 import com.comp2042.board.SimpleBoard;
 import com.comp2042.board.composite_bricks.ViewData;
 import com.comp2042.bricks.AbstractBrick;
 import com.comp2042.bricks.Brick;
 import com.comp2042.input.event_controllers.InputEventListener;
 import com.comp2042.input.InputHandler;
-import com.comp2042.renderer.basic_renderers.BoardRenderer;
-import com.comp2042.renderer.basic_renderers.BrickRenderer;
 import com.comp2042.renderer.concrete_refreshers.RefreshCoordinator;
-import com.comp2042.system_events.MoveEvent;
 import com.comp2042.ui.GameTimeLine;
 import com.comp2042.ui.panels.GameOverPanel;
 import com.comp2042.ui.panels.LevelUpPanel;
 import com.comp2042.ui.panels.NotificationPanel;
 import com.comp2042.ui.panels.PausePanel;
-import javafx.animation.KeyFrame;
 import javafx.beans.property.IntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,17 +20,17 @@ import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-
-import javafx.animation.Timeline;
 
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
+ * ------------------------------REFACTORED------------------------------<br>
+ * SOLID: Single Responsibility - Coordinates UI components<br>
+ * Design Pattern: Facade - Simple interface to complex UI subsystem<br>
  * ----------------------------------------CLASS SPLIT ALERT--------------------------------------<br>
  * The handle() method here was removed and put into a new class, InputHandler.java to increase cohesion of initialise() method.<br>
  * NOTE: InputHandler object is created in setEventListener() method. <br>
@@ -58,63 +53,32 @@ public class GuiController implements Initializable, GameView {
 
     public static final int BRICK_SIZE = 20;
 
-    @FXML
-    public GridPane gamePanel;
-
-    @FXML
-    private Group groupNotification;
-
-    @FXML
-    private GridPane brickPanel;
-
-    @FXML
-    private GameOverPanel gameOverPanel;
-
-    public Rectangle[][] displayMatrix;
-
-    private InputEventListener eventListener;
+    @FXML   public GridPane gamePanel;
+    @FXML   private Group groupNotification;
+    @FXML   private GridPane brickPanel;
+    @FXML   private GameOverPanel gameOverPanel;
+    @FXML   protected PausePanel pausePanel;
+    @FXML   private Label scoreLabel;
+    @FXML   public GridPane holdPanel;
+    @FXML   public GridPane previewPanel;
+    @FXML   private Label levelLabel;
 
     protected Rectangle[][] rectangles;
-
-    private final GameStateManager gameStateManager = new GameStateManager();
-
-    /**
-     * New class objects created.
-     */
-    public SimpleBoard simpleBoard;
+    public Rectangle[][] displayMatrix;
+    public Rectangle[][] holdMatrix;
+    public Rectangle[][] previewMatrix;
 
     protected InputHandler inputHandler;
-
-    protected BoardRenderer boardRenderer = new BoardRenderer();
-
-    protected BrickRenderer brickRenderer = new BrickRenderer();
-
-    protected GameTimeLine gameTimeLine = new GameTimeLine();
-
+    private UILabelManager labelManager;
     public RefreshCoordinator refreshCoordinator;
 
-    private UIPanelManager panelManager;
+    public SimpleBoard simpleBoard;
+    private InputEventListener eventListener;
+    private final GameStateManager gameStateManager = new GameStateManager();
+    protected GameTimeLine gameTimeLine = new GameTimeLine();
+    private final PanelInitialiser panelInitialiser = new PanelInitialiser();
+    private final GameInitialiser gameInitialiser = new GameInitialiser();
 
-    @FXML
-    protected PausePanel pausePanel;
-
-    @FXML
-    private Label scoreLabel;
-
-//    private boolean countdownRunning = false;
-
-    @FXML
-    public GridPane holdPanel;
-
-    public Rectangle[][] holdMatrix;
-
-    @FXML
-    public GridPane nextPanel;
-
-    public Rectangle[][] nextMatrix;
-
-    @FXML
-    private Label levelLabel;
 
     /**
      * Initialises the GUI when the FXML file is loaded at the start of the game.<br>
@@ -133,12 +97,11 @@ public class GuiController implements Initializable, GameView {
         gamePanel.requestFocus();
 
         refreshCoordinator = new RefreshCoordinator(BRICK_SIZE, gameStateManager);
+        labelManager = new UILabelManager(gameOverPanel, pausePanel);
 
-        panelManager = new UIPanelManager(gameOverPanel, pausePanel);
-        gameOverPanel.setVisible(false);
-        pausePanel.setVisible(false);
-
-        initHoldMatrix();
+        labelManager.hideAll();
+        holdMatrix = panelInitialiser.initializeHoldPanel(holdPanel);
+        previewMatrix = panelInitialiser.initializePreviewPanel(previewPanel);
 
         final Reflection reflection = new Reflection();
         reflection.setFraction(0.8);
@@ -168,28 +131,16 @@ public class GuiController implements Initializable, GameView {
      * @param brick         Object containing info on the current and next in line Brick-shape-object.
      */
     public void initGameView(int[][] boardMatrix, ViewData brick) {
-//        1.
-        displayMatrix = boardRenderer.createPlayableAreaMatrix(gamePanel, boardMatrix);
-
-        initNextPanel();
-
-//        2.
-        rectangles = brickRenderer.createBrickAreaMatrix(brickPanel, brick);
-
-//        3.
-        brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.xPosition() * brickPanel.getVgap() + brick.xPosition() * BRICK_SIZE);
-        brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.yPosition() * brickPanel.getHgap() + brick.yPosition() * BRICK_SIZE);
-
-//        4.
-        inputHandler = new InputHandler(
+        displayMatrix = gameInitialiser.initialiseBoard(gamePanel, boardMatrix);
+        rectangles = gameInitialiser.initialiseBrickArea(brickPanel, brick);
+        gameInitialiser.positionBrickPanel(brickPanel, gamePanel, brick);
+        inputHandler = gameInitialiser.createInputHandler(
                 this,
                 eventListener,
                 rectangles,
                 brickPanel,
                 gamePanel);
-        inputHandler.setKeyListener();
 
-//        5.
         gameTimeLine.setGameTimeline(eventListener);
         gameTimeLine.start();
     }
@@ -259,19 +210,6 @@ public class GuiController implements Initializable, GameView {
         return displayMatrix;
     }
 
-
-    /**
-     * Called by onHoldEvent() in GameController to render Brick object
-     * in hold panel and playable area after swap.
-     * @param viewData Info for falling Brick.
-     * @param heldBrick Info on held Brick object in hold panel.
-     */
-    @Override
-    public void refreshHoldPanel(ViewData viewData, Brick heldBrick) {
-        refreshCoordinator.renderActiveBrick(viewData, rectangles, brickPanel, gamePanel);
-        refreshCoordinator.renderHoldBrick((AbstractBrick) heldBrick, holdMatrix, holdPanel);
-    }
-
     @Override
     public void notifyLevelUp(int newLevel) {
         LevelUpPanel levelUpPanel = new LevelUpPanel(newLevel);
@@ -310,58 +248,7 @@ public class GuiController implements Initializable, GameView {
 
     @Override
     public void refreshPreviewPanel () {
-        refreshCoordinator.renderNextBricks(simpleBoard.getNextBricksPreview(), nextMatrix);
-    }
-
-    /**
-     * Calls rendering methods for rendering Hold and Preview panels. <br>
-     * Called by Main.java after calling setSimpleBoard().
-     */
-    public void refreshAllPanels () {
-        refreshCoordinator.renderHoldBrick((AbstractBrick) simpleBoard.getHeldBrick(), holdMatrix, holdPanel);
-        refreshCoordinator.renderNextBricks(simpleBoard.getNextBricksPreview(), nextMatrix);
-    }
-
-    private void initNextPanel() {
-        BrickRenderer renderer = new BrickRenderer();
-
-        int rows = 12;
-        int cols = 4;
-
-        int[][] emptyMatrix = new int[rows][cols]; // all zeros
-
-        ViewData emptyView = new ViewData(
-                emptyMatrix, // brickData
-                0,           // xPosition (unused in preview)
-                0,           // yPosition (unused in preview)
-                emptyMatrix  // nextBrickData (not important for preview)
-        );
-
-        // Only one nextPanel, only one nextMatrix
-        nextMatrix = renderer.createBrickAreaMatrix(nextPanel, emptyView);
-    }
-
-    /**
-     * Only has functionality if game is not paused.<br>
-     * Checks if the action of moving the Brick-shape-object down, regardless if caused by system or player,
-     * results in at least one row being completely filled.<br>
-     * If there is at least one row, pass arguments to NotificationPanel object to display the points obtained by that action alone.<br>
-     * Then call refreshBrick() to update visuals as a result of downward action.<br>
-     * gamePanel.requestFocus() to ensure the keystrokes are still being taken in by system.
-     * @param event MoveEvent object to check if source of action is from system (THREAD) or player (USER).
-     */
-    public void moveDown(MoveEvent event) {
-        if (!gameStateManager.isPaused()) {
-            DownData downData = eventListener.onDownEvent(event);
-            if (downData.clearRow() != null && downData.clearRow().linesRemoved() > 0) {
-                NotificationPanel notificationPanel = new NotificationPanel("+" + downData.clearRow().scoreBonus());
-                groupNotification.getChildren().add(notificationPanel);
-                notificationPanel.showScore(groupNotification.getChildren());
-            }
-            refreshCoordinator.renderActiveBrick(downData.viewData(), rectangles, brickPanel, gamePanel);
-            refreshCoordinator.renderNextBricks(simpleBoard.getNextBricksPreview(), nextMatrix);
-        }
-        gamePanel.requestFocus();
+        refreshCoordinator.renderNextBricks(simpleBoard.getNextBricksPreview(), previewMatrix);
     }
 
     /**
@@ -383,8 +270,8 @@ public class GuiController implements Initializable, GameView {
      */
     public void newGame(ActionEvent actionEvent) {
         gameTimeLine.stop();
-        panelManager.hideGameOver();
-        panelManager.hidePause();
+        labelManager.hideGameOver();
+        labelManager.hidePause();
         eventListener.createNewGame();
         gamePanel.requestFocus();
         gameTimeLine.start();
@@ -400,12 +287,12 @@ public class GuiController implements Initializable, GameView {
         if (!gameStateManager.isPaused()) {
             gameTimeLine.stop();
             gameStateManager.setPaused(true);
-            panelManager.showPause();
+            labelManager.showPause();
         }
         else {
-            if (!panelManager.isCountdownRunning()) {
+            if (!labelManager.isCountdownRunning()) {
 //                passes methods that startResumeCountdown() executes at the end of its functionality
-                panelManager.startResumeCountdown(() -> {
+                labelManager.startResumeCountdown(() -> {
                     gameStateManager.setPaused(false);
                     gameTimeLine.start();
                 });
@@ -419,24 +306,7 @@ public class GuiController implements Initializable, GameView {
      */
     public void gameOver() {
         gameTimeLine.stop();
-        panelManager.showGameOver();
+        labelManager.showGameOver();
         gameStateManager.setGameOver(true);
-    }
-
-    /**
-     * Initialises a hold matrix in the hold panel
-     */
-    private void initHoldMatrix () {
-        int size = 4;
-        holdMatrix = new Rectangle[size][size];
-
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                Rectangle r = new Rectangle(BRICK_SIZE,BRICK_SIZE);
-                r.setFill(Color.TRANSPARENT);
-                holdMatrix[i][j] = r;
-                holdPanel.add(r, i, j);
-            }
-        }
     }
 }

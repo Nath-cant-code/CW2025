@@ -1,0 +1,52 @@
+package com.comp2042.ui.ui_systems;
+
+import com.comp2042.board.composite_bricks.ViewData;
+import com.comp2042.input.InputHandler;
+import com.comp2042.input.event_controllers.InputEventListener;
+import com.comp2042.renderer.basic_renderers.BoardRenderer;
+import com.comp2042.renderer.basic_renderers.BrickRenderer;
+import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Rectangle;
+
+/**
+ * Initializes game view components.
+ * SOLID: Single Responsibility - Only initializes game view
+ */
+public class GameInitialiser {
+    private static final int BRICK_SIZE = 20;
+
+    public Rectangle[][] initialiseBoard(GridPane gamePanel, int[][] boardMatrix) {
+        BoardRenderer boardRenderer = new BoardRenderer();
+        return boardRenderer.createPlayableAreaMatrix(gamePanel, boardMatrix);
+    }
+
+    public Rectangle[][] initialiseBrickArea(GridPane brickPanel, ViewData brick) {
+        BrickRenderer brickRenderer = new BrickRenderer();
+        return brickRenderer.createBrickAreaMatrix(brickPanel, brick);
+    }
+
+    public void positionBrickPanel(GridPane brickPanel, GridPane gamePanel, ViewData brick) {
+        brickPanel.setLayoutX(gamePanel.getLayoutX() +
+                brick.xPosition() * brickPanel.getVgap() +
+                brick.xPosition() * BRICK_SIZE);
+        brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() +
+                brick.yPosition() * brickPanel.getHgap() +
+                brick.yPosition() * BRICK_SIZE);
+    }
+
+    public InputHandler createInputHandler(GuiController gc,
+                                           InputEventListener eventListener,
+                                           Rectangle[][] rectangles,
+                                           GridPane brickPanel,
+                                           GridPane gamePanel) {
+        InputHandler inputHandler = new InputHandler(
+                gc,
+                eventListener,
+                rectangles,
+                brickPanel,
+                gamePanel
+        );
+        inputHandler.setKeyListener();
+        return inputHandler;
+    }
+}

@@ -75,13 +75,6 @@ public interface GameView {
 
     void refreshPreviewPanel ();
 
-    /**
-     * Refreshes the hold panel Brick and the currently falling Brick.
-     * @param viewData  Info for currently falling Brick.
-     * @param heldBrick Info for held Brick in hold panel.
-     */
-    void refreshHoldPanel(ViewData viewData, Brick heldBrick);
-
     void notifyLevelUp(int newLevel);
 
     void updateFallSpeed(int speedMs);

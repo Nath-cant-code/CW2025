@@ -24,7 +24,7 @@ public class GameTimeLine {
 
     /**
      * Creates a timeline object that automatically causes Brick objects to naturally fall at specific intervals, Duration,millis( x ).
-     * @param gc    GuiController object to call methods.
+     * @param eventListener GameController object to call onDownEvent().
      */
     public void createTimeline (InputEventListener eventListener, int currSpeed) {
         if (timeLine != null) { timeLine.stop(); }
@@ -41,7 +41,7 @@ public class GameTimeLine {
     /**
      * Updates the fall speed and recreates timeline.
      * @param newSpeed New fall speed in milliseconds
-     * @param gc GuiController reference
+     * @param eventListener GameController object to pass to createTimeLine
      */
     public void updateSpeed(int newSpeed, InputEventListener eventListener) {
         boolean wasPlaying = timeLine != null &&

@@ -56,8 +56,8 @@ public class Main extends Application {
         new GameController(gameView, board);
         c.setSimpleBoard(board);
 //        c.refreshAllPanels();
-        c.refreshHoldBrick();
-        c.refreshPreviewPanel();
+        gameView.refreshHoldBrick();
+        gameView.refreshPreviewPanel();
     }
 
     /**

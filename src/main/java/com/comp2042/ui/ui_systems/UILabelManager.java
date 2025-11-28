@@ -10,12 +10,12 @@ import javafx.animation.Timeline;
  * SOLID: Single Responsibility - Only manages UI panels
  * Design Pattern: Facade - Simplifies panel management
  */
-public class UIPanelManager {
+public class UILabelManager {
     private final GameOverPanel gameOverPanel;
     private final PausePanel pausePanel;
     private boolean countdownRunning = false;
 
-    public UIPanelManager(GameOverPanel gameOverPanel, PausePanel pausePanel) {
+    public UILabelManager(GameOverPanel gameOverPanel, PausePanel pausePanel) {
         this.gameOverPanel = gameOverPanel;
         this.pausePanel = pausePanel;
     }
@@ -36,6 +36,11 @@ public class UIPanelManager {
 
     public void hidePause() {
         pausePanel.setVisible(false);
+    }
+
+    public void hideAll() {
+        hidePause();
+        hideGameOver();
     }
 
     public boolean isCountdownRunning() {
