@@ -1,5 +1,6 @@
 package com.comp2042.input.event_controllers;
 
+import java.awt.Point;
 import com.comp2042.board.*;
 import com.comp2042.board.composite_bricks.DownData;
 import com.comp2042.board.composite_bricks.ViewData;
@@ -71,15 +72,35 @@ public class GameController implements InputEventListener {
         boolean canMove = board.moveBrickDown();
         ClearRow clearRow = null;
 
-        System.out.println("canmove: " + canMove);
         if (!canMove) {
+//            2 hours spent here on the 2 refresh methods
+            gameView.refreshActiveBrick(board.getViewData());
+            gameView.refreshBackground(board.getBoardMatrix());
             board.mergeBrickToBackground();
+
+            System.out.println("isSpecialShapeCompleted: " + board.isSpecialShapeCompleted());
+            if (!board.isSpecialShapeCompleted()) {
+                Point shapeLocation = board.checkSpecialShape();
+                if (shapeLocation != null) {
+                    gameView.handleSpecialShapeCompletion();
+                    board.markSpecialShapeCompleted();
+
+                    if (board.createNewBrick()) { gameView.notifyGameOver(); }
+
+                    gameView.refreshActiveBrick(board.getViewData());
+                    gameView.refreshPreviewPanel();
+
+//                    Return with empty clear row data
+                    return new DownData(
+                            new ClearRow(0, board.getBoardMatrix(), 0),
+                            board.getViewData()
+                    );
+                }
+            }
+
             clearRow = board.clearRows();
 
-            System.out.println("lines removed = " + clearRow.linesRemoved());
-
             if (clearRow.linesRemoved() > 0) {
-                System.out.println("clearrow ran");
                 board.getScore().add(clearRow.scoreBonus());
                 gameView.showClearRowNotification(clearRow.scoreBonus());
 
@@ -87,21 +108,14 @@ public class GameController implements InputEventListener {
                         clearRow.linesRemoved()
                 );
 
-                System.out.println("GC LevelSystem hash: " + board.getLevelSystem());
-
-                System.out.println("leveledUp: " + leveledUp);
-
                 if (leveledUp) {
-                    System.out.println("Game level up");
                     int newLevel = board.getLevelSystem().getCurrentLevel();
                     gameView.notifyLevelUp(newLevel);
                     gameView.updateFallSpeed(board.getLevelSystem().getFallSpeedMs());
                 }
             }
 
-            if (board.createNewBrick()) {
-                gameView.notifyGameOver();
-            }
+            if (board.createNewBrick()) { gameView.notifyGameOver(); }
 
             gameView.refreshBackground(board.getBoardMatrix());
 
@@ -111,6 +125,7 @@ public class GameController implements InputEventListener {
                 board.getScore().add(1);
             }
         }
+
         gameView.refreshActiveBrick(board.getViewData());
         gameView.refreshPreviewPanel();
         return new DownData(clearRow, board.getViewData());
@@ -171,34 +186,59 @@ public class GameController implements InputEventListener {
      * and info on next Brick-shape-object.
      */
     @Override
-    public ViewData onSnapEvent(MoveEvent event) {
-        DownData downData = board.snapBrick(
-                            ((com.comp2042.ui.ui_systems.GuiController) gameView).refreshCoordinator,
-                            gameView.getDisplayMatrix()
+    public DownData onSnapEvent(MoveEvent event) {
+        board.snapBrick(
+                ((com.comp2042.ui.ui_systems.GuiController) gameView).refreshCoordinator,
+                gameView.getDisplayMatrix()
         );
 
-        if (downData.clearRow().linesRemoved() > 0) {
-            System.out.println("clearrow ran");
-            board.getScore().add(downData.clearRow().scoreBonus());
-            gameView.showClearRowNotification(downData.clearRow().scoreBonus());
+        ClearRow clearRow = null;
+//        2 hours spent here on the 2 refresh methods
+        gameView.refreshActiveBrick(board.getViewData());
+        gameView.refreshBackground(board.getBoardMatrix());
+        board.mergeBrickToBackground();
+
+        if (!board.isSpecialShapeCompleted()) {
+            Point shapeLocation = board.checkSpecialShape();
+            if (shapeLocation != null) {
+                gameView.handleSpecialShapeCompletion();
+                board.markSpecialShapeCompleted();
+
+                if (board.createNewBrick()) { gameView.notifyGameOver(); }
+
+                gameView.refreshActiveBrick(board.getViewData());
+                gameView.refreshPreviewPanel();
+
+                return new DownData(
+                        new ClearRow(0, board.getBoardMatrix(), 0),
+                        board.getViewData()
+                );
+            }
+        }
+
+        clearRow = board.clearRows();
+
+        if (clearRow.linesRemoved() > 0) {
+            board.getScore().add(clearRow.scoreBonus());
+            gameView.showClearRowNotification(clearRow.scoreBonus());
 
             boolean leveledUp = board.getLevelSystem().addClearedRows(
-                    downData.clearRow().linesRemoved()
+                    clearRow.linesRemoved()
             );
 
-            System.out.println("GC LevelSystem hash: " + board.getLevelSystem());
-
-            System.out.println("leveledUp: " + leveledUp);
-
             if (leveledUp) {
-                System.out.println("Game level up");
                 int newLevel = board.getLevelSystem().getCurrentLevel();
                 gameView.notifyLevelUp(newLevel);
                 gameView.updateFallSpeed(board.getLevelSystem().getFallSpeedMs());
             }
         }
 
-        return board.getViewData();
+        if (board.createNewBrick()) { gameView.notifyGameOver(); }
+
+        gameView.refreshBackground(board.getBoardMatrix());
+        gameView.refreshActiveBrick(board.getViewData());
+        gameView.refreshPreviewPanel();
+        return new DownData(clearRow, board.getViewData());
     }
 
     /**
@@ -210,7 +250,6 @@ public class GameController implements InputEventListener {
 
         board.holdBrick();
         ViewData viewData = board.getViewData();
-//        gameView.refreshHoldPanel(viewData, board.getHeldBrick());
         gameView.refreshHoldBrick();
         gameView.refreshActiveBrick(viewData);
     }
