@@ -50,6 +50,13 @@
         <GridPane fx:id="previewPanel" hgap="1" vgap="1"/>
     </VBox>
 
+    <VBox fx:id="specialShapeContainer"
+          alignment="CENTER"
+          spacing="10"
+          GridPane.columnIndex="2"
+          GridPane.rowIndex="4">
+    </VBox>
+
     <stylesheets>
         <URL value="@window_style.css"/>
     </stylesheets>

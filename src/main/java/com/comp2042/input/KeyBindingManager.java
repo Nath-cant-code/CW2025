@@ -104,7 +104,7 @@ public class KeyBindingManager {
         );
 
         InputAction snap = event -> refreshCoordinator.renderActiveBrick(
-                eventListener.onSnapEvent(event),
+                eventListener.onSnapEvent(event).viewData(),
                 rectangles, brickPanel, gamePanel
         );
 

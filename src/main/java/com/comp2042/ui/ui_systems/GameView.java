@@ -80,4 +80,10 @@ public interface GameView {
     void updateFallSpeed(int speedMs);
 
     void bindLevel(IntegerProperty levelProperty);
+
+    void handleSpecialShapeCompletion();
+
+    void hideSpecialShapeDisplay();
+
+    boolean isSpecialShapeDisplayVisible();
 }

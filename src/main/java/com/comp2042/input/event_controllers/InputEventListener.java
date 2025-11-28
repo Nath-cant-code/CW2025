@@ -19,7 +19,7 @@ public interface InputEventListener {
 
     ViewData onRotateAntiClock(MoveEvent event);
 
-    ViewData onSnapEvent(MoveEvent event);
+    DownData onSnapEvent(MoveEvent event);
 
     void onHoldEvent();
 

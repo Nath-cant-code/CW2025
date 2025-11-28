@@ -3,7 +3,6 @@ package com.comp2042.ui.ui_systems;
 import com.comp2042.board.SimpleBoard;
 import com.comp2042.board.composite_bricks.ViewData;
 import com.comp2042.bricks.AbstractBrick;
-import com.comp2042.bricks.Brick;
 import com.comp2042.input.event_controllers.InputEventListener;
 import com.comp2042.input.InputHandler;
 import com.comp2042.renderer.concrete_refreshers.RefreshCoordinator;
@@ -20,8 +19,12 @@ import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import com.comp2042.ui.panels.SpecialShapeTextPanel;
+import com.comp2042.ui.panels.SpecialShapeDisplayPanel;
+import com.comp2042.ui.SpecialShapeConfig;
 
 import java.net.URL;
 import java.util.Objects;
@@ -62,6 +65,7 @@ public class GuiController implements Initializable, GameView {
     @FXML   public GridPane holdPanel;
     @FXML   public GridPane previewPanel;
     @FXML   private Label levelLabel;
+    @FXML   private VBox specialShapeContainer;
 
     protected Rectangle[][] rectangles;
     public Rectangle[][] displayMatrix;
@@ -71,6 +75,7 @@ public class GuiController implements Initializable, GameView {
     protected InputHandler inputHandler;
     private UILabelManager labelManager;
     public RefreshCoordinator refreshCoordinator;
+    private SpecialShapeDisplayPanel specialShapeDisplayPanel;
 
     public SimpleBoard simpleBoard;
     private InputEventListener eventListener;
@@ -102,6 +107,11 @@ public class GuiController implements Initializable, GameView {
         labelManager.hideAll();
         holdMatrix = panelInitialiser.initializeHoldPanel(holdPanel);
         previewMatrix = panelInitialiser.initializePreviewPanel(previewPanel);
+
+        specialShapeDisplayPanel = new SpecialShapeDisplayPanel();
+        if (specialShapeContainer != null) {
+            specialShapeContainer.getChildren().add(specialShapeDisplayPanel);
+        }
 
         final Reflection reflection = new Reflection();
         reflection.setFraction(0.8);
@@ -273,6 +283,11 @@ public class GuiController implements Initializable, GameView {
         labelManager.hideGameOver();
         labelManager.hidePause();
         eventListener.createNewGame();
+
+        if (!isSpecialShapeDisplayVisible() && specialShapeDisplayPanel != null) {
+            specialShapeContainer.getChildren().add(specialShapeDisplayPanel);
+        }
+
         gamePanel.requestFocus();
         gameTimeLine.start();
         gameStateManager.reset();
@@ -308,5 +323,69 @@ public class GuiController implements Initializable, GameView {
         gameTimeLine.stop();
         labelManager.showGameOver();
         gameStateManager.setGameOver(true);
+    }
+
+    @Override
+    public void handleSpecialShapeCompletion() {
+        gameTimeLine.stop();
+        gameStateManager.setPaused(true);
+
+//        Wait briefly to show the cleared board
+        javafx.animation.PauseTransition pause =
+                new javafx.animation.PauseTransition(
+                        javafx.util.Duration.millis(SpecialShapeConfig.PAUSE_DURATION_MS)
+                );
+
+//        Show completion message
+//        Reset playable area visuals
+        pause.setOnFinished(e -> {
+            simpleBoard.clearEntireBoard();
+
+//            this is required to visually remove the last Brick object that completes the special shape
+            for (Rectangle[] rectangle : rectangles) {
+                for (Rectangle value : rectangle) {
+                    value.setFill(javafx.scene.paint.Color.TRANSPARENT);
+                }
+            }
+            refreshBackground(simpleBoard.getBoardMatrix());
+
+            simpleBoard.getScore().add(SpecialShapeConfig.BONUS_POINTS);
+
+            SpecialShapeTextPanel completionPanel = new SpecialShapeTextPanel();
+            groupNotification.getChildren().add(completionPanel);
+            completionPanel.showCompletion(groupNotification.getChildren());
+
+//            Hide the special shape display panel
+            hideSpecialShapeDisplay();
+
+//            Resume game after message displays
+            javafx.animation.PauseTransition resumePause =
+                    new javafx.animation.PauseTransition(
+                            javafx.util.Duration.millis(SpecialShapeConfig.MESSAGE_DURATION_MS + 1000)
+                    );
+
+            resumePause.setOnFinished(ev -> {
+                gameStateManager.setPaused(false);
+                gameTimeLine.start();
+                gamePanel.requestFocus();
+            });
+
+            resumePause.play();
+        });
+
+        pause.play();
+    }
+
+    @Override
+    public void hideSpecialShapeDisplay() {
+        if (specialShapeContainer != null && specialShapeDisplayPanel != null) {
+            specialShapeContainer.getChildren().remove(specialShapeDisplayPanel);
+        }
+    }
+
+    @Override
+    public boolean isSpecialShapeDisplayVisible() {
+        return specialShapeContainer != null &&
+                specialShapeContainer.getChildren().contains(specialShapeDisplayPanel);
     }
 }

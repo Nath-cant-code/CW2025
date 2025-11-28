@@ -8,6 +8,7 @@ import com.comp2042.renderer.concrete_refreshers.RefreshCoordinator;
 import com.comp2042.ui.LevelSystem;
 import com.comp2042.ui.Score;
 import javafx.scene.shape.Rectangle;
+import java.awt.Point;
 
 import java.util.List;
 
@@ -30,7 +31,9 @@ public interface Board {
 
     boolean rotateBrick(RotationDirection rd);
 
-    DownData snapBrick (RefreshCoordinator refreshCoordinator, Rectangle[][] displayMatrix);
+    void snapBrick (RefreshCoordinator refreshCoordinator, Rectangle[][] displayMatrix);
+
+    void clearEntireBoard();
 
     ViewData holdBrick ();
 
@@ -53,4 +56,12 @@ public interface Board {
     boolean createNewBrick();
 
     void newGame();
+
+    Point checkSpecialShape();
+
+    boolean isSpecialShapeCompleted();
+
+    void resetSpecialShape();
+
+    void markSpecialShapeCompleted();
 }

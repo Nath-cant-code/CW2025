@@ -1,5 +1,6 @@
 package com.comp2042.board;
 
+import java.awt.Point;
 import com.comp2042.board.composite_bricks.DownData;
 import com.comp2042.board.composite_bricks.NextShapeInfo;
 import com.comp2042.board.composite_bricks.ViewData;
@@ -45,6 +46,7 @@ public class SimpleBoard implements Board {
 
     private final BrickRotator brickRotator;
     private final BrickQueueManager queueManager;
+    public final SpecialShapeDetector specialShapeDetector;
     /**
      * This constructor makes it so that when a SimpleBoard object is created in GameController,
      * the size of the playable area must be specified. <br>
@@ -66,6 +68,7 @@ public class SimpleBoard implements Board {
         this.queueManager = new BrickQueueManager(new RandomBrickGenerator());
         score = new Score();
         this.levelSystem = new LevelSystem();
+        this.specialShapeDetector = new SpecialShapeDetector();
     }
 
     /**
@@ -187,7 +190,7 @@ public class SimpleBoard implements Board {
     }
 
     @Override
-    public DownData snapBrick (RefreshCoordinator refreshCoordinator, Rectangle[][] displayMatrix) {
+    public void snapBrick (RefreshCoordinator refreshCoordinator, Rectangle[][] displayMatrix) {
         int targetY = BrickMovementController.findSnapPosition(
                 currentGameMatrix,
                 brickRotator.getCurrentShape(),
@@ -198,20 +201,47 @@ public class SimpleBoard implements Board {
 //        score multiplier for hard dropping
         getScore().add((targetY - currentOffset.y) * 5);
         currentOffset.y = targetY;
-        mergeBrickToBackground();
+//        mergeBrickToBackground();
 
-        refreshCoordinator.renderBackground(currentGameMatrix, displayMatrix);
-        ClearRow clearRow = clearRows();
-//        THIS COSTED ME 1 DAY OF PROGRESS WALAO
-        refreshCoordinator.renderBackground(currentGameMatrix, displayMatrix);
+//        Check for special shape BEFORE clearing rows
+//        This bug caused me 6+ hours :)
+//        if (!specialShapeDetector.isCompleted()) {
+//            Point shapeLocation = specialShapeDetector.detectSpecialShape(currentGameMatrix);
+//            if (shapeLocation != null) {
+//                specialShapeDetector.markCompleted();
+//
+//                clearEntireBoard();
+//
+//                refreshCoordinator.renderBackground(currentGameMatrix, displayMatrix);
+//
+////                Create a special DownData to signal special shape completion
+//                ClearRow specialClear = new ClearRow(0, currentGameMatrix, 0);
+//                boolean gameOver = createNewBrick();
+//                ViewData vd = getViewData();
+//
+//                return new DownData(specialClear, vd);
+//            }
+//        }
 
-        if (clearRow.linesRemoved() > 0) { score.add(clearRow.scoreBonus()); }
+//        THIS BUG CAUSED ME 1 DAY :)
+//        refreshCoordinator.renderBackground(currentGameMatrix, displayMatrix);
+//        ClearRow clearRow = clearRows();
+//        refreshCoordinator.renderBackground(currentGameMatrix, displayMatrix);
+//
+//        if (clearRow.linesRemoved() > 0) { score.add(clearRow.scoreBonus()); }
+//
+//        boolean gameOver = createNewBrick();
+//        ViewData vd = getViewData();
+//
+//        return new DownData(clearRow, vd);
+    }
 
-        boolean gameOver = createNewBrick();
-//        holdUsedThisTurn = false;
-        ViewData vd = getViewData();
-
-        return new DownData(clearRow, vd);
+    /**
+     * Clears the entire board (used for special shape bonus).
+     */
+    @Override
+    public void clearEntireBoard() {
+        currentGameMatrix = new int[width][height];
     }
 
     @Override
@@ -339,9 +369,30 @@ public class SimpleBoard implements Board {
      */
     @Override
     public void newGame() {
-        currentGameMatrix = new int[width][height];
+        clearEntireBoard();
         score.reset();
         levelSystem.reset();
+        resetSpecialShape();
         createNewBrick();
+    }
+
+    @Override
+    public Point checkSpecialShape() {
+        return specialShapeDetector.detectSpecialShape(currentGameMatrix);
+    }
+
+    @Override
+    public boolean isSpecialShapeCompleted() {
+        return specialShapeDetector.isCompleted();
+    }
+
+    @Override
+    public void resetSpecialShape() {
+        specialShapeDetector.reset();
+    }
+
+    @Override
+    public void markSpecialShapeCompleted() {
+        specialShapeDetector.markCompleted();
     }
 }
