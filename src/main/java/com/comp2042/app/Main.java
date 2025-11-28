@@ -53,8 +53,8 @@ public class Main extends Application {
 
         GameView gameView = c;
         SimpleBoard board = new SimpleBoard(25, 10);
-        new GameController(gameView, board);
         c.setSimpleBoard(board);
+        new GameController(gameView, board);
 //        c.refreshAllPanels();
         gameView.refreshHoldBrick();
         gameView.refreshPreviewPanel();

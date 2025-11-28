@@ -3,7 +3,7 @@ package com.comp2042.renderer.concrete_refreshers;
 import com.comp2042.board.composite_bricks.ViewData;
 import com.comp2042.bricks.AbstractBrick;
 import com.comp2042.renderer.refresher_interfaces.*;
-import com.comp2042.ui.ui_systems.GameStateManager;
+import com.comp2042.ui.ui_systems.GameStateProperty;
 
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
@@ -32,19 +32,19 @@ public class RefreshCoordinator {
     private final ActiveBrick_RI fbRenderer;
     private final HoldBrick_RI holdRenderer;
     private final PreviewBricks_RI previewRenderer;
-    private final GameStateManager gameStateManager;
+    private final GameStateProperty gameStateProperty;
 
     /**
      * Creates a RenderingCoordinator with default renderers.
      * @param brickSize The size of brick cells in pixels
-     * @param gameStateManager The game state manager
+     * @param gameStateProperty The game state manager
      */
-    public RefreshCoordinator(int brickSize, GameStateManager gameStateManager) {
+    public RefreshCoordinator(int brickSize, GameStateProperty gameStateProperty) {
         this.bgRenderer = new RefreshGameBackground();
         this.fbRenderer = new RefreshActiveBrick(brickSize);
         this.holdRenderer = new RefreshHoldPanel();
         this.previewRenderer = new RefreshPreviewBricks();
-        this.gameStateManager = gameStateManager;
+        this.gameStateProperty = gameStateProperty;
     }
 
     /**
@@ -52,7 +52,7 @@ public class RefreshCoordinator {
      */
     public void renderActiveBrick(ViewData brick, Rectangle[][] rectangles,
                                   GridPane brickPanel, GridPane gamePanel) {
-        if (!gameStateManager.isPaused()) {
+        if (!gameStateProperty.isPaused()) {
             fbRenderer.refreshActiveBrick(brick, rectangles, brickPanel, gamePanel);
         }
     }

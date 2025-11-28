@@ -1,56 +1,94 @@
 package com.comp2042.ui.ui_systems;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import com.comp2042.input.event_controllers.InputEventListener;
+import com.comp2042.ui.GameTimeLine;
+import javafx.scene.layout.GridPane;
 
 /**
- * Manages game state (paused, game over). <br>
- * EXTRACTED FROM: GuiController <br>
- * SOLID principle applied: Single Responsibility Principle <br>
- * - Only manages game state, nothing else
+ * Manages game state operations (new game, pause, resume, game over).<br>
+ * SOLID: Single Responsibility - Only manages game state<br>
+ * SOLID: Open/Closed - Easy to add new game state operations<br>
+ * Design Pattern: Command - Each operation is a distinct command<br>
  */
 public class GameStateManager {
-    private final BooleanProperty isPaused = new SimpleBooleanProperty(false);
-    private final BooleanProperty isGameOver = new SimpleBooleanProperty(false);
+    private final GameTimeLine gameTimeLine;
+    private final GameStateProperty gameStateProperty;
+    private final UILabelManager labelManager;
+    private final InputEventListener eventListener;
+    private final GridPane gamePanel;
+    private final Runnable showSpecialShapeDisplay;
 
-    public void setPaused(boolean paused) {
-        isPaused.setValue(paused);
-    }
-
-    public void setGameOver(boolean gameOver) {
-        isGameOver.setValue(gameOver);
-    }
-
-    public boolean isPaused() {
-        return isPaused.getValue();
-    }
-
-    public boolean isGameOver() {
-        return isGameOver.getValue();
-    }
-
-    public BooleanProperty pausedProperty() {
-        return isPaused;
-    }
-
-    public BooleanProperty gameOverProperty() {
-        return isGameOver;
+    public GameStateManager(
+            GameTimeLine gameTimeLine,
+            GameStateProperty gameStateProperty,
+            UILabelManager labelManager,
+            InputEventListener eventListener,
+            GridPane gamePanel,
+            Runnable showSpecialShapeDisplay) {
+        this.gameTimeLine = gameTimeLine;
+        this.gameStateProperty = gameStateProperty;
+        this.labelManager = labelManager;
+        this.eventListener = eventListener;
+        this.gamePanel = gamePanel;
+        this.showSpecialShapeDisplay = showSpecialShapeDisplay;
     }
 
     /**
-     * To determine if program should be taking in input.<br>
-     * Used by InputHandler.
-     * @return TRUE (allow input) if game is not paused and not over
+     * Starts a new game.
      */
-    public boolean canProcessInput() {
-        return !isPaused() && !isGameOver();
+    public void startNewGame() {
+        gameTimeLine.stop();
+        labelManager.hideGameOver();
+        labelManager.hidePause();
+
+        eventListener.createNewGame();
+
+        showSpecialShapeDisplay.run();
+
+        gamePanel.requestFocus();
+        gameTimeLine.start();
+        gameStateProperty.reset();
     }
 
     /**
-     * For new game conditions.
+     * Toggles pause state.
      */
-    public void reset() {
-        isPaused.setValue(false);
-        isGameOver.setValue(false);
+    public void togglePause() {
+        if (!gameStateProperty.isPaused()) {
+            pauseGame();
+        } else {
+            resumeGame();
+        }
+        gamePanel.requestFocus();
+    }
+
+    /**
+     * Pauses the game.
+     */
+    private void pauseGame() {
+        gameTimeLine.stop();
+        gameStateProperty.setPaused(true);
+        labelManager.showPause();
+    }
+
+    /**
+     * Resumes the game with countdown.
+     */
+    private void resumeGame() {
+        if (!labelManager.isCountdownRunning()) {
+            labelManager.startResumeCountdown(() -> {
+                gameStateProperty.setPaused(false);
+                gameTimeLine.start();
+            });
+        }
+    }
+
+    /**
+     * Ends the game (game over).
+     */
+    public void endGame() {
+        gameTimeLine.stop();
+        labelManager.showGameOver();
+        gameStateProperty.setGameOver(true);
     }
 }

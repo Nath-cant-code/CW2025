@@ -22,9 +22,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import com.comp2042.ui.panels.SpecialShapeTextPanel;
 import com.comp2042.ui.panels.SpecialShapeDisplayPanel;
-import com.comp2042.ui.SpecialShapeConfig;
 
 import java.net.URL;
 import java.util.Objects;
@@ -72,18 +70,19 @@ public class GuiController implements Initializable, GameView {
     public Rectangle[][] holdMatrix;
     public Rectangle[][] previewMatrix;
 
+    public SimpleBoard simpleBoard;
+    private InputEventListener eventListener;
     protected InputHandler inputHandler;
     private UILabelManager labelManager;
     public RefreshCoordinator refreshCoordinator;
     private SpecialShapeDisplayPanel specialShapeDisplayPanel;
 
-    public SimpleBoard simpleBoard;
-    private InputEventListener eventListener;
-    private final GameStateManager gameStateManager = new GameStateManager();
+    private final GameStateProperty gameStateProperty = new GameStateProperty();
     protected GameTimeLine gameTimeLine = new GameTimeLine();
     private final PanelInitialiser panelInitialiser = new PanelInitialiser();
     private final GameInitialiser gameInitialiser = new GameInitialiser();
-
+    private SpecialShapeManager specialShapeManager;
+    private GameStateManager gameStateManager;
 
     /**
      * Initialises the GUI when the FXML file is loaded at the start of the game.<br>
@@ -101,7 +100,7 @@ public class GuiController implements Initializable, GameView {
         gamePanel.setFocusTraversable(true);
         gamePanel.requestFocus();
 
-        refreshCoordinator = new RefreshCoordinator(BRICK_SIZE, gameStateManager);
+        refreshCoordinator = new RefreshCoordinator(BRICK_SIZE, gameStateProperty);
         labelManager = new UILabelManager(gameOverPanel, pausePanel);
 
         labelManager.hideAll();
@@ -153,6 +152,32 @@ public class GuiController implements Initializable, GameView {
 
         gameTimeLine.setGameTimeline(eventListener);
         gameTimeLine.start();
+
+        initializeManagers();
+    }
+
+    private void initializeManagers() {
+        specialShapeManager = new SpecialShapeManager(
+                simpleBoard,
+                gameTimeLine,
+                gameStateProperty,
+                gamePanel
+        );
+
+        gameStateManager = new GameStateManager(
+                gameTimeLine,
+                gameStateProperty,
+                labelManager,
+                eventListener,
+                gamePanel,
+                this::restoreSpecialShapeDisplay
+        );
+    }
+
+    private void restoreSpecialShapeDisplay() {
+        if (!isSpecialShapeDisplayVisible() && specialShapeDisplayPanel != null) {
+            specialShapeContainer.getChildren().add(specialShapeDisplayPanel);
+        }
     }
 
     /**
@@ -265,8 +290,8 @@ public class GuiController implements Initializable, GameView {
      * Retrieve GameStateManager object.
      * @return  GameStateManager object.
      */
-    public GameStateManager getGameStateManager() {
-        return gameStateManager;
+    public GameStateProperty getGameStateManager() {
+        return gameStateProperty;
     }
 
     /**
@@ -279,18 +304,7 @@ public class GuiController implements Initializable, GameView {
      * @param actionEvent   null
      */
     public void newGame(ActionEvent actionEvent) {
-        gameTimeLine.stop();
-        labelManager.hideGameOver();
-        labelManager.hidePause();
-        eventListener.createNewGame();
-
-        if (!isSpecialShapeDisplayVisible() && specialShapeDisplayPanel != null) {
-            specialShapeContainer.getChildren().add(specialShapeDisplayPanel);
-        }
-
-        gamePanel.requestFocus();
-        gameTimeLine.start();
-        gameStateManager.reset();
+        gameStateManager.startNewGame();
     }
 
     /**
@@ -299,81 +313,19 @@ public class GuiController implements Initializable, GameView {
      * @param actionEvent no uses
      */
     public void pauseGame (ActionEvent actionEvent) {
-        if (!gameStateManager.isPaused()) {
-            gameTimeLine.stop();
-            gameStateManager.setPaused(true);
-            labelManager.showPause();
-        }
-        else {
-            if (!labelManager.isCountdownRunning()) {
-//                passes methods that startResumeCountdown() executes at the end of its functionality
-                labelManager.startResumeCountdown(() -> {
-                    gameStateManager.setPaused(false);
-                    gameTimeLine.start();
-                });
-            }
-        }
-        gamePanel.requestFocus();
+        gameStateManager.togglePause();
     }
 
     /**
      * Stops the timeLine, unhides game over label, and set game over checker to true.
      */
     public void gameOver() {
-        gameTimeLine.stop();
-        labelManager.showGameOver();
-        gameStateManager.setGameOver(true);
+        gameStateManager.endGame();
     }
 
     @Override
     public void handleSpecialShapeCompletion() {
-        gameTimeLine.stop();
-        gameStateManager.setPaused(true);
-
-//        Wait briefly to show the cleared board
-        javafx.animation.PauseTransition pause =
-                new javafx.animation.PauseTransition(
-                        javafx.util.Duration.millis(SpecialShapeConfig.PAUSE_DURATION_MS)
-                );
-
-//        Show completion message
-//        Reset playable area visuals
-        pause.setOnFinished(e -> {
-            simpleBoard.clearEntireBoard();
-
-//            this is required to visually remove the last Brick object that completes the special shape
-            for (Rectangle[] rectangle : rectangles) {
-                for (Rectangle value : rectangle) {
-                    value.setFill(javafx.scene.paint.Color.TRANSPARENT);
-                }
-            }
-            refreshBackground(simpleBoard.getBoardMatrix());
-
-            simpleBoard.getScore().add(SpecialShapeConfig.BONUS_POINTS);
-
-            SpecialShapeTextPanel completionPanel = new SpecialShapeTextPanel();
-            groupNotification.getChildren().add(completionPanel);
-            completionPanel.showCompletion(groupNotification.getChildren());
-
-//            Hide the special shape display panel
-            hideSpecialShapeDisplay();
-
-//            Resume game after message displays
-            javafx.animation.PauseTransition resumePause =
-                    new javafx.animation.PauseTransition(
-                            javafx.util.Duration.millis(SpecialShapeConfig.MESSAGE_DURATION_MS + 1000)
-                    );
-
-            resumePause.setOnFinished(ev -> {
-                gameStateManager.setPaused(false);
-                gameTimeLine.start();
-                gamePanel.requestFocus();
-            });
-
-            resumePause.play();
-        });
-
-        pause.play();
+        specialShapeManager.handleCompletion(rectangles, this, groupNotification.getChildren());
     }
 
     @Override
