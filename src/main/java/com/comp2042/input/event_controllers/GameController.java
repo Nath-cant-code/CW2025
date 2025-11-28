@@ -78,7 +78,6 @@ public class GameController implements InputEventListener {
             gameView.refreshBackground(board.getBoardMatrix());
             board.mergeBrickToBackground();
 
-            System.out.println("isSpecialShapeCompleted: " + board.isSpecialShapeCompleted());
             if (!board.isSpecialShapeCompleted()) {
                 Point shapeLocation = board.checkSpecialShape();
                 if (shapeLocation != null) {

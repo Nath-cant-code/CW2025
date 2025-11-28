@@ -327,7 +327,6 @@ public class GuiController implements Initializable, GameView {
 
     @Override
     public void handleSpecialShapeCompletion() {
-        System.out.println("handleSpecialShapeCompletion");
         gameTimeLine.stop();
         gameStateManager.setPaused(true);
 
@@ -338,8 +337,16 @@ public class GuiController implements Initializable, GameView {
                 );
 
 //        Show completion message
+//        Reset playable area visuals
         pause.setOnFinished(e -> {
             simpleBoard.clearEntireBoard();
+
+//            this is required to visually remove the last Brick object that completes the special shape
+            for (Rectangle[] rectangle : rectangles) {
+                for (Rectangle value : rectangle) {
+                    value.setFill(javafx.scene.paint.Color.TRANSPARENT);
+                }
+            }
             refreshBackground(simpleBoard.getBoardMatrix());
 
             simpleBoard.getScore().add(SpecialShapeConfig.BONUS_POINTS);
