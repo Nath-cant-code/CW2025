@@ -1,6 +1,6 @@
 package com.comp2042.renderer.refresher_interfaces;
 
-import com.comp2042.board.composite_bricks.ViewData;
+import com.comp2042.logic.records.ViewData;
 import javafx.scene.shape.Rectangle;
 
 import java.util.List;

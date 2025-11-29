@@ -1,6 +1,6 @@
 package com.comp2042.ui.panels;
 
-import com.comp2042.ui.SpecialShapeConfig;
+import com.comp2042.ui.elements.SpecialShapeConfig;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;

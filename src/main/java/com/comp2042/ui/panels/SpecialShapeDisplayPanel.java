@@ -1,7 +1,6 @@
 package com.comp2042.ui.panels;
 
-import com.comp2042.renderer.color_renderers.ColorSelector;
-import com.comp2042.ui.SpecialShapeConfig;
+import com.comp2042.ui.elements.SpecialShapeConfig;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;

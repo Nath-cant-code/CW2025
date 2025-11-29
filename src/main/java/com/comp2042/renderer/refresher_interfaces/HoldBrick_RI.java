@@ -1,6 +1,6 @@
 package com.comp2042.renderer.refresher_interfaces;
 
-import com.comp2042.bricks.AbstractBrick;
+import com.comp2042.bricks.production.blueprints.AbstractBrick;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 

@@ -1,9 +1,9 @@
 package com.comp2042.app;
 
-import com.comp2042.board.SimpleBoard;
-import com.comp2042.input.event_controllers.GameController;
-import com.comp2042.ui.ui_systems.GameView;
-import com.comp2042.ui.ui_systems.GuiController;
+import com.comp2042.logic.engine.SimpleBoard;
+import com.comp2042.input.event_managers.EventListener;
+import com.comp2042.ui.systems.controller.GameView;
+import com.comp2042.ui.systems.controller.GuiController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -30,8 +30,8 @@ public class Main extends Application {
      * Attach scene to stage and display the window on player's screen.<br>
      * -----------------------NEW REFACTORING-----------------------<br>
      * Upcasting of objects: SimpleBoard > Board, GuiController > GameView<br>
-     * Connects GuiController to GameController by passing an object of GameView > GuiController in:<br>
-     * new GameController(c);
+     * Connects GuiController to EventListener by passing an object of GameView > GuiController in:<br>
+     * new EventListener(c);
      * -----------------------NEW REFACTORING-----------------------<br>
      * @param primaryStage  Main window of the game (args).
      * @throws Exception    Self note: This means that this method might throw an exception
@@ -54,7 +54,7 @@ public class Main extends Application {
         GameView gameView = c;
         SimpleBoard board = new SimpleBoard(25, 10);
         c.setSimpleBoard(board);
-        new GameController(gameView, board);
+        new EventListener(gameView, board);
 //        c.refreshAllPanels();
         gameView.refreshHoldBrick();
         gameView.refreshPreviewPanel();
