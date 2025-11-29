@@ -157,6 +157,9 @@ public class GuiController implements Initializable, GameView {
         initializeManagers();
     }
 
+    /**
+     * Initialises manager classes.
+     */
     private void initializeManagers() {
         specialShapeManager = new SpecialShapeManager(
                 simpleBoard,
@@ -175,6 +178,9 @@ public class GuiController implements Initializable, GameView {
         );
     }
 
+    /**
+     * This method is passed to GameStateManager to be executed in its process flow.
+     */
     private void restoreSpecialShapeDisplay() {
         if (!isSpecialShapeDisplayVisible() && specialShapeDisplayPanel != null) {
             specialShapeContainer.getChildren().add(specialShapeDisplayPanel);

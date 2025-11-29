@@ -1,6 +1,5 @@
 package com.comp2042.input.event_controllers;
 
-import java.awt.Point;
 import com.comp2042.board.*;
 import com.comp2042.board.composite_bricks.DownData;
 import com.comp2042.board.composite_bricks.ViewData;
@@ -9,29 +8,24 @@ import com.comp2042.system_events.MoveEvent;
 import com.comp2042.ui.ui_systems.GameView;
 
 /**
- * This class acts as one of the bridges (after GuiController) between player actions and the game logic
- * by creating methods that link the player's actions to the game's responses towards player actions.
+ * -----------------------------------REFACTORED-----------------------------------<br>
+ * This class contains onEvent() methods connected to game's keybinds in KeyBindingManager.<br>
+ * onEvent() methods call corresponding methods in other classes that contain the logic for the respective events.<br>
+ * SOLID: Single Responsibility: Only has onEvent() methods.
+ * SOLID: Dependency Injection:<br>
+ * Similar to how in the original code, Board board = new SimpleBoard was used,
+ * I have made a change to mirror that, i.e. GameView gameView = new GuiController <br>
+ * Design Pattern: Facade: Calls the corresponding delegated methods. Class methods do not contain logic for the events.
  */
 public class GameController implements InputEventListener {
     private final Board board;
     private final GameView gameView;
+    private final BrickMergeProcessor mergeProcessor;
 
-    /**
-     * -----------------------------NEW-------------------------------<br>
-     * SOLID: Dependency Injection<br>
-     * Similar to how in the original code, Board board = new SimpleBoard was used,
-     * I have made a change to mirror that, i.e. GameView gameView = new GuiController <br>
-     * -----------------------------NEW-------------------------------<br>
-     * Creates new brick via createNewBrick() method in SimpleBoard object.<br>
-     * Player actions will cause the GuiController class to notify the viewGuiController object of this class. <br>
-     * Opens a window in which the game will initialise with the state provided by getBoardMatrix (currentGameMatrix),
-     * along with data about the Brick-shape-objects in the Deque, nextBricks.<br>
-     * Automatically updates the score when a player earns points from clearing rows.
-     * @param gameView GameView > GuiController object created in start() in Main class.
-     */
     public GameController(GameView gameView, Board board) {
         this.board = board;
         this.gameView = gameView;
+        this.mergeProcessor = new BrickMergeProcessor(board, gameView);
 
         board.createNewBrick();
         gameView.setEventListener(this);
@@ -56,12 +50,9 @@ public class GameController implements InputEventListener {
      *     If the movement is from the player, add a single point to their overall score.
      * </p>
      * <p>
-     *     In the case of FALSE (INVALID), DISALLOW the movement by calling mergeBrickToBackground()
-     *     and check if the result of merging the Brick-shape-object completely fills a row. <br>
-     *     If there is at least one row being cleared, get the points obtained and add it to the overall score.<br>
-     *     Also check if a new Brick object can be generated at the spawn point after merging the previous Brick object
-     *     with the playable area, if not then stop the game.<br>
-     *     Update the game state of the playable area (currentGameMatrix) at the end of everything.
+     *     In the case of FALSE (INVALID), DISALLOW the movement by calling mergeBrickToBackground().<br>
+     *     processMerge() is called to handle processing the state of the playable area and evaluate the condition of the state,
+     *     i.e. to clear rows, or if the special shape is formed.
      * </p>
      *
      * @param event The player's action (keystroke) that dictates a downwards movement on the Brick object.
@@ -78,46 +69,7 @@ public class GameController implements InputEventListener {
             gameView.refreshBackground(board.getBoardMatrix());
             board.mergeBrickToBackground();
 
-            if (!board.isSpecialShapeCompleted()) {
-                Point shapeLocation = board.checkSpecialShape();
-                if (shapeLocation != null) {
-                    gameView.handleSpecialShapeCompletion();
-                    board.markSpecialShapeCompleted();
-
-                    if (board.createNewBrick()) { gameView.notifyGameOver(); }
-
-                    gameView.refreshActiveBrick(board.getViewData());
-                    gameView.refreshPreviewPanel();
-
-//                    Return with empty clear row data
-                    return new DownData(
-                            new ClearRow(0, board.getBoardMatrix(), 0),
-                            board.getViewData()
-                    );
-                }
-            }
-
-            clearRow = board.clearRows();
-
-            if (clearRow.linesRemoved() > 0) {
-                board.getScore().add(clearRow.scoreBonus());
-                gameView.showClearRowNotification(clearRow.scoreBonus());
-
-                boolean leveledUp = board.getLevelSystem().addClearedRows(
-                        clearRow.linesRemoved()
-                );
-
-                if (leveledUp) {
-                    int newLevel = board.getLevelSystem().getCurrentLevel();
-                    gameView.notifyLevelUp(newLevel);
-                    gameView.updateFallSpeed(board.getLevelSystem().getFallSpeedMs());
-                }
-            }
-
-            if (board.createNewBrick()) { gameView.notifyGameOver(); }
-
-            gameView.refreshBackground(board.getBoardMatrix());
-
+            clearRow = mergeProcessor.processMerge();
         }
         else {
             if (event.eventSource() == EventSource.USER) {
@@ -125,6 +77,7 @@ public class GameController implements InputEventListener {
             }
         }
 
+//        IMPORTANT: THESE REFRESH CALLS CANNOT BE REMOVED
         gameView.refreshActiveBrick(board.getViewData());
         gameView.refreshPreviewPanel();
         return new DownData(clearRow, board.getViewData());
@@ -155,7 +108,7 @@ public class GameController implements InputEventListener {
     }
 
     /**
-     * Connects InputHandler to SimpleBoard + BrickRotater.
+     * Calls rotateBrickRight() in SimpleBoard.
      * @param event MoveEvent object containing EventType (keystroke) and EventSource.
      * @return      ViewData object containing information on current Brick-shape-object after alterations from player action
      * and info on next Brick-shape-object.
@@ -167,7 +120,7 @@ public class GameController implements InputEventListener {
     }
 
     /**
-     * Connects InputHandler to SimpleBoard + BrickRotater.
+     * Calls rotateBrickLeft() in SimpleBoard.
      * @param event MoveEvent object containing EventType (keystroke) and EventSource.
      * @return      ViewData object containing information on current Brick-shape-object after alterations from player action
      * and info on next Brick-shape-object.
@@ -179,10 +132,11 @@ public class GameController implements InputEventListener {
     }
 
     /**
-     * Calls method to hard drop the current Brick to the bottom.
+     * Calls method to hard drop the current Brick to the bottom then merges brick to background.
+     * Calls processMerge() handle processing the state of the playable area and evaluate the condition of the state,
+     * i.e. to clear rows, or if the special shape is formed.
      * @param event MoveEvent object containing EventType (keystroke) and EventSource.
-     * @return ViewData object containing information on current Brick-shape-object after alterations from player action
-     * and info on next Brick-shape-object.
+     * @return A DownData object with ClearRow object and ViewData object.
      */
     @Override
     public DownData onSnapEvent(MoveEvent event) {
@@ -191,56 +145,18 @@ public class GameController implements InputEventListener {
                 gameView.getDisplayMatrix()
         );
 
-        ClearRow clearRow = null;
 //        2 hours spent here on the 2 refresh methods
         gameView.refreshActiveBrick(board.getViewData());
         gameView.refreshBackground(board.getBoardMatrix());
         board.mergeBrickToBackground();
 
-        if (!board.isSpecialShapeCompleted()) {
-            Point shapeLocation = board.checkSpecialShape();
-            if (shapeLocation != null) {
-                gameView.handleSpecialShapeCompletion();
-                board.markSpecialShapeCompleted();
+        ClearRow clearRow = mergeProcessor.processMerge();
 
-                if (board.createNewBrick()) { gameView.notifyGameOver(); }
-
-                gameView.refreshActiveBrick(board.getViewData());
-                gameView.refreshPreviewPanel();
-
-                return new DownData(
-                        new ClearRow(0, board.getBoardMatrix(), 0),
-                        board.getViewData()
-                );
-            }
-        }
-
-        clearRow = board.clearRows();
-
-        if (clearRow.linesRemoved() > 0) {
-            board.getScore().add(clearRow.scoreBonus());
-            gameView.showClearRowNotification(clearRow.scoreBonus());
-
-            boolean leveledUp = board.getLevelSystem().addClearedRows(
-                    clearRow.linesRemoved()
-            );
-
-            if (leveledUp) {
-                int newLevel = board.getLevelSystem().getCurrentLevel();
-                gameView.notifyLevelUp(newLevel);
-                gameView.updateFallSpeed(board.getLevelSystem().getFallSpeedMs());
-            }
-        }
-
-        if (board.createNewBrick()) { gameView.notifyGameOver(); }
-
-        gameView.refreshBackground(board.getBoardMatrix());
-        gameView.refreshActiveBrick(board.getViewData());
-        gameView.refreshPreviewPanel();
         return new DownData(clearRow, board.getViewData());
     }
 
     /**
+     * Calls holdBrick() method.
      * Refreshes the hold panel to contain the selected held Brick.
      */
     @Override

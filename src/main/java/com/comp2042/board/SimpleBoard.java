@@ -102,9 +102,9 @@ public class SimpleBoard implements Board {
      * @return TRUE if VALID rotation, FALSE if INVALID rotation.
      */
     @Override
-    public boolean rotateBrickRight () {
+    public boolean rotateBrickLeft () {
         return brickActionCoordinator.tryRotate(
-                RotationDirection.CLOCKWISE,
+                RotationDirection.ANTI_CLOCKWISE,
                 currentGameMatrix,
                 currentOffset
         );
@@ -116,7 +116,7 @@ public class SimpleBoard implements Board {
      * @return TRUE if VALID rotation, FALSE if INVALID rotation.
      */
     @Override
-    public boolean rotateBrickLeft () {
+    public boolean rotateBrickRight () {
         return brickActionCoordinator.tryRotate(
                 RotationDirection.CLOCKWISE,
                 currentGameMatrix,
