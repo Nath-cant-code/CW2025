@@ -139,6 +139,7 @@ public class GuiController implements Initializable, GameView {
      * @param boardMatrix   Matrix of the playable area (currentGameMatrix in SimpleBoard).
      * @param brick         Object containing info on the current and next in line Brick-shape-object.
      */
+    @Override
     public void initGameView(int[][] boardMatrix, ViewData brick) {
         displayMatrix = gameInitialiser.initialiseBoard(gamePanel, boardMatrix);
         rectangles = gameInitialiser.initialiseBrickArea(brickPanel, brick);
@@ -178,16 +179,6 @@ public class GuiController implements Initializable, GameView {
         if (!isSpecialShapeDisplayVisible() && specialShapeDisplayPanel != null) {
             specialShapeContainer.getChildren().add(specialShapeDisplayPanel);
         }
-    }
-
-    /**
-     * Clearer more concise initialise method.
-     * @param boardMatrix The initial board matrix
-     * @param initialBrick The first brick to display
-     */
-    @Override
-    public void initialise(int[][] boardMatrix, ViewData initialBrick) {
-        initGameView(boardMatrix, initialBrick);
     }
 
     /**

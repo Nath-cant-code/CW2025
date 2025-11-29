@@ -25,14 +25,11 @@ import javafx.scene.shape.Rectangle;
 public interface GameView {
 
     /**
-     * -----------------------------IMPORTANT------------------------------<br>
-     * Initialise here is spelled with an S, while the initialize from Initializable is spelt with a Z.<br>
-     * -----------------------------IMPORTANT------------------------------<br>
      * Initialises the game view with the initial board state.
      * @param boardMatrix The initial board matrix
      * @param initialBrick The first brick to display
      */
-    void initialise(int[][] boardMatrix, ViewData initialBrick);
+    void initGameView(int[][] boardMatrix, ViewData initialBrick);
 
     /**
      * Sets the event listener for user input.

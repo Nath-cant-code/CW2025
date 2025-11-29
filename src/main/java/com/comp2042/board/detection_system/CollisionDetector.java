@@ -1,9 +1,9 @@
-package com.comp2042.board;
+package com.comp2042.board.detection_system;
 
 /**
- * Handles collision detection logic.
- * SOLID: Single Responsibility - Only detects collisions
- * Design Pattern: Strategy - Collision rules can be changed independently
+ * Handles collision detection logic.<br>
+ * SOLID: Single Responsibility - Only detects collisions<br>
+ * Design Pattern: Strategy - Collision rules can be changed independently<br>
  */
 public class CollisionDetector {
 

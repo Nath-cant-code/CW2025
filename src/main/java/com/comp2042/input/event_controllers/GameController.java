@@ -35,7 +35,7 @@ public class GameController implements InputEventListener {
 
         board.createNewBrick();
         gameView.setEventListener(this);
-        gameView.initialise(board.getBoardMatrix(), board.getViewData());
+        gameView.initGameView(board.getBoardMatrix(), board.getViewData());
         gameView.bindScore(board.getScore().scoreProperty());
         gameView.bindLevel(board.getLevelSystem().currentLevelProperty());
     }

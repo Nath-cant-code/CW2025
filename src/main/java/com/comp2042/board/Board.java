@@ -29,11 +29,7 @@ public interface Board {
 
     boolean rotateBrickRight();
 
-    boolean rotateBrick(RotationDirection rd);
-
     void snapBrick (RefreshCoordinator refreshCoordinator, Rectangle[][] displayMatrix);
-
-    void clearEntireBoard();
 
     ViewData holdBrick ();
 
@@ -45,13 +41,15 @@ public interface Board {
 
     ViewData getViewData();
 
+    Score getScore();
+
     LevelSystem getLevelSystem();
 
     void mergeBrickToBackground();
 
     ClearRow clearRows();
 
-    Score getScore();
+    void clearEntireBoard();
 
     boolean createNewBrick();
 

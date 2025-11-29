@@ -1,4 +1,6 @@
-package com.comp2042.board;
+package com.comp2042.board.detection_system;
+
+import com.comp2042.board.ClearRow;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -152,12 +154,4 @@ public class MatrixOperations {
     public static List<int[][]> deepCopyList(List<int[][]> list){
         return list.stream().map(MatrixOperations::copy).collect(Collectors.toList());
     }
-
-//    public static int findSnapPosition (int [][] board, int [][] currShape, int currX, int currY) {
-//        int y = currY;
-//        while (true) {
-//            if (intersect(board, currShape, currX, y + 1)) { return y; }
-//            y++;
-//        }
-//    }
 }

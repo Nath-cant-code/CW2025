@@ -1,16 +1,16 @@
 package com.comp2042.board;
 
 import java.awt.Point;
-import com.comp2042.board.composite_bricks.DownData;
-import com.comp2042.board.composite_bricks.NextShapeInfo;
+
 import com.comp2042.board.composite_bricks.ViewData;
-import com.comp2042.brick_actions.BrickRotator;
+import com.comp2042.board.detection_system.CollisionDetector;
+import com.comp2042.board.detection_system.MatrixOperations;
+import com.comp2042.board.detection_system.SpecialShapeDetector;
+import com.comp2042.brick_actions.BrickActionCoordinator;
 import com.comp2042.brick_actions.RotationDirection;
 import com.comp2042.bricks.Brick;
 import com.comp2042.bricks.brick_generation_system.*;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.comp2042.renderer.concrete_refreshers.RefreshCoordinator;
@@ -19,263 +19,155 @@ import com.comp2042.ui.Score;
 import javafx.scene.shape.Rectangle;
 
 /**
- * This class implements Board and creates useful methods. <br>
- * An object of this class is created in Main
- * and only one object is created everytime the game (program) runs.<br>
- * SimpleBoard object consists of the playable area where bricks will fall,
- * along with all methods that correspond to the player's actions. <br>
  * -----------------------------------REFACTORED-----------------------------------<br>
+ * An object of this class is created in Main and only one object is created everytime the game (program) runs.<br>
  * Now focuses on coordinating game board operations. <br>
- * SOLID: Single Responsibility - Coordinates board state, delegates specific tasks. <br>
- * Design Pattern: Facade - Provides simple interface to complex subsystem
+ * In essence, this is a wrapper class that encapsulates other sub-wrapper classes.<br>
+ * This class no longer contains the logic for the functionalities, but calls delegated methods from other classes containing said logic.<br>
+ * SOLID: Single Responsibility: Coordinates board state, delegates specific tasks. <br>
+ * SOLID: Dependency Inversion: Implements Board, which other classes depend on, instead of depending on the details of this class.<br>
+ * Design Pattern: Facade: Provides simple interface to complex subsystem
  */
 public class SimpleBoard implements Board {
-
-    /**
-     * It helps to think that brickRotater holds the Brick-shape-object that has ALREADY BEEN POPPED
-     * from the Deque, nextBricks and is currently falling in the playable area (currentGameMatrix). <br>
-     * While brickGenerator holds the first or top Brick-shape-object in the Deque, nextBricks,
-     * that HAS NOT BEEN POPPED YET.
-     */
     private final int width;
     private final int height;
     private int[][] currentGameMatrix;
     private Point currentOffset;
+
+
     private final Score score;
     private final LevelSystem levelSystem;
-
-    private final BrickRotator brickRotator;
     private final BrickQueueManager queueManager;
+    private final BrickActionCoordinator brickActionCoordinator;
     public final SpecialShapeDetector specialShapeDetector;
+
     /**
-     * This constructor makes it so that when a SimpleBoard object is created in GameController,
-     * the size of the playable area must be specified. <br>
-     * currentGameMatrix would be the playable area for the bricks to fall in. <br>
-     * <p>
-     *     brickGenerator: an object to either: <br>
-     *     - getNextBrick(): look at the first (top) Brick-shape-object in the Deque (nextBricks) <br>
-     *     - getBrick(): or pop the first (top) Brick-shape-object in the Deque, essentially deleting it from the Deque
-     * </p>
-     * @param width     the values represent how many Brick sub-blocks (or pixels) can fit across the playable area.
-     * @param height    the values represent how many Brick sub-blocks (or pixels)
-     *                  can stack on top of each other in the playable area up until the Brick generation area (spawn point).
+     * Initialised in Main.java
+     * @param width     Width of playable area.
+     * @param height    Height of playable area.
      */
     public SimpleBoard(int width, int height) {
         this.width = width;
         this.height = height;
         currentGameMatrix = new int[width][height];
-        brickRotator = new BrickRotator();
-        this.queueManager = new BrickQueueManager(new RandomBrickGenerator());
-        score = new Score();
         this.levelSystem = new LevelSystem();
         this.specialShapeDetector = new SpecialShapeDetector();
+
+        score = new Score();
+        queueManager = new BrickQueueManager(new RandomBrickGenerator());
+        brickActionCoordinator = new BrickActionCoordinator(queueManager, score);
     }
 
     /**
-     * Creates a point object to hold desired changes to Brick-shape-object's relative coordinates in playable area (currentGameMatrix).<br>
-     * Calls intersect() to check if new desired position of Brick-shape-object is valid within the playable area. <br>
-     * @return  If VALID -> else statement runs and currentOffset becomes the new coordinates and moveBrickDown() returns TRUE,
-     * if INVALID, moveBrickDown() returns FALSE.
+     * Passes displacement coordinates to mover method.
+     * @return  TRUE if movement is valid, FALSE otherwise.
      */
     @Override
     public boolean moveBrickDown () {
-        System.out.println("Move Brick Down ran");
-        Point newPosition = BrickMovementController.tryMoveBrick(
+        return  brickActionCoordinator.tryMove(
                 currentGameMatrix,
-                brickRotator.getCurrentShape(),
                 currentOffset,
                 0, 1
         );
-
-        // Collision detected
-        if (newPosition == null) {
-            return false;
-        }
-
-        // Update position and return true for successful movement
-        currentOffset = newPosition;
-        return true;
     }
 
     /**
-     * Creates a point object to hold desired changes to Brick-shape-object's relative coordinates in playable area (currentGameMatrix).<br>
-     * Calls intersect() to check if new desired position of Brick-shape-object is valid within the playable area. <br>
-     * @return  If VALID -> else statement runs and currentOffset becomes the new coordinates and moveBrickDown() returns TRUE,
-     * if INVALID, moveBrickDown() returns FALSE.
+     * Passes displacement coordinates to mover method.
+     * @return  TRUE if movement is valid, FALSE otherwise.
      */
     @Override
     public boolean moveBrickLeft () {
-        Point newPosition = BrickMovementController.tryMoveBrick(
+        return  brickActionCoordinator.tryMove(
                 currentGameMatrix,
-                brickRotator.getCurrentShape(),
                 currentOffset,
                 -1, 0
         );
-
-        if (newPosition == null) {
-            return false;
-        }
-
-        currentOffset = newPosition;
-        return true;
     }
 
     /**
-     * Creates a point object to hold desired changes to Brick-shape-object's relative coordinates in playable area (currentGameMatrix).<br>
-     * Calls intersect() to check if new desired position of Brick-shape-object is valid within the playable area. <br>
-     * @return  If VALID -> else statement runs and currentOffset becomes the new coordinates and moveBrickDown() returns TRUE,
-     * if INVALID, moveBrickDown() returns FALSE.
+     * Passes displacement coordinates to mover method.
+     * @return  TRUE if movement is valid, FALSE otherwise.
      */
     @Override
     public boolean moveBrickRight () {
-        Point newPosition = BrickMovementController.tryMoveBrick(
+        return  brickActionCoordinator.tryMove(
                 currentGameMatrix,
-                brickRotator.getCurrentShape(),
                 currentOffset,
                 1, 0
         );
-
-        if (newPosition == null) {
-            return false;
-        }
-
-        currentOffset = newPosition;
-        return true;
     }
 
     /**
-     * Calls clockwise rotation logic in BrickRotater. <br>
-     * Passes a RotationDirection based accordingly.
+     * Passes corresponding RotationDirection to rotater method.
      * @return TRUE if VALID rotation, FALSE if INVALID rotation.
      */
     @Override
-    public boolean rotateBrickRight () {return rotateBrick(RotationDirection.CLOCKWISE); }
+    public boolean rotateBrickRight () {
+        return brickActionCoordinator.tryRotate(
+                RotationDirection.CLOCKWISE,
+                currentGameMatrix,
+                currentOffset
+        );
+    }
 
     /**
      * ------------------------------------ADDED A ROTATE RIGHT METHOD------------------------------------<br>
-     * Calls clockwise rotation logic in BrickRotater. <br>
-     * Passes a RotationDirection based accordingly.
+     * Passes corresponding RotationDirection to rotater method.
      * @return TRUE if VALID rotation, FALSE if INVALID rotation.
      */
     @Override
-    public boolean rotateBrickLeft () { return rotateBrick(RotationDirection.ANTI_CLOCKWISE); }
-
-    /**
-     * ------------------------------------ADDED A GENERAL ROTATE METHOD------------------------------------<br>
-     * Extracted logic out of rotateLeftBrick() and placed it in a new method rotateBrick(). <br>
-     * Creates a nextShape object to hold the next orientation in the Brick-shape-object's brickMatrix List. <br>
-     * Calls intersect() to check if the next orientation of the Brick-shape-object is valid within the playable area. <br>
-     * @return  If VALID -> else statement runs and sets the Brick-shape-object's current orientation to the new desired orientation
-     * and rotateBrickLeft() returns TRUE,
-     * if INVALID, rotateBrickLeft() returns FALSE.
-     */
-    @Override
-    public boolean rotateBrick (RotationDirection rd) {
-        int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
-        NextShapeInfo nextShape = brickRotator.nextRotation(rd);
-
-        boolean conflict = CollisionDetector.wouldCollide(
-                currentMatrix,
-                nextShape.shape(),
-                (int) currentOffset.getX(),
-                (int) currentOffset.getY()
+    public boolean rotateBrickLeft () {
+        return brickActionCoordinator.tryRotate(
+                RotationDirection.CLOCKWISE,
+                currentGameMatrix,
+                currentOffset
         );
-
-        if (conflict) {
-            return false;
-        } else {
-            brickRotator.setCurrentShape(nextShape.position());
-            return true;
-        }
     }
 
+    /**
+     * Calls snap brick method.
+     * @param refreshCoordinator    Object to render the Brick object after snap (hard drop)
+     * @param displayMatrix         Current game matrix
+     */
     @Override
     public void snapBrick (RefreshCoordinator refreshCoordinator, Rectangle[][] displayMatrix) {
-        int targetY = BrickMovementController.findSnapPosition(
-                currentGameMatrix,
-                brickRotator.getCurrentShape(),
-                (int) currentOffset.getX(),
-                (int) currentOffset.getY()
-        );
-
-//        score multiplier for hard dropping
-        getScore().add((targetY - currentOffset.y) * 5);
-        currentOffset.y = targetY;
-//        mergeBrickToBackground();
-
-//        Check for special shape BEFORE clearing rows
-//        This bug caused me 6+ hours :)
-//        if (!specialShapeDetector.isCompleted()) {
-//            Point shapeLocation = specialShapeDetector.detectSpecialShape(currentGameMatrix);
-//            if (shapeLocation != null) {
-//                specialShapeDetector.markCompleted();
-//
-//                clearEntireBoard();
-//
-//                refreshCoordinator.renderBackground(currentGameMatrix, displayMatrix);
-//
-////                Create a special DownData to signal special shape completion
-//                ClearRow specialClear = new ClearRow(0, currentGameMatrix, 0);
-//                boolean gameOver = createNewBrick();
-//                ViewData vd = getViewData();
-//
-//                return new DownData(specialClear, vd);
-//            }
-//        }
-
-//        THIS BUG CAUSED ME 1 DAY :)
-//        refreshCoordinator.renderBackground(currentGameMatrix, displayMatrix);
-//        ClearRow clearRow = clearRows();
-//        refreshCoordinator.renderBackground(currentGameMatrix, displayMatrix);
-//
-//        if (clearRow.linesRemoved() > 0) { score.add(clearRow.scoreBonus()); }
-//
-//        boolean gameOver = createNewBrick();
-//        ViewData vd = getViewData();
-//
-//        return new DownData(clearRow, vd);
+        currentOffset.y = brickActionCoordinator.executeSnap(currentGameMatrix, currentOffset);
     }
 
     /**
-     * Clears the entire board (used for special shape bonus).
+     * Passes createNewBrick() method in this class to holder method for it to run after hold is executed.
+     * @return  ViewData object.
      */
     @Override
-    public void clearEntireBoard() {
-        currentGameMatrix = new int[width][height];
-    }
-
-    @Override
     public ViewData holdBrick () {
-        if (!queueManager.canUseHold()) {
-            return getViewData();
+        Point newOffset = brickActionCoordinator.executeHold(this::createNewBrick);
+        if (newOffset != null) {
+            currentOffset = newOffset;
         }
-
-        Brick currentBrick = brickRotator.getBrick();
-        Brick swappedBrick = queueManager.swapWithHeld(currentBrick);
-
-        if (swappedBrick == null) {
-            createNewBrick();
-        }
-        else {
-            brickRotator.setBrick(swappedBrick);
-            currentOffset = new Point(4, 1);
-        }
-
         return getViewData();
     }
 
+    /**
+     * Get the Brick object in hold panel.
+     * @return  Brick object in hold panel.
+     */
     @Override
     public Brick getHeldBrick () {
         return queueManager.getHeldBrick();
     }
 
+    /**
+     * Get List of next 3 Brick objects in queue.
+     * @return  List of next 3 Brick objects in queue.
+     */
     @Override
     public List<ViewData> getNextBricksPreview() {
         return queueManager.getPreviewData();
     }
 
     /**
-     * @return  currentGameMatrix, the current game state with all the Brick objects in place.
+     * Get currentGameMatrix
+     * @return  currentGameMatrix, the current game board with all the Brick objects in place.
      */
     @Override
     public int[][] getBoardMatrix() {
@@ -283,18 +175,33 @@ public class SimpleBoard implements Board {
     }
 
     /**
-     * @return  Creates a ViewData object with fields: current Brick-shape-object's current orientation, B-s-o's current x-coordinates,
+     * Creates a ViewData object with fields:<br>
+     * current Brick-shape-object's current orientation, B-s-o's current x-coordinates,
      * B-s-o's current y-coordinates, the first orientation in the brickMatrix of the first (top) Brick-shape-object in the Deque, nextBricks.
+     * @return  ViewData object
      */
     @Override
     public ViewData getViewData() {
         return new ViewData (
-                brickRotator.getCurrentShape(),
+                brickActionCoordinator.getCurrentShape(),
                 (int) currentOffset.getX(),
                 (int) currentOffset.getY(),
                 queueManager.getNextBrick().getShapeMatrix().getFirst());
     }
 
+    /**
+     * Get game score.
+     * @return  Game score.
+     */
+    @Override
+    public Score getScore() {
+        return score;
+    }
+
+    /**
+     * Get LevelSystem object.
+     * @return  LevelSystem object.
+     */
     @Override
     public LevelSystem getLevelSystem() {
         return levelSystem;
@@ -308,7 +215,7 @@ public class SimpleBoard implements Board {
         queueManager.resetHoldForNewTurn();
         currentGameMatrix = MatrixOperations.merge(
                 currentGameMatrix,
-                brickRotator.getCurrentShape(),
+                brickActionCoordinator.getCurrentShape(),
                 (int) currentOffset.getX(),
                 (int) currentOffset.getY()
         );
@@ -333,15 +240,15 @@ public class SimpleBoard implements Board {
     }
 
     /**
-     * @return  Game score.
+     * Clears the entire board by setting the game matrix to the default parameters.
      */
     @Override
-    public Score getScore() {
-        return score;
+    public void clearEntireBoard() {
+        currentGameMatrix = new int[width][height];
     }
 
     /**
-     * ------------------------------------MIGHT BE ABLE TO CHANGE SPAWN POINT HERE------------------------------------<br>
+     * ------------------------------------SPAWN POINT CHANGED HERE------------------------------------<br>
      * Creates a new Brick object (currentBrick) by popping the first (top) Brick-shape-object from the Deque, nextBricks. <br>
      * Calls setBrick() to set the new Brick-shape-object's orientation to the first in its brickMatrix List. <br>
      * currentOffset is the coordinates in the playable area (currentGameMatrix) where the new Brick-shape-object will be generated,
@@ -352,19 +259,19 @@ public class SimpleBoard implements Board {
     @Override
     public boolean createNewBrick() {
         Brick currentBrick = queueManager.generateBrick();
-        brickRotator.setBrick(currentBrick);
+        brickActionCoordinator.setBrick(currentBrick);
         currentOffset = new Point(4, 1);
         return !CollisionDetector.isValidSpawnPosition(
                 currentGameMatrix,
-                brickRotator.getCurrentShape(),
+                brickActionCoordinator.getCurrentShape(),
                 (int) currentOffset.getX(),
                 (int) currentOffset.getY()
         );
     }
 
     /**
-     * Creates a playable area (currentGameMatrix) with set values of width and height from constructor.<br>
-     * Sets the game score to 0 (zero).<br>
+     * Clears entire board.<br>
+     * Resets score, levels, and allow special shape bonus.<br>
      * Calls createNewBrick() to generate a new Brick from the top of the Deque, newBricks, at the spawn point.
      */
     @Override
@@ -376,21 +283,35 @@ public class SimpleBoard implements Board {
         createNewBrick();
     }
 
+    /**
+     * Calls method to scan the playable area for the special shape.
+     * @return  Starting point of the special shape in the playable area.
+     */
     @Override
     public Point checkSpecialShape() {
         return specialShapeDetector.detectSpecialShape(currentGameMatrix);
     }
 
+    /**
+     * Calls method to check if player has already formed the special shape in the current game.
+     * @return  TRUE if formed before, FALSE otherwise.
+     */
     @Override
     public boolean isSpecialShapeCompleted() {
         return specialShapeDetector.isCompleted();
     }
 
+    /**
+     * Allows the player to form the special shape again on a new game.
+     */
     @Override
     public void resetSpecialShape() {
         specialShapeDetector.reset();
     }
 
+    /**
+     * Notify the indicator that the player has formed the special shape during the current game.
+     */
     @Override
     public void markSpecialShapeCompleted() {
         specialShapeDetector.markCompleted();

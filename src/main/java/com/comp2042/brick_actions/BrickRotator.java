@@ -1,15 +1,43 @@
 package com.comp2042.brick_actions;
 
+import com.comp2042.board.detection_system.CollisionDetector;
 import com.comp2042.board.composite_bricks.NextShapeInfo;
 import com.comp2042.bricks.Brick;
 
+import java.awt.*;
+
 /**
- * This class manages the selection of the possible orientations of a Brick-shape-object.
+ * This class manages the selection of the possible orientations of a Brick-shape-object.<br>
+ * SOLID: Single Responsibility - Only manages rotation
  */
 public class BrickRotator {
 
     private Brick brick;
     private int currentShape = 0;
+
+    /**
+     * Attempts to rotate the brick in the specified direction.
+     * @param rd Rotation direction
+     * @param gameMatrix Current game matrix
+     * @param currentOffset Current brick position
+     * @return true if rotation successful, false otherwise
+     */
+    public boolean tryRotateBrick(RotationDirection rd, int[][] gameMatrix, Point currentOffset) {
+        NextShapeInfo nextShape = nextRotation(rd);
+
+        boolean conflict = CollisionDetector.wouldCollide(
+                gameMatrix,
+                nextShape.shape(),
+                (int) currentOffset.getX(),
+                (int) currentOffset.getY()
+        );
+
+        if (!conflict) {
+            setCurrentShape(nextShape.position());
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Calls a method based on the RotationDirection received.
@@ -58,19 +86,19 @@ public class BrickRotator {
     }
 
     /**
-     * Whatever value the currentShape counter has, that will be the index of the getShapeMatrix List being accessed.<br>
-     * @return Orientation of current Brick-shape-object
-     */
-    public int[][] getCurrentShape() {
-        return brick.getShapeMatrix().get(currentShape);
-    }
-
-    /**
      * Only used once in SimpleBoard.rotateBrickLeft() to set a NEW orientation for the current Brick-shape-object.<br>
      * @param currentShape  New counter value to be used as the index (nextShape) to select the new orientation.
      */
     public void setCurrentShape(int currentShape) {
         this.currentShape = currentShape;
+    }
+
+    /**
+     * Whatever value the currentShape counter has, that will be the index of the getShapeMatrix List being accessed.<br>
+     * @return Orientation of current Brick-shape-object
+     */
+    public int[][] getCurrentShape() {
+        return brick.getShapeMatrix().get(currentShape);
     }
 
     /**
@@ -82,6 +110,10 @@ public class BrickRotator {
         currentShape = 0;
     }
 
+    /**
+     * Gets Brick object.
+     * @return  Brick object in class.
+     */
     public Brick getBrick () {
         return this.brick;
     }

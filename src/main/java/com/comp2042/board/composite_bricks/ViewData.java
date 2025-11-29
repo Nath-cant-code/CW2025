@@ -1,6 +1,6 @@
 package com.comp2042.board.composite_bricks;
 
-import com.comp2042.board.MatrixOperations;
+import com.comp2042.board.detection_system.MatrixOperations;
 
 /**
  * This class is to create an object that contains information on the current Brick-shape-object's

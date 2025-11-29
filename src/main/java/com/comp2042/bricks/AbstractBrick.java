@@ -1,6 +1,6 @@
 package com.comp2042.bricks;
 
-import com.comp2042.board.MatrixOperations;
+import com.comp2042.board.detection_system.MatrixOperations;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.comp2042.board;
+package com.comp2042.board.detection_system;
 
 import com.comp2042.ui.SpecialShapeConfig;
 

@@ -1,5 +1,7 @@
 package com.comp2042.board;
 
+import com.comp2042.board.detection_system.MatrixOperations;
+
 /**
  * This class is important for when the player completely fills a row with blocks from Brick-shape-objects
  * and the whole row gets cleared, earning the player points. <br>
