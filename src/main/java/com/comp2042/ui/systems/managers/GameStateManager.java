@@ -1,6 +1,6 @@
 package com.comp2042.ui.systems.managers;
 
-import com.comp2042.input.event_managers.InputEventListener;
+import com.comp2042.input.event_listener.InputEventListener;
 import javafx.scene.layout.GridPane;
 
 /**

@@ -2,8 +2,7 @@ package com.comp2042.app;
 
 import com.comp2042.logic.engine.ActionBoard;
 import com.comp2042.logic.engine.Board;
-import com.comp2042.logic.engine.SimpleBoard;
-import com.comp2042.input.event_managers.EventListener;
+import com.comp2042.input.event_listener.EventListener;
 import com.comp2042.ui.systems.controller.GameView;
 import com.comp2042.ui.systems.controller.GuiController;
 import javafx.application.Application;

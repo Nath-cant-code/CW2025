@@ -2,7 +2,7 @@ package com.comp2042.ui.systems.initializers;
 
 import com.comp2042.logic.records.ViewData;
 import com.comp2042.input.keyboard.InputHandler;
-import com.comp2042.input.event_managers.InputEventListener;
+import com.comp2042.input.event_listener.InputEventListener;
 import com.comp2042.renderer.basic_renderers.BoardRenderer;
 import com.comp2042.renderer.basic_renderers.BrickRenderer;
 import com.comp2042.ui.systems.controller.GuiController;

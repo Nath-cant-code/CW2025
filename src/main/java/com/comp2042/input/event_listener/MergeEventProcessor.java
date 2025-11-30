@@ -1,4 +1,4 @@
-package com.comp2042.input.event_managers;
+package com.comp2042.input.event_listener;
 
 import com.comp2042.logic.engine.Board;
 import com.comp2042.logic.records.ClearRow;

@@ -1,6 +1,6 @@
 package com.comp2042.input.keyboard;
 
-import com.comp2042.input.event_managers.InputEventListener;
+import com.comp2042.input.event_listener.InputEventListener;
 import com.comp2042.renderer.runtime_refreshers.RefreshCoordinator;
 import com.comp2042.input.system_events.EventType;
 import com.comp2042.ui.systems.controller.GuiController;

@@ -1,7 +1,7 @@
 package com.comp2042.ui.systems.controller;
 
 import com.comp2042.logic.records.ViewData;
-import com.comp2042.input.event_managers.InputEventListener;
+import com.comp2042.input.event_listener.InputEventListener;
 import javafx.beans.property.IntegerProperty;
 import javafx.scene.shape.Rectangle;
 
