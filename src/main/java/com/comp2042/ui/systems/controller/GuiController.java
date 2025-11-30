@@ -1,6 +1,7 @@
 package com.comp2042.ui.systems.controller;
 
-import com.comp2042.logic.engine.SimpleBoard;
+import com.comp2042.logic.engine.Board;
+//import com.comp2042.logic.engine.SimpleBoard;
 import com.comp2042.logic.records.ViewData;
 import com.comp2042.bricks.production.blueprints.AbstractBrick;
 import com.comp2042.input.event_managers.InputEventListener;
@@ -72,7 +73,7 @@ public class GuiController implements Initializable, GameView {
     public Rectangle[][] holdMatrix;
     public Rectangle[][] previewMatrix;
 
-    public SimpleBoard simpleBoard;
+    public Board board;
     private InputEventListener eventListener;
     protected InputHandler inputHandler;
     private UILabelManager labelManager;
@@ -164,7 +165,7 @@ public class GuiController implements Initializable, GameView {
      */
     private void initializeManagers() {
         specialShapeManager = new SpecialShapeManager(
-                simpleBoard,
+                board,
                 timeLineManager,
                 gameStateProperty,
                 gamePanel
@@ -201,10 +202,10 @@ public class GuiController implements Initializable, GameView {
     /**
      * Creates SimpleBoard object in this class.<br>
      * Refreshes Hold Brick panel and Preview Bricks panel.
-     * @param simpleBoard SimpleBoard object.
+     * @param board SimpleBoard object.
      */
-    public void setSimpleBoard (SimpleBoard simpleBoard) {
-        this.simpleBoard = simpleBoard;
+    public void setBoard(Board board) {
+        this.board = board;
     }
 
     /**
@@ -277,12 +278,12 @@ public class GuiController implements Initializable, GameView {
 
     @Override
     public void refreshHoldBrick () {
-        refreshCoordinator.renderHoldBrick((AbstractBrick) simpleBoard.getHeldBrick(), holdMatrix, holdPanel);
+        refreshCoordinator.renderHoldBrick((AbstractBrick) board.getHeldBrick(), holdMatrix, holdPanel);
     }
 
     @Override
     public void refreshPreviewPanel () {
-        refreshCoordinator.renderNextBricks(simpleBoard.getNextBricksPreview(), previewMatrix);
+        refreshCoordinator.renderNextBricks(board.getNextBricksPreview(), previewMatrix);
     }
 
     /**

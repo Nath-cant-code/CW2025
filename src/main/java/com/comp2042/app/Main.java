@@ -1,5 +1,7 @@
 package com.comp2042.app;
 
+import com.comp2042.logic.engine.ActionBoard;
+import com.comp2042.logic.engine.Board;
 import com.comp2042.logic.engine.SimpleBoard;
 import com.comp2042.input.event_managers.EventListener;
 import com.comp2042.ui.systems.controller.GameView;
@@ -52,10 +54,9 @@ public class Main extends Application {
         primaryStage.show();
 
         GameView gameView = c;
-        SimpleBoard board = new SimpleBoard(25, 10);
-        c.setSimpleBoard(board);
+        Board board = new ActionBoard(25, 10);
+        c.setBoard(board);
         new EventListener(gameView, board);
-//        c.refreshAllPanels();
         gameView.refreshHoldBrick();
         gameView.refreshPreviewPanel();
     }

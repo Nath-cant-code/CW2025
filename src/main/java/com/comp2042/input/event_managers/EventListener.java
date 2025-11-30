@@ -1,5 +1,6 @@
 package com.comp2042.input.event_managers;
 
+import com.comp2042.logic.engine.ActionBoard;
 import com.comp2042.logic.engine.Board;
 import com.comp2042.logic.engine.SimpleBoard;
 import com.comp2042.logic.records.ClearRow;
@@ -42,7 +43,7 @@ public class EventListener implements InputEventListener {
      * Used for backward compatibility.
      */
     public EventListener(GameView gameView) {
-        this(gameView, new SimpleBoard(25, 10));
+        this(gameView, new ActionBoard(25, 10));
     }
 
     /**

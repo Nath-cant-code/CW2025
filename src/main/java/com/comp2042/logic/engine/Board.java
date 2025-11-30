@@ -12,9 +12,7 @@ import java.awt.Point;
 import java.util.List;
 
 /**
- * This interface and its abstract methods are implemented by SimpleBoard.
- * <p></p>
- * EventListener creates a SimpleBoard object and uses the methods in implemented by SimpleBoard.
+ * Implemented by super class SimpleBoard and subclass ActionBoard.
  */
 public interface Board {
 

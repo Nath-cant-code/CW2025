@@ -26,21 +26,23 @@ import javafx.scene.shape.Rectangle;
  * Now focuses on coordinating game board operations. <br>
  * In essence, this is a wrapper class that encapsulates other sub-wrapper classes.<br>
  * This class no longer contains the logic for the functionalities, but calls delegated methods from other classes containing said logic.<br>
+ * -----------------------------------SUBCLASS CREATED-----------------------------------<br>
+ * Extracted Brick object related actions to new subclass: ActionBoard.<br>
+ * Hence, SimpleBoard only has getMethods() and methods relating to playable area matrix.<br>
  * SOLID: Single Responsibility: Coordinates board state, delegates specific tasks. <br>
  * SOLID: Dependency Inversion: Implements Board, which other classes depend on, instead of depending on the details of this class.<br>
  * Design Pattern: Facade: Provides simple interface to complex subsystem
  */
-public class SimpleBoard implements Board {
-    private final int width;
-    private final int height;
-    private int[][] currentGameMatrix;
-    private Point currentOffset;
+public abstract class SimpleBoard implements Board {
+    protected final int width;
+    protected final int height;
+    protected int[][] currentGameMatrix;
+    protected Point currentOffset;
 
-
-    private final Score score;
-    private final LevelSystem levelSystem;
-    private final BrickQueueManager queueManager;
-    private final BrickActionCoordinator brickActionCoordinator;
+    protected final Score score;
+    protected final LevelSystem levelSystem;
+    protected final BrickQueueManager queueManager;
+    protected final BrickActionCoordinator brickActionCoordinator;
     public final SpecialShapeDetector specialShapeDetector;
 
     /**
@@ -58,95 +60,6 @@ public class SimpleBoard implements Board {
         score = new Score();
         queueManager = new BrickQueueManager(new RandomBrickGenerator());
         brickActionCoordinator = new BrickActionCoordinator(queueManager, score);
-    }
-
-    /**
-     * Passes displacement coordinates to mover method.
-     * @return  TRUE if movement is valid, FALSE otherwise.
-     */
-    @Override
-    public boolean moveBrickDown () {
-        return  brickActionCoordinator.tryMove(
-                currentGameMatrix,
-                currentOffset,
-                0, 1
-        );
-    }
-
-    /**
-     * Passes displacement coordinates to mover method.
-     * @return  TRUE if movement is valid, FALSE otherwise.
-     */
-    @Override
-    public boolean moveBrickLeft () {
-        return  brickActionCoordinator.tryMove(
-                currentGameMatrix,
-                currentOffset,
-                -1, 0
-        );
-    }
-
-    /**
-     * Passes displacement coordinates to mover method.
-     * @return  TRUE if movement is valid, FALSE otherwise.
-     */
-    @Override
-    public boolean moveBrickRight () {
-        return  brickActionCoordinator.tryMove(
-                currentGameMatrix,
-                currentOffset,
-                1, 0
-        );
-    }
-
-    /**
-     * Passes corresponding RotationDirection to rotater method.
-     * @return TRUE if VALID rotation, FALSE if INVALID rotation.
-     */
-    @Override
-    public boolean rotateBrickLeft () {
-        return brickActionCoordinator.tryRotate(
-                RotationDirection.ANTI_CLOCKWISE,
-                currentGameMatrix,
-                currentOffset
-        );
-    }
-
-    /**
-     * ------------------------------------ADDED A ROTATE RIGHT METHOD------------------------------------<br>
-     * Passes corresponding RotationDirection to rotater method.
-     * @return TRUE if VALID rotation, FALSE if INVALID rotation.
-     */
-    @Override
-    public boolean rotateBrickRight () {
-        return brickActionCoordinator.tryRotate(
-                RotationDirection.CLOCKWISE,
-                currentGameMatrix,
-                currentOffset
-        );
-    }
-
-    /**
-     * Calls snap brick method.
-     * @param refreshCoordinator    Object to render the Brick object after snap (hard drop)
-     * @param displayMatrix         Current game matrix
-     */
-    @Override
-    public void snapBrick (RefreshCoordinator refreshCoordinator, Rectangle[][] displayMatrix) {
-        currentOffset.y = brickActionCoordinator.executeSnap(currentGameMatrix, currentOffset);
-    }
-
-    /**
-     * Passes createNewBrick() method in this class to holder method for it to run after hold is executed.
-     * @return  ViewData object.
-     */
-    @Override
-    public ViewData holdBrick () {
-        Point newOffset = brickActionCoordinator.executeHold(this::createNewBrick);
-        if (newOffset != null) {
-            currentOffset = newOffset;
-        }
-        return getViewData();
     }
 
     /**
@@ -247,28 +160,6 @@ public class SimpleBoard implements Board {
     @Override
     public void clearEntireBoard() {
         currentGameMatrix = new int[width][height];
-    }
-
-    /**
-     * ------------------------------------SPAWN POINT CHANGED HERE------------------------------------<br>
-     * Creates a new Brick object (currentBrick) by popping the first (top) Brick-shape-object from the Deque, nextBricks. <br>
-     * Calls setBrick() to set the new Brick-shape-object's orientation to the first in its brickMatrix List. <br>
-     * currentOffset is the coordinates in the playable area (currentGameMatrix) where the new Brick-shape-object will be generated,
-     * AKA the spawn point. <br>
-     * @return  If the spawn point is VALID, createNewBrick() returns FALSE,
-     * if spawn point in INVALID, createNewBrick() returns TRUE.
-     */
-    @Override
-    public boolean createNewBrick() {
-        Brick currentBrick = queueManager.generateBrick();
-        brickActionCoordinator.setBrick(currentBrick);
-        currentOffset = new Point(4, 1);
-        return !CollisionDetector.isValidSpawnPosition(
-                currentGameMatrix,
-                brickActionCoordinator.getCurrentShape(),
-                (int) currentOffset.getX(),
-                (int) currentOffset.getY()
-        );
     }
 
     /**

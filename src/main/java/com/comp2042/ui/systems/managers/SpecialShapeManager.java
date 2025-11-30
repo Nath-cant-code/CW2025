@@ -1,6 +1,6 @@
 package com.comp2042.ui.systems.managers;
 
-import com.comp2042.logic.engine.SimpleBoard;
+import com.comp2042.logic.engine.Board;
 import com.comp2042.ui.elements.SpecialShapeConfig;
 import com.comp2042.ui.panels.SpecialShapeTextPanel;
 import com.comp2042.ui.systems.controller.GameView;
@@ -14,13 +14,13 @@ import javafx.scene.shape.Rectangle;
  * SOLID: Single Responsibility - Only handles special shape completion<br>
  */
 public class SpecialShapeManager {
-    private final SimpleBoard board;
+    private final Board board;
     private final TimeLineManager timeLineManager;
     private final GameStateProperty gameStateProperty;
     private final GridPane gamePanel;
 
     public SpecialShapeManager(
-            SimpleBoard board,
+            Board board,
             TimeLineManager timeLineManager,
             GameStateProperty gameStateProperty,
             GridPane gamePanel) {
