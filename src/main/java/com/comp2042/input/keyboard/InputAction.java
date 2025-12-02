@@ -4,6 +4,7 @@ import com.comp2042.input.system_events.MoveEvent;
 
 /**
  * Represents a single input action that can be executed.<br>
+ * Think of this class as InputExecutable.<br>
  * SOLID: Open/Closed Principle<br>
  * <p>
  *     - New input actions can be added without modifying existing code<br>

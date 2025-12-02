@@ -7,7 +7,8 @@ import javafx.beans.property.SimpleBooleanProperty;
  * Manages game state (paused, game over). <br>
  * EXTRACTED FROM: GuiController <br>
  * SOLID principle applied: Single Responsibility Principle <br>
- * - Only manages game state, nothing else
+ * - Only manages game state, nothing else<br>
+ * Design Pattern: State: When game state changes, behaviour changes
  */
 public class GameStateProperty {
     private final BooleanProperty isPaused = new SimpleBooleanProperty(false);

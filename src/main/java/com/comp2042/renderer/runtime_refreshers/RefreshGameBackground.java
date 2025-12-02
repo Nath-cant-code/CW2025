@@ -5,7 +5,10 @@ import com.comp2042.renderer.refresher_interfaces.GameBackground_RI;
 import javafx.scene.shape.Rectangle;
 
 /**
- * Renders the game board background.
+ * Renders the game board background.<br>
+ * SOLID: Single Responsibility<br>
+ * Design Pattern: Strategy: Encapsulates refreshing logic,
+ * allowing this class to act independently of other refresh classes<br>
  */
 public class RefreshGameBackground implements GameBackground_RI {
 

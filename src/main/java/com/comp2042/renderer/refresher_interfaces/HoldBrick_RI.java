@@ -5,7 +5,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
 /**
- * Renders the hold panel showing the held brick.
+ * Renders the hold panel showing the held brick.<br>
+ * SOLID: Interface Segregation, Dependency Inversion<br>
+ * Design Pattern: Template: Defines skeleton of refresh method<br>
  */
 public interface HoldBrick_RI {
     /**

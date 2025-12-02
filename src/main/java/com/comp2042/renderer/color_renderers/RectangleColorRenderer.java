@@ -2,6 +2,10 @@ package com.comp2042.renderer.color_renderers;
 
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Changes the colour of Rectangle object being passed (could be Brick object or playable area pixels)<br>
+ * Design Pattern: Decorator, Iterator
+ */
 public class RectangleColorRenderer {
     /**
      * setRectangleData(src, dest).<br>

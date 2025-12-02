@@ -1,4 +1,4 @@
-package com.comp2042.logic.records;
+package com.comp2042.logic.game_records;
 
 import com.comp2042.logic.detection_system.MatrixOperations;
 

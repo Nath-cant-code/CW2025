@@ -3,7 +3,7 @@ package com.comp2042.logic.engine;
 import com.comp2042.bricks.actions.RotationDirection;
 import com.comp2042.bricks.production.blueprints.Brick;
 import com.comp2042.logic.detection_system.CollisionDetector;
-import com.comp2042.logic.records.ViewData;
+import com.comp2042.logic.game_records.ViewData;
 import com.comp2042.renderer.runtime_refreshers.RefreshCoordinator;
 import javafx.scene.shape.Rectangle;
 import java.awt.Point;
@@ -11,7 +11,7 @@ import java.awt.Point;
 /**
  * Extends SimpleBoard to handle all brick action operations.<br>
  * SOLID: Single Responsibility - Only manages brick actions<br>
- * Design Pattern: Template Method - Extends base board functionality<br>
+ * Design Pattern: Strategy - Encapsulates Brick action behaviours<br>
  */
 public class ActionBoard extends SimpleBoard {
 

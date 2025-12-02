@@ -15,7 +15,7 @@ import javafx.util.Duration;
 
 /**
  * Displays level-up notifications with animation.
- * SOLID: Single Responsibility - Only displays level-up notifications
+ * SOLID: Single Responsibility: Only displays level-up notifications
  */
 public class LevelUpPanel extends BorderPane {
 

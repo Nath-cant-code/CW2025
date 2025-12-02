@@ -65,16 +65,16 @@ public class InputHandler {
 
     /**
      * 1st if statement is strictly for N (new game) or ESC (pause & resume game) only.<br>
-     *
-     * 2nd if statement checks if game is paused or over before allowing the player's inputs
-     * to be passed for processing. <br>
-     * If the game is in either state,
+     * If TRUE,
      * <p>
      *     the game will not process any additional keystrokes received from the player
      *     except the new game keystroke, until the game is unpaused if in a paused state.
      * </p>
      * <br>
-     * If the game is in neither state, process the directional keystrokes of the player accordingly.<br>
+     *
+     * 2nd if statement checks if game is paused or over before allowing the player's inputs
+     * to be passed for processing. <br>
+     * If TRUE,
      * <p>
      *     For example, when the player chooses to rotate the Brick-shape-object, either the UP key or the W key
      *     must be entered.<br>
@@ -87,7 +87,7 @@ public class InputHandler {
     private void handleKeyEvent(KeyEvent keyEvent) {
         KeyCode code = keyEvent.getCode();
 
-        // System actions work anytime (pause, new game)
+//        System actions work anytime (pause, new game)
         InputAction systemAction = keyBinder.getSystemAction(code);
         if (systemAction != null) {
             systemAction.execute(new MoveEvent(
@@ -98,7 +98,7 @@ public class InputHandler {
             return;
         }
 
-        // Gameplay actions only work when game is running
+//        Gameplay actions only work when game is running
         if (gc.getGameStateManager().canProcessInput()) {
             InputAction gameplayAction = keyBinder.getGameplayAction(code);
             if (gameplayAction != null) {

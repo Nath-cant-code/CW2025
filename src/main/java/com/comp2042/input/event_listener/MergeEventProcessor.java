@@ -1,7 +1,7 @@
 package com.comp2042.input.event_listener;
 
 import com.comp2042.logic.engine.Board;
-import com.comp2042.logic.records.ClearRow;
+import com.comp2042.logic.game_records.ClearRow;
 import com.comp2042.ui.systems.controller.GameView;
 import java.awt.Point;
 
@@ -9,7 +9,7 @@ import java.awt.Point;
  * Processes logic of sequence of method callings after a brick merges with the background.<br>
  * Especially important for downward event methods such as onDownEvent() and onSnapEvent().<br>
  * SOLID: Single Responsibility - Only handles post-merge processing<br>
- * Design Pattern: Template Method - Defines merge processing algorithm<br>
+ * Design Pattern: Template Method - Defines post-merge processing algorithm<br>
  */
 public class MergeEventProcessor {
     private final Board board;

@@ -1,13 +1,16 @@
 package com.comp2042.renderer.runtime_refreshers;
 
-import com.comp2042.logic.records.ViewData;
+import com.comp2042.logic.game_records.ViewData;
 import com.comp2042.renderer.color_renderers.RectangleColorRenderer;
 import com.comp2042.renderer.refresher_interfaces.ActiveBrick_RI;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
 /**
- * Renders the currently falling brick.
+ * Renders the currently falling brick.<br>
+ * SOLID: Single Responsibility<br>
+ * Design Pattern: Strategy: Encapsulates refreshing logic,
+ * allowing this class to act independently of other refresh classes<br>
  */
 public class RefreshActiveBrick implements ActiveBrick_RI {
     private final int brickSize;
@@ -19,7 +22,7 @@ public class RefreshActiveBrick implements ActiveBrick_RI {
     @Override
     public void refreshActiveBrick(ViewData brick, Rectangle[][] rectangles,
                                    GridPane brickPanel, GridPane gamePanel) {
-        // Update position
+//        Update position
         brickPanel.setLayoutX(gamePanel.getLayoutX() +
                 brick.xPosition() * brickPanel.getVgap() +
                 brick.xPosition() * brickSize);
@@ -27,7 +30,7 @@ public class RefreshActiveBrick implements ActiveBrick_RI {
                 brick.yPosition() * brickPanel.getHgap() +
                 brick.yPosition() * brickSize);
 
-        // Update colors
+//        Update colors
         int[][] brickData = brick.brickData();
         for (int i = 0; i < brickData.length; i++) {
             for (int j = 0; j < brickData[i].length; j++) {

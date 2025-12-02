@@ -1,6 +1,6 @@
 package com.comp2042.renderer.runtime_refreshers;
 
-import com.comp2042.logic.records.ViewData;
+import com.comp2042.logic.game_records.ViewData;
 import com.comp2042.bricks.production.blueprints.AbstractBrick;
 import com.comp2042.renderer.refresher_interfaces.*;
 import com.comp2042.ui.systems.managers.GameStateProperty;
@@ -17,14 +17,16 @@ import java.util.List;
  * ----------------------------REFACTORING DONE----------------------------<br>
  * Coordinates all rendering operations using the specialized renderers.<br>
  * <p>
- * Design Pattern: Facade Pattern<br>
- * - Provides a unified interface to a set of interfaces (renderers)<br>
- * - Simplifies the subsystem for clients<br>
- * </p>
- * <p>
+ * SOLID: O/C
+ * - Open for extension of new refresh methods without modifying existing methods
  * SOLID: Dependency Inversion<br>
  * - Depends on renderer interfaces, not concrete implementations<br>
  * - Easy to swap renderer implementations<br>
+ * </p>
+ * <p>
+ * Design Pattern: Facade Pattern<br>
+ * - Provides a unified interface to a set of interfaces (renderers)<br>
+ * - Simplifies the subsystem for clients<br>
  * </p>
  */
 public class RefreshCoordinator {

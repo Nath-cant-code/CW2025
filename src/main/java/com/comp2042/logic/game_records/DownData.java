@@ -1,4 +1,4 @@
-package com.comp2042.logic.records;
+package com.comp2042.logic.game_records;
 
 /**
  * A class that just contains a ClearRow object together with a ViewData object mainly for when a Brick object is moving down

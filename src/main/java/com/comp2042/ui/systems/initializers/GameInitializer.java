@@ -1,6 +1,6 @@
 package com.comp2042.ui.systems.initializers;
 
-import com.comp2042.logic.records.ViewData;
+import com.comp2042.logic.game_records.ViewData;
 import com.comp2042.input.keyboard.InputHandler;
 import com.comp2042.input.event_listener.InputEventListener;
 import com.comp2042.renderer.basic_renderers.BoardRenderer;
@@ -10,8 +10,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
 /**
- * Initializes game view components.
- * SOLID: Single Responsibility - Only initializes game view
+ * Initializes game view components.<br>
+ * SOLID: Single Responsibility - Only initializes game view<br>
  */
 public class GameInitializer {
     private static final int BRICK_SIZE = 20;

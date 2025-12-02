@@ -27,7 +27,7 @@ public class SpecialShapeDetector {
         int patternHeight = pattern.length;
         int patternWidth = pattern[0].length;
 
-        // Start from row 2 (skip the spawn area)
+//        Start from row 2 (skip the spawn area)
 //        every coord is a starting point
         for (int boardY = 2; boardY <= boardMatrix.length - patternHeight; boardY++) {
             for (int boardX = 0; boardX <= boardMatrix[0].length - patternWidth; boardX++) {
@@ -54,11 +54,11 @@ public class SpecialShapeDetector {
                 int boardValue = board[startY + py][startX + px];
                 int patternValue = pattern[py][px];
 
-                // Pattern expects filled (1) but board is empty (0)
+//                Pattern expects filled (1) but board is empty (0)
                 if (patternValue == 1 && boardValue == 0) {
                     return false;
                 }
-                // Pattern expects empty (0) but board is filled (non-zero)
+//                Pattern expects empty (0) but board is filled (non-zero)
                 if (patternValue == 0 && boardValue != 0) {
                     return false;
                 }

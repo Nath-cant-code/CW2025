@@ -5,9 +5,9 @@ import javafx.scene.layout.GridPane;
 
 /**
  * Manages game state operations (new game, pause, resume, game over).<br>
- * SOLID: Single Responsibility - Only manages game state<br>
- * SOLID: Open/Closed - Easy to add new game state operations<br>
- * Design Pattern: Command - Each operation is a distinct command<br>
+ * SOLID: Single Responsibility: Only manages game state<br>
+ * SOLID: Open/Closed: Easy to add new game state operations<br>
+ * Design Pattern: Strategy
  */
 public class GameStateManager {
     private final TimeLineManager timeLineManager;

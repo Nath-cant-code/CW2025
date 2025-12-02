@@ -11,6 +11,7 @@ public final class Score {
     private final IntegerProperty score = new SimpleIntegerProperty(0);
 
     /**
+     * Returns score.
      * @return  Score number.
      */
     public IntegerProperty scoreProperty() {

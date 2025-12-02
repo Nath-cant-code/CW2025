@@ -1,6 +1,6 @@
 package com.comp2042.logic.detection_system;
 
-import com.comp2042.logic.records.ClearRow;
+import com.comp2042.logic.game_records.ClearRow;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

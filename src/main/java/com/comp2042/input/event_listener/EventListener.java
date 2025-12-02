@@ -2,9 +2,9 @@ package com.comp2042.input.event_listener;
 
 import com.comp2042.logic.engine.ActionBoard;
 import com.comp2042.logic.engine.Board;
-import com.comp2042.logic.records.ClearRow;
-import com.comp2042.logic.records.DownData;
-import com.comp2042.logic.records.ViewData;
+import com.comp2042.logic.game_records.ClearRow;
+import com.comp2042.logic.game_records.DownData;
+import com.comp2042.logic.game_records.ViewData;
 import com.comp2042.input.system_events.EventSource;
 import com.comp2042.input.system_events.MoveEvent;
 import com.comp2042.ui.systems.controller.GameView;
@@ -15,7 +15,7 @@ import com.comp2042.ui.systems.controller.GuiController;
  * This class contains onEvent() methods connected to game's keybinds in KeyBinder.<br>
  * onEvent() methods call corresponding methods in other classes that contain the logic for the respective events.<br>
  * SOLID: Single Responsibility: Only has onEvent() methods.
- * SOLID: Dependency Injection:<br>
+ * SOLID: Dependency Inversion:<br>
  * Similar to how in the original code, Board board = new SimpleBoard was used,
  * I have made a change to mirror that, i.e. GameView gameView = new GuiController <br>
  * Design Pattern: Facade: Calls the corresponding delegated methods. Class methods do not contain logic for the events.

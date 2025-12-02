@@ -1,6 +1,6 @@
 package com.comp2042.bricks.actions;
 
-import com.comp2042.logic.records.ViewData;
+import com.comp2042.logic.game_records.ViewData;
 import com.comp2042.bricks.production.blueprints.Brick;
 import com.comp2042.bricks.production.brick_generation_system.BrickGenerator;
 

@@ -8,23 +8,26 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
- * Renders the hold panel.
+ * Renders the hold panel.<br>
+ * SOLID: Single Responsibility<br>
+ * Design Pattern: Strategy: Encapsulates refreshing logic,
+ * allowing this class to act independently of other refresh classes<br>
  */
 public class RefreshHoldPanel implements HoldBrick_RI {
 
     @Override
     public void refreshHoldBrick(AbstractBrick holdBrick, Rectangle[][] holdMatrix, GridPane holdPanel) {
-        // Clear the hold panel
-        for (int i = 0; i < holdMatrix.length; i++) {
-            for (int j = 0; j < holdMatrix[i].length; j++) {
-                holdMatrix[i][j].setFill(Color.TRANSPARENT);
+//        Clear the hold panel
+        for (Rectangle[] matrix : holdMatrix) {
+            for (Rectangle rectangle : matrix) {
+                rectangle.setFill(Color.TRANSPARENT);
             }
         }
 
-        // If no brick is held, we're done
+//        If no brick is held, we're done
         if (holdBrick == null) return;
 
-        // Render the held brick centered
+//        Render the held brick centered
         int[][] shape = holdBrick.getShapeMatrix().getFirst();
         int shapeWidth = shape.length;
         int shapeHeight = shape[0].length;

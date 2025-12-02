@@ -1,7 +1,7 @@
 package com.comp2042.bricks.actions;
 
 import com.comp2042.logic.detection_system.CollisionDetector;
-import com.comp2042.logic.records.NextShapeInfo;
+import com.comp2042.logic.game_records.NextShapeInfo;
 import com.comp2042.bricks.production.blueprints.Brick;
 
 import java.awt.*;

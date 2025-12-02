@@ -1,11 +1,13 @@
 package com.comp2042.renderer.refresher_interfaces;
 
-import com.comp2042.logic.records.ViewData;
+import com.comp2042.logic.game_records.ViewData;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
 /**
- * Renders the active falling brick.
+ * Renders the active falling brick.<br>
+ * SOLID: Interface Segregation, Dependency Inversion<br>
+ * Design Pattern: Template: Defines skeleton of refresh method<br>
  */
 public interface ActiveBrick_RI {
     /**

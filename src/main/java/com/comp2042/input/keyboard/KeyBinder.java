@@ -19,6 +19,10 @@ import java.util.Map;
  *     - Only responsible for key-to-action mapping<br>
  *     - Makes it easy to change controls or add new bindings<br>
  * </p>
+ * SOLID: Open Closed<br>
+ * <p>
+ *     - New input actions can be added here without affecting existing actions
+ * </p>
  * Design Pattern: Factory Pattern + Strategy Pattern<br>
  * <p>
  *     - Factory: Creates appropriate InputAction objects<br>
@@ -95,7 +99,6 @@ public class KeyBinder {
                 rectangles, brickPanel, gamePanel
         );
 
-//        InputAction moveDown = guiController::moveDown;
         InputAction moveDown = event -> refreshCoordinator.renderActiveBrick(
                 eventListener.onDownEvent(event).viewData(),
                 rectangles, brickPanel, gamePanel

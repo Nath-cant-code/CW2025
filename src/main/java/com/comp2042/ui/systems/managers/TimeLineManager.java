@@ -11,7 +11,8 @@ import javafx.util.Duration;
 /**
  * This class is to separate TimeLine object creation from GuiController.java class.<br>
  * Also manages increasing fall speed with level progressions.<br>
- * SOLID: Single Responsibility - Only manages game timeline
+ * SOLID: Single Responsibility - Only manages game timeline<br>
+ * Design Pattern: Strategy: Speed increase can be modified independently<br>
  */
 public class TimeLineManager {
     private Timeline timeLine;

@@ -1,8 +1,7 @@
 package com.comp2042.ui.systems.controller;
 
 import com.comp2042.logic.engine.Board;
-//import com.comp2042.logic.engine.SimpleBoard;
-import com.comp2042.logic.records.ViewData;
+import com.comp2042.logic.game_records.ViewData;
 import com.comp2042.bricks.production.blueprints.AbstractBrick;
 import com.comp2042.input.event_listener.InputEventListener;
 import com.comp2042.input.keyboard.InputHandler;
@@ -33,10 +32,12 @@ import java.util.ResourceBundle;
 
 /**
  * ------------------------------REFACTORED------------------------------<br>
- * SOLID: Single Responsibility - Coordinates UI components<br>
- * Design Pattern: Facade - Simple interface to complex UI subsystem<br>
+ * SOLID: Single Responsibility: Coordinates UI components<br>
+ * SOLID: Interface Segregation: Contains methods not in GameView interface<br>
+ * SOLID: Dependency Inversion: Objects of GameView are created and depended on instead of depending on details in this class<br>
+ * Design Pattern: Facade: Simple interface to complex UI subsystem<br>
  * ----------------------------------------CLASS SPLIT ALERT--------------------------------------<br>
- * The handle() method here was removed and put into a new class, InputHandler.java to increase cohesion of initialise() method.<br>
+ * The handle() method here was removed and put into a new class, InputHandler.java to increase cohesion of initialize() method.<br>
  * NOTE: InputHandler object is created in setEventListener() method. <br>
  * ----------------------------------------CLASS SPLIT ALERT--------------------------------------<br>
  * ----------------------------------------FUNCTIONALITY SPLIT ALERT--------------------------------------<br>
@@ -44,14 +45,6 @@ import java.util.ResourceBundle;
  * This is now handled in GameStateManager.<br>
  * ----------------------------------------FUNCTIONALITY SPLIT ALERT--------------------------------------<br>
  * Acts as a bridge between the GUI and the game logic.<br>
- * This class:
- * <p>
- *     - Displays the matrix of the playable area (currentGameMatrix) in a graphical form.<br>
- *     - Listens to player keystrokes.<br>
- *     - Handles the automatic natural falling mechanism of Brick-shape-objects in the game.<br>
- *     - Updates visual layout of playable area when the matrix is altered.<br>
- *     - Handles pause, game over and new game functionalities.
- * </p>
  */
 public class GuiController implements Initializable, GameView {
 
@@ -252,16 +245,28 @@ public class GuiController implements Initializable, GameView {
         levelUpPanel.showLevelUp(groupNotification.getChildren());
     }
 
+    /**
+     * Calls method to update (increase) fall speed
+     * @param speedMs   Current falling speed of Brick object
+     */
     @Override
     public void updateFallSpeed(int speedMs) {
         timeLineManager.updateSpeed(speedMs, eventListener);
     }
 
+    /**
+     * Binds level text to level label at the side
+     * @param levelProperty Current level
+     */
     @Override
     public void bindLevel(IntegerProperty levelProperty) {
         levelLabel.textProperty().bind(levelProperty.asString("Level: %d"));
     }
 
+    /**
+     * Calls refresh Brick method
+     * @param viewData  Brick object info
+     */
     @Override
     public void refreshActiveBrick (ViewData viewData) {
         refreshCoordinator.renderActiveBrick(viewData, rectangles, brickPanel, gamePanel);
@@ -276,14 +281,48 @@ public class GuiController implements Initializable, GameView {
         refreshCoordinator.renderBackground(boardMatrix, displayMatrix);
     }
 
+    /**
+     * Calls render method for rendering Brick object in hold panel.
+     */
     @Override
     public void refreshHoldBrick () {
         refreshCoordinator.renderHoldBrick((AbstractBrick) board.getHeldBrick(), holdMatrix, holdPanel);
     }
 
+    /**
+     * Calls render method for rendering Brick objects in queue in preview panel.
+     */
     @Override
     public void refreshPreviewPanel () {
         refreshCoordinator.renderNextBricks(board.getNextBricksPreview(), previewMatrix);
+    }
+
+    /**
+     * Calls method containing the logic that handles UI for when special combination shape is formed
+     */
+    @Override
+    public void handleSpecialShapeCompletion() {
+        specialShapeManager.handleCompletion(rectangles, this, groupNotification.getChildren());
+    }
+
+    /**
+     * Hides display panel of the special combination shape
+     */
+    @Override
+    public void hideSpecialShapeDisplay() {
+        if (specialShapeContainer != null && specialShapeDisplayPanel != null) {
+            specialShapeContainer.getChildren().remove(specialShapeDisplayPanel);
+        }
+    }
+
+    /**
+     * Checks if the display panel of the special combination shape is visible
+     * @return TRUE if there are elements in specialShapeContainer
+     */
+    @Override
+    public boolean isSpecialShapeDisplayVisible() {
+        return specialShapeContainer != null &&
+                specialShapeContainer.getChildren().contains(specialShapeDisplayPanel);
     }
 
     /**
@@ -295,13 +334,7 @@ public class GuiController implements Initializable, GameView {
     }
 
     /**
-     * Stops the timeLine, <br>
-     * re-hides the game over label, <br>
-     * calls createNewGame() method to run code that resets the game, <br>
-     * maintain system's capability to receive keystrokes, <br>
-     * start the timeLine again, <br>
-     * set pause and game over checker boolean values to false. <br>
-     * @param actionEvent   null
+     * Calls method that contains logic sequence of starting a new game.
      */
     public void newGame(ActionEvent actionEvent) {
         gameStateManager.startNewGame();
@@ -309,7 +342,7 @@ public class GuiController implements Initializable, GameView {
 
     /**
      * -------------------------------------FUNCTIONALITY ADDED--------------------------------------<br>
-     * If game is running and user presses pause key, boolean paused = true -> runs true if statement
+     * Calls said functionality in gameStateManager.
      * @param actionEvent no uses
      */
     public void pauseGame (ActionEvent actionEvent) {
@@ -317,27 +350,9 @@ public class GuiController implements Initializable, GameView {
     }
 
     /**
-     * Stops the timeLine, unhides game over label, and set game over checker to true.
+     * Calls delegated method containing logic that processes when a game is over.
      */
     public void gameOver() {
         gameStateManager.endGame();
-    }
-
-    @Override
-    public void handleSpecialShapeCompletion() {
-        specialShapeManager.handleCompletion(rectangles, this, groupNotification.getChildren());
-    }
-
-    @Override
-    public void hideSpecialShapeDisplay() {
-        if (specialShapeContainer != null && specialShapeDisplayPanel != null) {
-            specialShapeContainer.getChildren().remove(specialShapeDisplayPanel);
-        }
-    }
-
-    @Override
-    public boolean isSpecialShapeDisplayVisible() {
-        return specialShapeContainer != null &&
-                specialShapeContainer.getChildren().contains(specialShapeDisplayPanel);
     }
 }

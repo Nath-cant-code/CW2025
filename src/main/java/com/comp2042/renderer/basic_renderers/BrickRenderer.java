@@ -2,7 +2,7 @@ package com.comp2042.renderer.basic_renderers;
 
 import com.comp2042.renderer.color_renderers.ColorSelector;
 import com.comp2042.ui.systems.controller.GuiController;
-import com.comp2042.logic.records.ViewData;
+import com.comp2042.logic.game_records.ViewData;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 

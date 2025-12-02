@@ -6,9 +6,11 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
 /**
- * Manages UI panel visibility and states.
- * SOLID: Single Responsibility - Only manages UI panels
- * Design Pattern: Facade - Simplifies panel management
+ * Manages UI panel visibility and states.<br>
+ * SOLID: Single Responsibility: Only manages UI panels<br>
+ * Design Pattern: <br>
+ * State: When game state changes, behaviour changes<br>
+ * Interpreter: Converts natural language into structured representation<br>
  */
 public class UILabelManager {
     private final GameOverPanel gameOverPanel;

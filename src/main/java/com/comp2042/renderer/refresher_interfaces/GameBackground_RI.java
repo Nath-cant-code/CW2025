@@ -3,7 +3,9 @@ package com.comp2042.renderer.refresher_interfaces;
 import javafx.scene.shape.Rectangle;
 
 /**
- * Renders the main game board background.
+ * Renders the main game board background.<br>
+ * SOLID: Interface Segregation, Dependency Inversion<br>
+ * Design Pattern: Template: Defines skeleton of refresh method<br>
  */
 public interface GameBackground_RI {
     /**

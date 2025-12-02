@@ -2,23 +2,19 @@ package com.comp2042.logic.engine;
 
 import java.awt.Point;
 
-import com.comp2042.logic.records.ClearRow;
-import com.comp2042.logic.records.ViewData;
-import com.comp2042.logic.detection_system.CollisionDetector;
+import com.comp2042.logic.game_records.ClearRow;
+import com.comp2042.logic.game_records.ViewData;
 import com.comp2042.logic.detection_system.MatrixOperations;
 import com.comp2042.logic.detection_system.SpecialShapeDetector;
 import com.comp2042.bricks.actions.BrickActionCoordinator;
 import com.comp2042.bricks.actions.BrickQueueManager;
-import com.comp2042.bricks.actions.RotationDirection;
 import com.comp2042.bricks.production.blueprints.Brick;
 import com.comp2042.bricks.production.brick_generation_system.*;
 
 import java.util.List;
 
-import com.comp2042.renderer.runtime_refreshers.RefreshCoordinator;
 import com.comp2042.ui.elements.LevelSystem;
 import com.comp2042.ui.elements.Score;
-import javafx.scene.shape.Rectangle;
 
 /**
  * -----------------------------------REFACTORED-----------------------------------<br>

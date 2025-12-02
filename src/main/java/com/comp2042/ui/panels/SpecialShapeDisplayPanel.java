@@ -10,7 +10,7 @@ import javafx.scene.shape.Rectangle;
 
 /**
  * Displays the special shape pattern for the player to see.
- * SOLID: Single Responsibility - Only displays the special shape target
+ * SOLID: Single Responsibility: Only displays the special shape target
  */
 public class SpecialShapeDisplayPanel extends VBox {
     private static final int CELL_SIZE = 20;

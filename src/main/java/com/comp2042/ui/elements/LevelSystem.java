@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 /**
  * Manages game level progression.<br>
  * SOLID: Single Responsibility - Only manages level logic<br>
+ * Design Pattern: Strategy - Fall speed calculation can be changed independently
  * Design Pattern: Observer - Uses JavaFX properties for automatic UI updates<br>
  */
 public class LevelSystem {
@@ -55,7 +56,6 @@ public class LevelSystem {
 
     /**
      * Calculates fall speed based on current level
-     * Design Pattern: Strategy - Fall speed calculation can be changed independently
      */
     public int getFallSpeedMs() {
         System.out.println("Speed increased");
@@ -65,6 +65,9 @@ public class LevelSystem {
         return Math.max(MIN_FALL_SPEED_MS, BASE_FALL_SPEED_MS - speedDecrease);
     }
 
+    /**
+     * Reset level back to level 1
+     */
     public void reset() {
         currentLevel.set(1);
         totalRowsCleared.set(0);

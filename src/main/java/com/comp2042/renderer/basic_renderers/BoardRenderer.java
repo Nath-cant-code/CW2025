@@ -7,6 +7,7 @@ import javafx.scene.shape.Rectangle;
 
 /**
  * Creates visual playable area (displayMatrix) from boardMatrix (AKA currentGameMatrix).
+ * SOLID: Single Responsibility: Only renders the game board
  */
 public class BoardRenderer {
     public Rectangle[][] displayMatrix;

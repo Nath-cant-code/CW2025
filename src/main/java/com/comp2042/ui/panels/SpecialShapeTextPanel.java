@@ -16,7 +16,7 @@ import javafx.util.Duration;
 
 /**
  * Displays special shape completion notification with animation.
- * SOLID: Single Responsibility - Only displays special shape notifications
+ * SOLID: Single Responsibility: Only displays special shape notifications
  */
 public class SpecialShapeTextPanel extends BorderPane {
 
