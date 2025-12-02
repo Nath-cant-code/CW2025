@@ -22,8 +22,10 @@ mvn javafx:run
 ### Or if using IntelliJ, Maven running configurations can be accessed at the (right) side panel
 
 1. Click the 'M' icon to open maven running configurations
-2. Then go to `demo3 > Plugins > clean`
-3. Click `clean:clean` to run
+2. Go to `demo3 > Plugins > clean`
+3. Click `clean:clean` to build 
+4. Go to `demo3 > Plugins > javafx`
+5. Click `javafx:run` to run
 
 #### Using IDE (IntelliJ IDEA / Eclipse):
 1. Open the project in your IDE
