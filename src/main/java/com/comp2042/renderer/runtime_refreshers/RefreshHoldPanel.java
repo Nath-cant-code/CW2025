@@ -46,7 +46,9 @@ public class RefreshHoldPanel implements HoldBrick_RI {
                     int drawY = y + offsetY;
                     if (drawX >= 0 && drawX < panelWidth &&
                             drawY >= 0 && drawY < panelHeight) {
-                        RectangleColorRenderer.setRectangleColor(color, holdMatrix[drawX][drawY]);
+//                        For some reason if i do holdMatrix[drawX][drawY] the displayed Brick is a mirror image
+//                        Only applies to this rendering and not Preview panel rendering
+                        RectangleColorRenderer.setRectangleColor(color, holdMatrix[drawY][drawX]);
                     }
                 }
             }

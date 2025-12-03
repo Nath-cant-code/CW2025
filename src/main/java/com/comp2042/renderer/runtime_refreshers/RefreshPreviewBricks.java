@@ -32,11 +32,13 @@ public class RefreshPreviewBricks implements PreviewBricks_RI {
             int offsetY = index * 4; // Each brick in its own 4-row section
             int offsetX = 0;
 
-            for (int x = 0; x < shape.length; x++) {
-                for (int y = 0; y < shape[0].length; y++) {
-                    if (shape[x][y] != 0) {
+//            Inversion of y and x loops needed to prevent preview panel from showing mirrored images
+//            cannot be applied for hold panel
+            for (int y = 0; y < shape.length; y++) {
+                for (int x = 0; x < shape[0].length; x++) {
+                    if (shape[y][x] != 0) {
                         Rectangle r = nextMatrix[offsetY + y][offsetX + x];
-                        r.setFill(ColorSelector.getFillColor(shape[x][y]));
+                        r.setFill(ColorSelector.getFillColor(shape[y][x]));
                     }
                 }
             }

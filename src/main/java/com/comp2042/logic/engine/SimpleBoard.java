@@ -171,6 +171,7 @@ public abstract class SimpleBoard implements Board {
         score.reset();
         levelSystem.reset();
         resetSpecialShape();
+        queueManager.resetHoldForNewGame();
         createNewBrick();
     }
 

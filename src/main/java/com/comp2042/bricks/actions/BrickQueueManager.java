@@ -45,6 +45,15 @@ public class BrickQueueManager {
     }
 
     /**
+     * Resets the hold state for a new game.
+     * Clears the held brick and resets the hold usage flag.
+     */
+    public void resetHoldForNewGame() {
+        heldBrick = null;
+        holdUsedThisTurn = false;
+    }
+
+    /**
      * Swaps current brick with held brick.
      * @param currentBrick The brick currently in play
      * @return The brick to put into play (either held brick or null if first hold)

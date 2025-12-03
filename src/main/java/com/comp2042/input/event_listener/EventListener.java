@@ -179,5 +179,6 @@ public class EventListener implements InputEventListener {
     public void createNewGame() {
         board.newGame();
         gameView.refreshBackground(board.getBoardMatrix());
+        gameView.refreshHoldBrick();
     }
 }
