@@ -3,6 +3,11 @@ package com.comp2042.renderer.color_renderers;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+/**
+ * Selects color based on integer passed.
+ * SOLID: SR,O/C
+ * Design pattern: Decorator
+ */
 public class ColorSelector {
     /**
      * Sets a colour for the Brick-shape-object.

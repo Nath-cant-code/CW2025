@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Text?>
 <?import java.net.URL?>
 <?import com.comp2042.ui.panels.PausePanel?>
-<HBox fx:controller="com.comp2042.ui.ui_systems.GuiController"
+<HBox fx:controller="com.comp2042.ui.systems.master.GUIController"
       xmlns:fx="http://javafx.com/fxml"
       spacing="20">
 
@@ -19,7 +19,11 @@
     <VBox spacing="10">
         <Label text="Score" styleClass="scoreClass"/>
         <Label fx:id="scoreLabel" styleClass="scoreClass"/>
+        <Label text="Level" styleClass="scoreClass"/>
+        <Label fx:id="levelLabel" styleClass="scoreClass"/>
     </VBox>
+
+
 
     <Pane>
         <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
@@ -43,7 +47,14 @@
 
     <VBox spacing="5" alignment="CENTER">
         <Label text="NEXT" styleClass="scoreClass"/>
-        <GridPane fx:id="nextPanel" hgap="1" vgap="1"/>
+        <GridPane fx:id="previewPanel" hgap="1" vgap="1"/>
+    </VBox>
+
+    <VBox fx:id="specialShapeContainer"
+          alignment="CENTER"
+          spacing="10"
+          GridPane.columnIndex="2"
+          GridPane.rowIndex="4">
     </VBox>
 
     <stylesheets>

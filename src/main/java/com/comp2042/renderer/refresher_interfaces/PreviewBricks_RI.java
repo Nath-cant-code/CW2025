@@ -1,12 +1,14 @@
 package com.comp2042.renderer.refresher_interfaces;
 
-import com.comp2042.board.composite_bricks.ViewData;
+import com.comp2042.logic.game_records.ViewData;
 import javafx.scene.shape.Rectangle;
 
 import java.util.List;
 
 /**
- * Renders the preview of upcoming bricks.
+ * Renders the preview of upcoming bricks.<br>
+ * SOLID: Interface Segregation, Dependency Inversion<br>
+ * Design Pattern: Template: Defines skeleton of refresh method<br>
  */
 public interface PreviewBricks_RI {
     /**

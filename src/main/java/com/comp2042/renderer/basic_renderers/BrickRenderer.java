@@ -1,13 +1,13 @@
 package com.comp2042.renderer.basic_renderers;
 
 import com.comp2042.renderer.color_renderers.ColorSelector;
-import com.comp2042.ui.ui_systems.GuiController;
-import com.comp2042.board.composite_bricks.ViewData;
+import com.comp2042.ui.systems.master.GUIController;
+import com.comp2042.logic.game_records.ViewData;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
 /**
- * This class is to separate "Brick object box matrix" object creation from GuiController.java class.
+ * This class is to separate "Brick object box matrix" object creation from GUIController.java class.
  */
 public class BrickRenderer {
     /**
@@ -21,7 +21,7 @@ public class BrickRenderer {
 
         for (int i = 0; i < brick.brickData().length; i++) {
             for (int j = 0; j < brick.brickData()[i].length; j++) {
-                Rectangle rectangle = new Rectangle(GuiController.BRICK_SIZE, GuiController.BRICK_SIZE);
+                Rectangle rectangle = new Rectangle(GUIController.BRICK_SIZE, GUIController.BRICK_SIZE);
                 rectangle.setFill(ColorSelector.getFillColor(brick.brickData()[i][j]));
                 rectangles[i][j] = rectangle;
                 brickPanel.add(rectangle, j, i);

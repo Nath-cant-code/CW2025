@@ -1,12 +1,13 @@
 package com.comp2042.renderer.basic_renderers;
 
-import com.comp2042.ui.ui_systems.GuiController;
+import com.comp2042.ui.systems.master.GUIController;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
  * Creates visual playable area (displayMatrix) from boardMatrix (AKA currentGameMatrix).
+ * SOLID: Single Responsibility: Only renders the game board
  */
 public class BoardRenderer {
     public Rectangle[][] displayMatrix;
@@ -22,7 +23,7 @@ public class BoardRenderer {
 
         for (int i = 2; i < boardMatrix.length; i++) {
             for (int j = 0; j < boardMatrix[i].length; j++) {
-                javafx.scene.shape.Rectangle rectangle = new javafx.scene.shape.Rectangle(GuiController.BRICK_SIZE, GuiController.BRICK_SIZE);
+                javafx.scene.shape.Rectangle rectangle = new javafx.scene.shape.Rectangle(GUIController.BRICK_SIZE, GUIController.BRICK_SIZE);
                 rectangle.setFill(Color.TRANSPARENT);
                 displayMatrix[i][j] = rectangle;
                 gamePanel.add(rectangle, j, i - 2);
