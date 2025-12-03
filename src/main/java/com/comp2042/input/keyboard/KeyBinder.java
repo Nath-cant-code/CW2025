@@ -3,7 +3,7 @@ package com.comp2042.input.keyboard;
 import com.comp2042.input.event_listener.InputEventListener;
 import com.comp2042.renderer.runtime_refreshers.RefreshCoordinator;
 import com.comp2042.input.system_events.EventType;
-import com.comp2042.ui.systems.controller.GuiController;
+import com.comp2042.ui.systems.master.GameView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
@@ -49,7 +49,7 @@ public class KeyBinder {
             Rectangle[][] rectangles,
             GridPane brickPanel,
             GridPane gamePanel,
-            GuiController guiController) {
+            GameView guiController) {
 
         gameplayActions = new HashMap<>();
         systemActions = new HashMap<>();
@@ -77,7 +77,7 @@ public class KeyBinder {
             Rectangle[][] rectangles,
             GridPane brickPanel,
             GridPane gamePanel,
-            GuiController guiController) {
+            GameView guiController) {
 
         InputAction moveLeft = event -> refreshCoordinator.renderActiveBrick(
                 eventListener.onLeftEvent(event),
@@ -128,7 +128,7 @@ public class KeyBinder {
     /**
      * Initialises mappings for system actions (work anytime).
      */
-    private void initializeSystemBindings(GuiController guiController) {
+    private void initializeSystemBindings(GameView guiController) {
         systemActions.put(KeyCode.ESCAPE, event -> guiController.pauseGame(null));
         systemActions.put(KeyCode.N, event -> guiController.newGame(null));
     }

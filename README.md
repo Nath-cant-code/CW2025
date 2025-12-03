@@ -297,7 +297,7 @@ mvn javafx:run
   - <font color="DeepSkyBlue">Dependency Inversion</font>: Implements Board, which other classes depend on, instead of depending on the details of this class
   - <font color="HotPink">Facade</font>: Provides simple interface to complex subsystem
 
-### 2. **GuiController** (`com.comp2042.ui.systems.controller`)
+### 2. **GuiController** (`com.comp2042.ui.systems.master`)
 - **Changes**:
   - Implements new interface: GameView
   - Removed massive `initGameView()` method logic

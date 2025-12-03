@@ -2,7 +2,7 @@ package com.comp2042.input.event_listener;
 
 import com.comp2042.logic.engine.Board;
 import com.comp2042.logic.game_records.ClearRow;
-import com.comp2042.ui.systems.controller.GameView;
+import com.comp2042.ui.systems.master.GameView;
 import java.awt.Point;
 
 /**
@@ -73,7 +73,7 @@ public class MergeEventProcessor {
         board.markSpecialShapeCompleted();
 
         if (board.createNewBrick()) {
-            gameView.notifyGameOver();
+            gameView.gameOver();
         }
 
         gameView.refreshActiveBrick(board.getViewData());
@@ -105,7 +105,7 @@ public class MergeEventProcessor {
      */
     private void handleNewBrick() {
         if (board.createNewBrick()) {
-            gameView.notifyGameOver();
+            gameView.gameOver();
         }
     }
 

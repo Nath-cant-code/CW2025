@@ -7,8 +7,7 @@ import com.comp2042.logic.game_records.DownData;
 import com.comp2042.logic.game_records.ViewData;
 import com.comp2042.input.system_events.EventSource;
 import com.comp2042.input.system_events.MoveEvent;
-import com.comp2042.ui.systems.controller.GameView;
-import com.comp2042.ui.systems.controller.GuiController;
+import com.comp2042.ui.systems.master.GameView;
 
 /**
  * -----------------------------------REFACTORED-----------------------------------<br>
@@ -17,7 +16,7 @@ import com.comp2042.ui.systems.controller.GuiController;
  * SOLID: Single Responsibility: Only has onEvent() methods.
  * SOLID: Dependency Inversion:<br>
  * Similar to how in the original code, Board board = new SimpleBoard was used,
- * I have made a change to mirror that, i.e. GameView gameView = new GuiController <br>
+ * I have made a change to mirror that, i.e. GameView gameView = new GUIController <br>
  * Design Pattern: Facade: Calls the corresponding delegated methods. Class methods do not contain logic for the events.
  */
 public class EventListener implements InputEventListener {
@@ -144,7 +143,7 @@ public class EventListener implements InputEventListener {
     @Override
     public DownData onSnapEvent(MoveEvent event) {
         board.snapBrick(
-                ((GuiController) gameView).refreshCoordinator,
+                gameView.getRefreshCoordinator(),
                 gameView.getDisplayMatrix()
         );
 

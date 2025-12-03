@@ -1,7 +1,7 @@
 package com.comp2042.input.keyboard;
 
 import com.comp2042.input.event_listener.InputEventListener;
-import com.comp2042.ui.systems.controller.GuiController;
+import com.comp2042.ui.systems.master.GameView;
 import com.comp2042.input.system_events.EventSource;
 import com.comp2042.input.system_events.MoveEvent;
 import javafx.scene.input.KeyCode;
@@ -10,7 +10,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
 /**
- * This class was created to separate the user input handling from the initialise() method in GuiController.<br>
+ * This class was created to separate the user input handling from the initialise() method in GUIController.<br>
  * ----------------------------------REFACTORED----------------------------------<br>
  * Handles key events using the map-based system.<br>
  * Summary:<br>
@@ -32,13 +32,13 @@ import javafx.scene.shape.Rectangle;
  * - Easy to add new key bindings<br>
  */
 public class InputHandler {
-    private final GuiController gc;
+    private final GameView gc;
     private final KeyBinder keyBinder;
 
     /**
      * Creates an InputHandler with default key bindings.
      */
-    public InputHandler(GuiController gc,
+    public InputHandler(GameView gc,
                         InputEventListener eventListener,
                         Rectangle[][] rectangles,
                         GridPane brickPanel,
@@ -48,7 +48,7 @@ public class InputHandler {
         // Create key binding manager with all the necessary dependencies
         this.keyBinder = new KeyBinder(
                 eventListener,
-                gc.refreshCoordinator,
+                gc.getRefreshCoordinator(),
                 rectangles,
                 brickPanel,
                 gamePanel,
@@ -60,7 +60,7 @@ public class InputHandler {
      * this::function_name is a method reference. <br>
      */
     public void setKeyListener() {
-        gc.gamePanel.setOnKeyPressed(this::handleKeyEvent);
+        gc.getGamePanel().setOnKeyPressed(this::handleKeyEvent);
     }
 
     /**

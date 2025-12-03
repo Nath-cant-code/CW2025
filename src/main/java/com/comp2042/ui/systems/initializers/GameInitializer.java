@@ -5,7 +5,7 @@ import com.comp2042.input.keyboard.InputHandler;
 import com.comp2042.input.event_listener.InputEventListener;
 import com.comp2042.renderer.basic_renderers.BoardRenderer;
 import com.comp2042.renderer.basic_renderers.BrickRenderer;
-import com.comp2042.ui.systems.controller.GuiController;
+import com.comp2042.ui.systems.master.GameView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
@@ -35,7 +35,7 @@ public class GameInitializer {
                 brick.yPosition() * BRICK_SIZE);
     }
 
-    public InputHandler createInputHandler(GuiController gc,
+    public InputHandler createInputHandler(GameView gc,
                                            InputEventListener eventListener,
                                            Rectangle[][] rectangles,
                                            GridPane brickPanel,

@@ -3,7 +3,7 @@ package com.comp2042.ui.systems.managers;
 import com.comp2042.logic.engine.Board;
 import com.comp2042.ui.elements.SpecialShapeConfig;
 import com.comp2042.ui.panels.SpecialShapeTextPanel;
-import com.comp2042.ui.systems.controller.GameView;
+import com.comp2042.ui.systems.master.GameView;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;

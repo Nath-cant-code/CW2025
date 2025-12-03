@@ -1,8 +1,7 @@
-package com.comp2042.ui.systems.controller;
+package com.comp2042.ui.systems.master;
 
 import com.comp2042.logic.engine.Board;
 import com.comp2042.logic.game_records.ViewData;
-import com.comp2042.bricks.production.blueprints.AbstractBrick;
 import com.comp2042.input.event_listener.InputEventListener;
 import com.comp2042.input.keyboard.InputHandler;
 import com.comp2042.renderer.runtime_refreshers.RefreshCoordinator;
@@ -10,7 +9,6 @@ import com.comp2042.ui.systems.initializers.GameInitializer;
 import com.comp2042.ui.systems.initializers.PanelInitialiser;
 import com.comp2042.ui.systems.managers.*;
 import com.comp2042.ui.panels.GameOverPanel;
-import com.comp2042.ui.panels.LevelUpPanel;
 import com.comp2042.ui.panels.NotificationPanel;
 import com.comp2042.ui.panels.PausePanel;
 import javafx.beans.property.IntegerProperty;
@@ -31,35 +29,33 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
- * ------------------------------REFACTORED------------------------------<br>
- * SOLID: Single Responsibility: Coordinates UI components<br>
- * SOLID: Interface Segregation: Contains methods not in GameView interface<br>
+ * ----------------------------------------NEW CLASS----------------------------------------<br>
+ * SOLID: Single Responsibility: Manages UI objects and states<br>
+ * SOLID: Open Closed: New functionalities can be added in GUIController without affecting fixed handling of UI in this class<br>
+ * SOLID: Liskov Substitution: Subclass GUIController extends this class.<br>
  * SOLID: Dependency Inversion: Objects of GameView are created and depended on instead of depending on details in this class<br>
  * Design Pattern: Facade: Simple interface to complex UI subsystem<br>
  * ----------------------------------------CLASS SPLIT ALERT--------------------------------------<br>
  * The handle() method here was removed and put into a new class, InputHandler.java to increase cohesion of initialize() method.<br>
  * NOTE: InputHandler object is created in setEventListener() method. <br>
- * ----------------------------------------CLASS SPLIT ALERT--------------------------------------<br>
  * ----------------------------------------FUNCTIONALITY SPLIT ALERT--------------------------------------<br>
- * GuiController no longer handles checking of game states: pause or game over<br>
+ * GuiManager no longer handles logic for game states: pause or game over<br>
  * This is now handled in GameStateManager.<br>
- * ----------------------------------------FUNCTIONALITY SPLIT ALERT--------------------------------------<br>
- * Acts as a bridge between the GUI and the game logic.<br>
  */
-public class GuiController implements Initializable, GameView {
+public abstract class GUIManager implements Initializable, GameView {
 
     public static final int BRICK_SIZE = 20;
 
     @FXML   public GridPane gamePanel;
-    @FXML   private Group groupNotification;
-    @FXML   private GridPane brickPanel;
+    @FXML   protected Group groupNotification;
+    @FXML   protected GridPane brickPanel;
     @FXML   private GameOverPanel gameOverPanel;
     @FXML   protected PausePanel pausePanel;
     @FXML   private Label scoreLabel;
     @FXML   public GridPane holdPanel;
     @FXML   public GridPane previewPanel;
-    @FXML   private Label levelLabel;
-    @FXML   private VBox specialShapeContainer;
+    @FXML   protected Label levelLabel;
+    @FXML   protected VBox specialShapeContainer;
 
     protected Rectangle[][] rectangles;
     public Rectangle[][] displayMatrix;
@@ -67,17 +63,17 @@ public class GuiController implements Initializable, GameView {
     public Rectangle[][] previewMatrix;
 
     public Board board;
-    private InputEventListener eventListener;
+    protected InputEventListener eventListener;
     protected InputHandler inputHandler;
     private UILabelManager labelManager;
-    public RefreshCoordinator refreshCoordinator;
-    private SpecialShapeDisplayPanel specialShapeDisplayPanel;
+    protected RefreshCoordinator refreshCoordinator;
+    protected SpecialShapeDisplayPanel specialShapeDisplayPanel;
 
     private final GameStateProperty gameStateProperty = new GameStateProperty();
     protected TimeLineManager timeLineManager = new TimeLineManager();
     private final PanelInitialiser panelInitialiser = new PanelInitialiser();
     private final GameInitializer gameInitializer = new GameInitializer();
-    private SpecialShapeManager specialShapeManager;
+    protected SpecialShapeManager specialShapeManager;
     private GameStateManager gameStateManager;
 
     /**
@@ -85,7 +81,7 @@ public class GuiController implements Initializable, GameView {
      * Loads a custom font from resources directory.<br>
      * <p>
      *     gamePanel.setFocusTraversable(true);
- *         gamePanel.requestFocus();
+     *         gamePanel.requestFocus();
      * </p>
      * Hides the "GAME OVER" panel during gameplay.<br>
      * Creates Reflection object for effects. <br>
@@ -184,6 +180,16 @@ public class GuiController implements Initializable, GameView {
     }
 
     /**
+     * Creates SimpleBoard object in this class.<br>
+     * Refreshes Hold Brick panel and Preview Bricks panel.
+     * @param board SimpleBoard object.
+     */
+    @Override
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    /**
      * Connects GUI to game logic.
      * @param eventListener viewGuiController object in EventListener.
      */
@@ -193,12 +199,39 @@ public class GuiController implements Initializable, GameView {
     }
 
     /**
-     * Creates SimpleBoard object in this class.<br>
-     * Refreshes Hold Brick panel and Preview Bricks panel.
-     * @param board SimpleBoard object.
+     * Retrieve GameStateManager object.
+     * @return  GameStateManager object.
      */
-    public void setBoard(Board board) {
-        this.board = board;
+    @Override
+    public GameStateProperty getGameStateManager() {
+        return gameStateProperty;
+    }
+
+    /**
+     * Retrieves displayMatrix.
+     * @return  displayMatrix.
+     */
+    @Override
+    public Rectangle[][] getDisplayMatrix() {
+        return displayMatrix;
+    }
+
+    /**
+     * Retrieves refreshCoordinator object.
+     * @return  refreshCoordinator
+     */
+    @Override
+    public RefreshCoordinator getRefreshCoordinator () {
+        return refreshCoordinator;
+    }
+
+    /**
+     * Retrieves game panel object.
+     * @return  game panel
+     */
+    @Override
+    public GridPane getGamePanel () {
+        return gamePanel;
     }
 
     /**
@@ -222,120 +255,9 @@ public class GuiController implements Initializable, GameView {
     }
 
     /**
-     * Concise method that just calls gameOver.
-     */
-    @Override
-    public void notifyGameOver() {
-        gameOver();
-    }
-
-    /**
-     * Retrieves displayMatrix.
-     * @return  displayMatrix.
-     */
-    @Override
-    public Rectangle[][] getDisplayMatrix() {
-        return displayMatrix;
-    }
-
-    @Override
-    public void notifyLevelUp(int newLevel) {
-        LevelUpPanel levelUpPanel = new LevelUpPanel(newLevel);
-        groupNotification.getChildren().add(levelUpPanel);
-        levelUpPanel.showLevelUp(groupNotification.getChildren());
-    }
-
-    /**
-     * Calls method to update (increase) fall speed
-     * @param speedMs   Current falling speed of Brick object
-     */
-    @Override
-    public void updateFallSpeed(int speedMs) {
-        timeLineManager.updateSpeed(speedMs, eventListener);
-    }
-
-    /**
-     * Binds level text to level label at the side
-     * @param levelProperty Current level
-     */
-    @Override
-    public void bindLevel(IntegerProperty levelProperty) {
-        levelLabel.textProperty().bind(levelProperty.asString("Level: %d"));
-    }
-
-    /**
-     * Calls refresh Brick method
-     * @param viewData  Brick object info
-     */
-    @Override
-    public void refreshActiveBrick (ViewData viewData) {
-        refreshCoordinator.renderActiveBrick(viewData, rectangles, brickPanel, gamePanel);
-    }
-
-    /**
-     * Concise method to update (refresh) background.
-     * @param boardMatrix The current board state.
-     */
-    @Override
-    public void refreshBackground(int[][] boardMatrix) {
-        refreshCoordinator.renderBackground(boardMatrix, displayMatrix);
-    }
-
-    /**
-     * Calls render method for rendering Brick object in hold panel.
-     */
-    @Override
-    public void refreshHoldBrick () {
-        refreshCoordinator.renderHoldBrick((AbstractBrick) board.getHeldBrick(), holdMatrix, holdPanel);
-    }
-
-    /**
-     * Calls render method for rendering Brick objects in queue in preview panel.
-     */
-    @Override
-    public void refreshPreviewPanel () {
-        refreshCoordinator.renderNextBricks(board.getNextBricksPreview(), previewMatrix);
-    }
-
-    /**
-     * Calls method containing the logic that handles UI for when special combination shape is formed
-     */
-    @Override
-    public void handleSpecialShapeCompletion() {
-        specialShapeManager.handleCompletion(rectangles, this, groupNotification.getChildren());
-    }
-
-    /**
-     * Hides display panel of the special combination shape
-     */
-    @Override
-    public void hideSpecialShapeDisplay() {
-        if (specialShapeContainer != null && specialShapeDisplayPanel != null) {
-            specialShapeContainer.getChildren().remove(specialShapeDisplayPanel);
-        }
-    }
-
-    /**
-     * Checks if the display panel of the special combination shape is visible
-     * @return TRUE if there are elements in specialShapeContainer
-     */
-    @Override
-    public boolean isSpecialShapeDisplayVisible() {
-        return specialShapeContainer != null &&
-                specialShapeContainer.getChildren().contains(specialShapeDisplayPanel);
-    }
-
-    /**
-     * Retrieve GameStateManager object.
-     * @return  GameStateManager object.
-     */
-    public GameStateProperty getGameStateManager() {
-        return gameStateProperty;
-    }
-
-    /**
      * Calls method that contains logic sequence of starting a new game.
      */
+    @Override
     public void newGame(ActionEvent actionEvent) {
         gameStateManager.startNewGame();
     }
@@ -345,6 +267,7 @@ public class GuiController implements Initializable, GameView {
      * Calls said functionality in gameStateManager.
      * @param actionEvent no uses
      */
+    @Override
     public void pauseGame (ActionEvent actionEvent) {
         gameStateManager.togglePause();
     }
@@ -352,6 +275,7 @@ public class GuiController implements Initializable, GameView {
     /**
      * Calls delegated method containing logic that processes when a game is over.
      */
+    @Override
     public void gameOver() {
         gameStateManager.endGame();
     }

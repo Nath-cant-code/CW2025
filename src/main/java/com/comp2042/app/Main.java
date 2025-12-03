@@ -3,8 +3,7 @@ package com.comp2042.app;
 import com.comp2042.logic.engine.ActionBoard;
 import com.comp2042.logic.engine.Board;
 import com.comp2042.input.event_listener.EventListener;
-import com.comp2042.ui.systems.controller.GameView;
-import com.comp2042.ui.systems.controller.GuiController;
+import com.comp2042.ui.systems.master.GameView;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,15 +22,15 @@ public class Main extends Application {
      * <p>
      *     Self note: root now holds the full UI structure (GridPane, GameOverPanel).
      * </p>
-     * A controller class is created and set as a GuiController object.<br>
+     * A controller class is created and set as a GUIController object.<br>
      * Creates a Scene object and adjusts the dimensions of the window.<br>
      * <p>
      *     Self note: Scene is what is inside the stage (main window).
      * </p>
      * Attach scene to stage and display the window on player's screen.<br>
      * -----------------------NEW REFACTORING-----------------------<br>
-     * Upcasting of objects: SimpleBoard > Board, GuiController > GameView<br>
-     * Connects GuiController to EventListener by passing an object of GameView > GuiController in:<br>
+     * Upcasting of objects: SimpleBoard > Board, GUIController > GameView<br>
+     * Connects GUIController to EventListener by passing an object of GameView > GUIController in:<br>
      * new EventListener(c);
      * -----------------------NEW REFACTORING-----------------------<br>
      * @param primaryStage  Main window of the game (args).
@@ -45,16 +44,16 @@ public class Main extends Application {
         ResourceBundle resources = null;
         FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
         Parent root = fxmlLoader.load();
-        GuiController c = fxmlLoader.getController();
+        GameView gameView = fxmlLoader.getController();
 
         primaryStage.setTitle("TetrisJFX");
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        GameView gameView = c;
+//        GameView gameView = guiManager;
         Board board = new ActionBoard(25, 10);
-        c.setBoard(board);
+        gameView.setBoard(board);
         new EventListener(gameView, board);
         gameView.refreshHoldBrick();
         gameView.refreshPreviewPanel();
