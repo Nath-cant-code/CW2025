@@ -56,11 +56,8 @@ public class BrickRotator {
      * This counter along with the modulus operator (%) helps to
      * cycle through the different orientations of a specific Brick-shape-object. <br>
      * nextShape will be used as an index to select the next orientation of the Brick-shape-object
-     * <p>
-     *     @return an object (with class NextShapeInfo) that contains: <br>
-     *     - the matrix of the next orientation of the current Brick-shape-object <br>
-     *     - and the index of said orientation in the (Brick-shape-object orientations) List, i.e. getShapeMatrix
-     * </p>
+     * @return an object (with class NextShapeInfo) that contains the matrix of the next orientation of the current Brick-shape-object
+     * and the index of said orientation in the (Brick-shape-object orientations) List, i.e. getShapeMatrix
      */
     public NextShapeInfo nextClockRotation() {
         int nextShape = currentShape;
@@ -73,11 +70,8 @@ public class BrickRotator {
      * ***IMPORTANT***<br>
      * All Brick-shape-classes have been adjusted to rotate in a clockwise manner in ascending index value.<br>
      * Hence, for anti-clockwise rotation, we need to loop to the last index and return back to the first index.<br>
-     * <p>
-     *     @return an object (with class NextShapeInfo) that contains: <br>
-     *     - the matrix of the next orientation of the current Brick-shape-object <br>
-     *     - and the index of said orientation in the (Brick-shape-object orientations) List, i.e. getShapeMatrix
-     * </p>
+     * @return an object (with class NextShapeInfo) that contains the matrix of the next orientation of the current Brick-shape-object
+     * and the index of said orientation in the (Brick-shape-object orientations) List, i.e. getShapeMatrix
      */
     public NextShapeInfo nextAntiClockRotation() {
         int nextShape = currentShape;
