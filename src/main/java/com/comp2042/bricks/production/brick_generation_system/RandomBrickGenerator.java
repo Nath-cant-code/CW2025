@@ -24,12 +24,19 @@ public class RandomBrickGenerator implements BrickGenerator {
     private final BrickType[] brickList = BrickType.values();
 
     /**
-     * One type of Brick-shape-object is chosen from the list and added onto the Deque (this process happens twice). <br>
+     * Calls initializeQueue() to initializes the queue with 4 random bricks.
+     */
+    public RandomBrickGenerator() {
+        initializeQueue();
+    }
+
+    /**
+     * One type of Brick-shape-object is chosen from the list and added onto the Deque (this process happens 4x). <br>
      * The Deque will then become a random sequence of Brick-shape-objects, which will be
      * referred to when generating a new brick on the screen. <br>
      * The Deque is referred to by methods of other classes via the getNextBrick() method.
      */
-    public RandomBrickGenerator() {
+    private void initializeQueue() {
         nextBricks.add(randomBrick());
         nextBricks.add(randomBrick());
         nextBricks.add(randomBrick());
@@ -75,4 +82,14 @@ public class RandomBrickGenerator implements BrickGenerator {
      */
     @Override
     public List<Brick> getUpcomingBricks() { return new ArrayList<>(nextBricks); }
+
+    /**
+     * Resets the queue for a new game by clearing existing bricks
+     * and generating a fresh queue.
+     */
+    @Override
+    public void resetQueue() {
+        nextBricks.clear();
+        initializeQueue();
+    }
 }

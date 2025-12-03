@@ -45,12 +45,13 @@ public class BrickQueueManager {
     }
 
     /**
-     * Resets the hold state for a new game.
+     * Resets the hold state for a new game. <br>
      * Clears the held brick and resets the hold usage flag.
      */
-    public void resetHoldForNewGame() {
+    public void resetQueueForNewGame() {
         heldBrick = null;
         holdUsedThisTurn = false;
+        brickGenerator.resetQueue();
     }
 
     /**

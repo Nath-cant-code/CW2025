@@ -26,4 +26,10 @@ public interface BrickGenerator {
     Brick getNextBrick();
 
     List<Brick> getUpcomingBricks();
+
+    /**
+     * Resets the brick queue for a new game.
+     * Implemented by RandomBrickGenerator.
+     */
+    void resetQueue();
 }
