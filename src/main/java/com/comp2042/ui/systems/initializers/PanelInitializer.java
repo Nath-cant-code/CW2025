@@ -10,7 +10,7 @@ import javafx.scene.shape.Rectangle;
  * Initializes UI panels (hold, preview).<br>
  * SOLID: Single Responsibility - Only initializes panels<br>
  */
-public class PanelInitialiser {
+public class PanelInitializer {
     private static final int BRICK_SIZE = 20;
 
     public Rectangle[][] initializeHoldPanel(GridPane holdPanel) {

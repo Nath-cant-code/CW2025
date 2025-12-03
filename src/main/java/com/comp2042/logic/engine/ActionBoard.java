@@ -11,6 +11,8 @@ import java.awt.Point;
 /**
  * Extends SimpleBoard to handle all brick action operations.<br>
  * SOLID: Single Responsibility - Only manages brick actions<br>
+ * SOLID: Open Closed: New functionalities can be added to ActionBoard without affecting SimpleBoard.<br>
+ * SOLID: Liskov Substitution: Separate categories of functionalities.<br>
  * Design Pattern: Strategy - Encapsulates Brick action behaviours<br>
  */
 public class ActionBoard extends SimpleBoard {

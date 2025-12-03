@@ -26,7 +26,7 @@ public class NotificationPanel extends BorderPane {
      * and adds a style to it.<br>
      * Create a Effect object and set it as an effect for Label object.<br>
      * Adjust colour and position of label.<br>
-     * @param text  A string passed from GuiController that contains "+" and the points obtained.
+     * @param text  A string passed from GUIController that contains "+" and the points obtained.
      */
     public NotificationPanel(String text) {
         setMinHeight(200);

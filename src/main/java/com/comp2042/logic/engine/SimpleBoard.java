@@ -26,6 +26,8 @@ import com.comp2042.ui.elements.Score;
  * Extracted Brick object related actions to new subclass: ActionBoard.<br>
  * Hence, SimpleBoard only has getMethods() and methods relating to playable area matrix.<br>
  * SOLID: Single Responsibility: Coordinates board state, delegates specific tasks. <br>
+ * SOLID: Open Closed: New functionalities can be added to subclass without affecting SimpleBoard.<br>
+ * SOLID: Liskov Substitution: Separate categories of functionalities.<br>
  * SOLID: Dependency Inversion: Implements Board, which other classes depend on, instead of depending on the details of this class.<br>
  * Design Pattern: Facade: Provides simple interface to complex subsystem
  */

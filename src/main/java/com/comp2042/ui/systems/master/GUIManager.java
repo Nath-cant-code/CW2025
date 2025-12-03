@@ -6,7 +6,7 @@ import com.comp2042.input.event_listener.InputEventListener;
 import com.comp2042.input.keyboard.InputHandler;
 import com.comp2042.renderer.runtime_refreshers.RefreshCoordinator;
 import com.comp2042.ui.systems.initializers.GameInitializer;
-import com.comp2042.ui.systems.initializers.PanelInitialiser;
+import com.comp2042.ui.systems.initializers.PanelInitializer;
 import com.comp2042.ui.systems.managers.*;
 import com.comp2042.ui.panels.GameOverPanel;
 import com.comp2042.ui.panels.NotificationPanel;
@@ -71,7 +71,7 @@ public abstract class GUIManager implements Initializable, GameView {
 
     private final GameStateProperty gameStateProperty = new GameStateProperty();
     protected TimeLineManager timeLineManager = new TimeLineManager();
-    private final PanelInitialiser panelInitialiser = new PanelInitialiser();
+    private final PanelInitializer panelInitializer = new PanelInitializer();
     private final GameInitializer gameInitializer = new GameInitializer();
     protected SpecialShapeManager specialShapeManager;
     private GameStateManager gameStateManager;
@@ -96,8 +96,8 @@ public abstract class GUIManager implements Initializable, GameView {
         labelManager = new UILabelManager(gameOverPanel, pausePanel);
 
         labelManager.hideAll();
-        holdMatrix = panelInitialiser.initializeHoldPanel(holdPanel);
-        previewMatrix = panelInitialiser.initializePreviewPanel(previewPanel);
+        holdMatrix = panelInitializer.initializeHoldPanel(holdPanel);
+        previewMatrix = panelInitializer.initializePreviewPanel(previewPanel);
 
         specialShapeDisplayPanel = new SpecialShapeDisplayPanel();
         if (specialShapeContainer != null) {

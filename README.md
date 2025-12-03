@@ -19,6 +19,13 @@ mvn clean compile
 mvn javafx:run
 ```
 
+#### Adding your own running Configurations
+
+1. Add a new Maven run configuration
+2. Add this as the run command `javafx:run -f pom.xml`
+3. Set working directory to the project
+4. Set both Maven and Java options to inherit from settings
+
 ### Or if using IntelliJ, Maven running configurations can be accessed at the (right) side panel
 
 1. Click the 'M' icon to open maven running configurations
@@ -173,7 +180,7 @@ mvn javafx:run
 
 ### Engine System (`com.comp2042.logic.engine`)
 - **ActionBoard**: 
-  - <font color="DeepSkyBlue">SOLID: SR, LS, DI</font> + <font color="HotPink">Design Pattern: Facade</font>
+  - <font color="DeepSkyBlue">SOLID: SR, O/C, LS, DI</font> + <font color="HotPink">Design Pattern: Facade</font>
   - Extends SimpleBoard, contains calls to Brick action methods
 
 ### Rendering System (`com.comp2042.renderer.basic_renderers`)
@@ -251,16 +258,11 @@ mvn javafx:run
   - <font color="DeepSkyBlue">SOLID: SR</font> 
   - Animated special shape completion message
 
-### UI Panels (`com.comp2042.ui.panels`)
-- **GameView**:
-  - <font color="DeepSkyBlue">SOLID: IS, DI</font> + <font color="HotPink">Design Pattern: Template</font>
-  - Interface for GuiController
-
 ### UI Initializers (`com.comp2042.ui.systems.initializers`)
 - **GameInitializer**: 
   - <font color="DeepSkyBlue">SOLID: SR</font> 
   - Initializes game view components
-- **PanelInitialiser**: 
+- **PanelInitializer**: 
   - <font color="DeepSkyBlue">SOLID: SR</font> 
   - Initializes hold and preview panels
 
@@ -281,6 +283,14 @@ mvn javafx:run
   - <font color="DeepSkyBlue">SOLID: SR</font> + <font color="HotPink">Design Pattern: State, Interpreter</font>
   - Manages UI panel visibility
 
+### Overall GUI handlers (`com.comp2042.ui.systems.master`)
+- **GameView**:
+  - <font color="DeepSkyBlue">SOLID: IS, DI</font> + <font color="HotPink">Design Pattern: Template</font>
+  - Interface for GuiController
+- **GUIManager**:
+  - <font color="DeepSkyBlue">SOLID: SR, O/C, LS, DI</font> + <font color="HotPink">Design Pattern: Facade</font>
+  - Handles fixed states of GUI and game
+
 ---
 
 ## Modified Java Classes
@@ -292,23 +302,29 @@ mvn javafx:run
   - Made class abstract to enforce subclass implementation
   - Delegates to BrickActionCoordinator, BrickQueueManager
 - **Reason**: 
-  - <font color="DeepSkyBlue">SOLID: SR, DI</font> + <font color="HotPink">Design Pattern: Facade</font>
+  - <font color="DeepSkyBlue">SOLID: SR, LS, DI</font> + <font color="HotPink">Design Pattern: Facade</font>
   - <font color="DeepSkyBlue">Single Responsibility</font>: Improve testability and maintainability by separating board state management from brick actions
+  - <font color="DeepSkyBlue">Open Closed</font>: New functionalities can be added to subclass without affecting SimpleBoard
+  - <font color="DeepSkyBlue">Liskov Substitution</font>: Separate categories of functionalities
   - <font color="DeepSkyBlue">Dependency Inversion</font>: Implements Board, which other classes depend on, instead of depending on the details of this class
   - <font color="HotPink">Facade</font>: Provides simple interface to complex subsystem
 
-### 2. **GuiController** (`com.comp2042.ui.systems.master`)
+### 2. **GUIController** (`com.comp2042.ui.systems.master`)
 - **Changes**:
-  - Implements new interface: GameView
-  - Removed massive `initGameView()` method logic
-  - Removed direct timeline management
-  - Delegated input handling to InputHandler
-  - Delegated rendering to RefreshCoordinator
-  - Delegated game state management to GameStateManager
-  - Delegated special combination shape UI processes to SpecialShapeManager
+  - Extends new superclass GUIManager
+  - **Changes made to GUIController before extracting methods to GUIManager**:
+    - Refactored massive `initGameView()` method logic
+    - Removed direct timeline management
+    - Delegated input handling to InputHandler
+    - Delegated game state management to GameStateManager
+  - **Changes done that are still in GUIController**:
+    - Delegated rendering to RefreshCoordinator
+    - Delegated special combination shape UI processes to SpecialShapeManager
 - **Reason**:
-  - <font color="DeepSkyBlue">SOLID: SR, DI</font> + <font color="HotPink">Design Pattern: Facade</font>
+  - <font color="DeepSkyBlue">SOLID: SR, O/C, LS, DI</font> + <font color="HotPink">Design Pattern: Facade</font>
   - <font color="DeepSkyBlue">Single Responsibility</font>: Improve testability and maintainability by coordinating UI components only
+  - <font color="DeepSkyBlue">Open Closed</font>: New GUI functionalities can be added into GUIController without affecting fixed functionalities in GUIManager
+  - <font color="DeepSkyBlue">Liskov Substitution</font>: Separate categories of functionalities
   - <font color="DeepSkyBlue">Dependency Inversion</font>: Implements GameView, which other classes depend on, instead of depending on the details of this class
   - <font color="HotPink">Facade</font>: Provides simple interface to complex UI subsystem
 
