@@ -1,6 +1,12 @@
 # This is my COMP2042 Developing Maintainable Software Coursework
 My task for this coursework is to refactor and extend the classic retro game, Tetris. The changes mentioned here are a brief summary of the commits I made throughout the progress of this coursework. 
 
+## GitHub Link
+
+`https://github.com/Nath-cant-code/CW2025` 
+
+Latest version of the code should be the "master" branch. The "original_code" branch is just for me to have a copy of the original code and compare all the changes I have made to the project when I come back to this repository in the future.
+
 ## Compilation Instructions
 
 ### Prerequisites
