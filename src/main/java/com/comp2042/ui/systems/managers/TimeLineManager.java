@@ -16,7 +16,7 @@ import javafx.util.Duration;
  */
 public class TimeLineManager {
     private Timeline timeLine;
-    private int currentSpeed = 400;
+    private int currentSpeed = 600;
 
     public void setGameTimeline(InputEventListener eventListener) {
         createTimeline(eventListener, currentSpeed);

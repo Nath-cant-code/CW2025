@@ -33,7 +33,7 @@ public class BrickSnapper {
         );
 
 //        score multiplier for hard dropping
-        score.add((targetY - currentOffset.y) * 5);
+        score.add((targetY - currentOffset.y) * 10);
 
         return targetY;
     }

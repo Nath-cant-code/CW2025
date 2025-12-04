@@ -12,7 +12,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 public class LevelSystem {
     private static final int ROWS_PER_LEVEL = 5;
     private static final int MAX_LEVEL = 10;
-    private static final int BASE_FALL_SPEED_MS = 400;
+    private static final int BASE_FALL_SPEED_MS = 600;
     private static final int MIN_FALL_SPEED_MS = 100;
 
     private final IntegerProperty currentLevel = new SimpleIntegerProperty(1);
@@ -61,7 +61,7 @@ public class LevelSystem {
         System.out.println("Speed increased");
         int level = currentLevel.get();
         // Speed increases by 30ms per level
-        int speedDecrease = (level - 1) * 30;
+        int speedDecrease = (level - 1) * 50;
         return Math.max(MIN_FALL_SPEED_MS, BASE_FALL_SPEED_MS - speedDecrease);
     }
 
