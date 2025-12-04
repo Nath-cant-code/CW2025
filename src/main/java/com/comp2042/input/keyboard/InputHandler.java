@@ -10,7 +10,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
 /**
- * This class was created to separate the user input handling from the initialise() method in GUIController.<br>
+ * This class was created to separate the user input handling from the initGameView() method in GUIController.<br>
  * ----------------------------------REFACTORED----------------------------------<br>
  * Handles key events using the map-based system.<br>
  * Summary:<br>

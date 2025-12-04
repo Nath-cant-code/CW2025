@@ -60,22 +60,21 @@ mvn javafx:run
 - **Rotation System**: Clockwise (X key) and anti-clockwise (Z, W, UP keys) rotation
 - **Hard Drop**: Space bar instantly drops (snap / hard drop) pieces to the bottom
 - **Hold Mechanism**: C key allows players to hold one piece for later use (one hold per turn)
-- **Soft Drop Bonus**: Players earn 1 point per row when manually moving pieces down
 
 ### Scoring System
 - **Progressive Scoring**:
   - Soft drop: 1 point per row
-  - Hard drop: 5 points per row
-  - Line clears: 50 × (lines cleared)²
+  - Hard drop: 10 points per row
+  - Line clears: 100 × (lines cleared)²
 - **Score Display**: Real-time score updates
 
 ### Level System
 - **Dynamic Difficulty**:
   - Level increases every 5 lines cleared
-  - Fall speed increases by 30ms per level
+  - Fall speed increases by 50ms per level
   - Maximum 10 levels
-  - Speed range: 400ms (Level 1) to 100ms (Level 10)
-- **Level-Up Notifications**: Animated notifications when leveling up
+  - Speed range: 600ms (Level 1) to 100ms (Level 10)
+- **Level-Up Notifications**: Notifications when leveling up
 
 ### Preview System
 - **Next Pieces Preview**: Shows the next 3 Tetrominoes in queue
