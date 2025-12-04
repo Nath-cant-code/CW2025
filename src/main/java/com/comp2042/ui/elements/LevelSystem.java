@@ -36,8 +36,6 @@ public class LevelSystem {
      * @return true if leveled up, false otherwise
      */
     public boolean addClearedRows(int rowsCleared) {
-        System.out.println("LevelSystem hash: " + this);
-
         int oldLevel = currentLevel.get();
         totalRowsCleared.set(totalRowsCleared.get() + rowsCleared);
 
@@ -48,7 +46,6 @@ public class LevelSystem {
 
         if (newLevel > oldLevel) {
             currentLevel.set(newLevel);
-            System.out.println("New level");
             return true;
         }
         return false;
@@ -58,9 +55,8 @@ public class LevelSystem {
      * Calculates fall speed based on current level
      */
     public int getFallSpeedMs() {
-        System.out.println("Speed increased");
         int level = currentLevel.get();
-        // Speed increases by 30ms per level
+//        Speed increases by 50ms per level
         int speedDecrease = (level - 1) * 50;
         return Math.max(MIN_FALL_SPEED_MS, BASE_FALL_SPEED_MS - speedDecrease);
     }
