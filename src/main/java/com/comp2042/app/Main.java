@@ -13,6 +13,10 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Main class.<br>
+ * Game runs from here.<br>
+ */
 public class Main extends Application {
 
     /**
