@@ -14,7 +14,16 @@ public class SpecialShapeDetector {
     private boolean shapeCompleted = false;
 
     /**
-     * Scans the entire board for the special shape pattern.
+     * Scans the entire board for the special shape pattern. <br>
+     * The algorithm works by evaluating each pixel as the top left pixel of the special combination shape.<br>
+     * What this means is that for every point, the algorithm will check an area equal to the size of the special combination shape
+     * with the current point as the top left pixel of the special shape.<br>
+     * If the special combination shape exists, algorithm returns the pixel as the starting point of the special shape,
+     * which will correspond as the top left pixel of the special shape.<br>
+     * The efficiency of the algorithm is enhanced by subtracting the size of the area of the special combination shape
+     * from the search range. <br>
+     * This is because if the space is lesser than the special combination shape's area,
+     * then the special shape cannot exist with the current point as the top left pixel.
      * @param boardMatrix The current game board state
      * @return Point containing the top-left position if found, null otherwise
      */
