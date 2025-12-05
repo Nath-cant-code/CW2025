@@ -1,0 +1,357 @@
+@startuml
+
+/' diagram meta data start
+config=StructureConfiguration;
+{
+  "projectClassification": {
+    "searchMode": "OpenProject", // OpenProject, AllProjects
+    "includedProjects": "",
+    "pathEndKeywords": "*.impl",
+    "isClientPath": "",
+    "isClientName": "",
+    "isTestPath": "",
+    "isTestName": "",
+    "isMappingPath": "",
+    "isMappingName": "",
+    "isDataAccessPath": "",
+    "isDataAccessName": "",
+    "isDataStructurePath": "",
+    "isDataStructureName": "",
+    "isInterfaceStructuresPath": "",
+    "isInterfaceStructuresName": "",
+    "isEntryPointPath": "",
+    "isEntryPointName": "",
+    "treatFinalFieldsAsMandatory": false
+  },
+  "graphRestriction": {
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "com.comp2042.*",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "removeByInheritance": "", // inheritance/annotation based filtering is done in a second step
+    "removeByAnnotation": "",
+    "removeByClassPackage": "", // cleanup the graph after inheritance/annotation based filtering is done
+    "removeByClassName": "",
+    "cutMappings": true,
+    "cutEnum": true,
+    "cutTests": true,
+    "cutClient": true,
+    "cutDataAccess": true,
+    "cutInterfaceStructures": false,
+    "cutDataStructures": true,
+    "cutGetterAndSetter": true,
+    "cutConstructors": true
+  },
+  "graphTraversal": {
+    "forwardDepth": 3,
+    "backwardDepth": 3,
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "hideMappings": false,
+    "hideDataStructures": false,
+    "hidePrivateMethods": true,
+    "hideInterfaceCalls": true, // indirection: implementation -> interface (is hidden) -> implementation
+    "onlyShowApplicationEntryPoints": false, // root node is included
+    "useMethodCallsForStructureDiagram": "ForwardOnly" // ForwardOnly, BothDirections, No
+  },
+  "details": {
+    "aggregation": "GroupByClass", // ByClass, GroupByClass, None
+    "showClassGenericTypes": true,
+    "showMethods": false,
+    "showMethodParameterNames": false,
+    "showMethodParameterTypes": false,
+    "showMethodReturnType": false,
+    "showPackageLevels": 2,
+    "showDetailedClassStructure": false
+  },
+  "rootClass": "com.comp2042.app.Main",
+  "extensionCallbackMethod": "" // qualified.class.name#methodName - signature: public static String method(String)
+}
+diagram meta data end '/
+
+
+
+digraph g {
+    rankdir="TB"
+    splines=polyline
+    
+
+'nodes 
+subgraph cluster_601226037 { 
+   	label=comp2042
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   subgraph cluster_1111196009 { 
+   	label=ui
+	labeljust=l
+	fillcolor="#d8d8d8"
+	style=filled
+   
+   GUIController227548208[
+	label="(C)GUIController"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+GUIManager227548208[
+	label="(C)GUIManager"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+GameInitializer2075464991[
+	label="(C)GameInitializer"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+GameOverPanel1849330611[
+	label="(C)GameOverPanel"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+GameStateManager530146124[
+	label="(C)GameStateManager"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+GameStateProperty530146124[
+	label="(C)GameStateProperty"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+LevelUpPanel1849330611[
+	label="(C)LevelUpPanel"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+NotificationPanel1849330611[
+	label="(C)NotificationPanel"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+PanelInitializer2075464991[
+	label="(C)PanelInitializer"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+PausePanel1849330611[
+	label="(C)PausePanel"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+Score1978665797[
+	label="(C)Score"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+SpecialShapeDisplayPanel1849330611[
+	label="(C)SpecialShapeDisplayPanel"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+SpecialShapeManager530146124[
+	label="(C)SpecialShapeManager"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+SpecialShapeTextPanel1849330611[
+	label="(C)SpecialShapeTextPanel"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+TimeLineManager530146124[
+	label="(C)TimeLineManager"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+UILabelManager530146124[
+	label="(C)UILabelManager"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_1780194682 { 
+   	label=renderer
+	labeljust=l
+	fillcolor="#d8d8d8"
+	style=filled
+   
+   RefreshActiveBrick1567742937[
+	label="(C)RefreshActiveBrick"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+RefreshCoordinator1567742937[
+	label="(C)RefreshCoordinator"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+RefreshGameBackground1567742937[
+	label="(C)RefreshGameBackground"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+RefreshHoldPanel1567742937[
+	label="(C)RefreshHoldPanel"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+RefreshPreviewBricks1567742937[
+	label="(C)RefreshPreviewBricks"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_1956791527 { 
+   	label=input
+	labeljust=l
+	fillcolor="#d8d8d8"
+	style=filled
+   
+   EventListener1228875533[
+	label="(C)EventListener"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+InputHandler592531551[
+	label="(C)InputHandler"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_1959582843 { 
+   	label=logic
+	labeljust=l
+	fillcolor="#d8d8d8"
+	style=filled
+   
+   ActionBoard1813293464[
+	label="(C)ActionBoard"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+
+SimpleBoard1813293464[
+	label="(C)SimpleBoard"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_87356802 { 
+   	label=app
+	labeljust=l
+	fillcolor="#d8d8d8"
+	style=filled
+   
+   Main860941771[
+	label="(C)Main"
+	style=filled
+	shape=rect
+	fillcolor="#FFFFFF"
+];
+} 
+} 
+
+'edges    
+GUIController227548208 -> LevelUpPanel1849330611[label="notifyLevelUp() -> showLevelUp()"];
+GUIController227548208 -> SpecialShapeManager530146124[label="handleSpecialShapeCompletion() -> handleCompletion()"];
+GUIController227548208 -> TimeLineManager530146124[label="updateFallSpeed() -> updateSpeed()"];
+GUIManager227548208 -> EventListener1228875533[arrowhead=none];
+GUIManager227548208 -> GUIController227548208[arrowhead=none, arrowtail=empty, dir=both];
+GUIManager227548208 -> GameInitializer2075464991[label="gameInitializer
+[0..1]"];
+GUIManager227548208 -> GameOverPanel1849330611[label="gameOverPanel
+[0..1]"];
+GUIManager227548208 -> GameStateManager530146124[label="gameStateManager
+[0..1]"];
+GUIManager227548208 -> GameStateProperty530146124[label="gameStateProperty
+[0..1]"];
+GUIManager227548208 -> InputHandler592531551[label="inputHandler
+[0..1]"];
+GUIManager227548208 -> NotificationPanel1849330611[label="showClearRowNotification() -> showScore()"];
+GUIManager227548208 -> PanelInitializer2075464991[label="panelInitializer
+[0..1]"];
+GUIManager227548208 -> PausePanel1849330611[label="pausePanel
+[0..1]"];
+GUIManager227548208 -> RefreshCoordinator1567742937[label="refreshCoordinator
+[0..1]"];
+GUIManager227548208 -> SpecialShapeDisplayPanel1849330611[label="specialShapeDisplayPanel
+[0..1]"];
+GUIManager227548208 -> SpecialShapeManager530146124[label="specialShapeManager
+[0..1]"];
+GUIManager227548208 -> TimeLineManager530146124[label="timeLineManager
+[0..1]"];
+GUIManager227548208 -> UILabelManager530146124[label="labelManager
+[0..1]"];
+Main860941771 -> GUIManager227548208[arrowhead=none];
+RefreshCoordinator1567742937 -> GameStateProperty530146124[label="gameStateProperty
+[0..1]"];
+RefreshCoordinator1567742937 -> RefreshActiveBrick1567742937[arrowhead=none];
+RefreshCoordinator1567742937 -> RefreshGameBackground1567742937[arrowhead=none];
+RefreshCoordinator1567742937 -> RefreshHoldPanel1567742937[arrowhead=none];
+RefreshCoordinator1567742937 -> RefreshPreviewBricks1567742937[arrowhead=none];
+SpecialShapeManager530146124 -> GameStateProperty530146124[label="gameStateProperty
+[0..1]"];
+SpecialShapeManager530146124 -> Score1978665797[label="handleCompletion() -> add()"];
+SpecialShapeManager530146124 -> SimpleBoard1813293464[arrowhead=none];
+SpecialShapeManager530146124 -> SpecialShapeTextPanel1849330611[label="handleCompletion() -> showCompletion()"];
+SpecialShapeManager530146124 -> TimeLineManager530146124[label="timeLineManager
+[0..1]"];
+    
+}
+@enduml
