@@ -145,9 +145,9 @@ public abstract class SimpleBoard implements Board {
         ClearRow clearRow = MatrixOperations.checkRemoving(currentGameMatrix);
         currentGameMatrix = clearRow.newMatrix();
 
-        if (clearRow.linesRemoved() > 0) {
-            levelSystem.addClearedRows(clearRow.linesRemoved());
-        }
+//        if (clearRow.linesRemoved() > 0) {
+//            levelSystem.addClearedRows(clearRow.linesRemoved());
+//        }
 
         return clearRow;
     }
